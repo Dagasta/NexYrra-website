@@ -1,22 +1,21 @@
 import { Resend } from 'resend';
 import { NextRequest, NextResponse } from 'next/server';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function POST(req: NextRequest) {
-    try {
-        const { email, name } = await req.json();
+  try {
+    const resend = new Resend(process.env.RESEND_API_KEY || 're_dummy');
+    const { email, name } = await req.json();
 
-        if (!email) {
-            return NextResponse.json({ error: 'Email is required' }, { status: 400 });
-        }
+    if (!email) {
+      return NextResponse.json({ error: 'Email is required' }, { status: 400 });
+    }
 
-        // Send welcome email
-        const { data, error } = await resend.emails.send({
-            from: 'Nexyrra Signals <onboarding@resend.dev>', // You can change this to nexyrra@gmail.com after domain verification
-            to: email,
-            subject: 'Welcome to Nexyrra Signals: Intelligence Synchronized',
-            html: `
+    // Send welcome email
+    const { data, error } = await resend.emails.send({
+      from: 'Nexyrra Signals <onboarding@resend.dev>', // You can change this to nexyrra@gmail.com after domain verification
+      to: email,
+      subject: 'Welcome to Nexyrra Signals: Intelligence Synchronized',
+      html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; background: #08090f; color: white; padding: 40px; border-radius: 20px;">
           <h1 style="color: #8B5CF6; font-size: 24px; font-weight: 800; margin-bottom: 20px;">WELCOME TO THE INNER CIRCLE</h1>
           <p style="color: #94A3B8; font-size: 16px; line-height: 1.6;">Hello ${name || 'Operator'},</p>
@@ -34,16 +33,16 @@ export async function POST(req: NextRequest) {
           <p style="font-size: 12px; color: #475569;">© Nexyrra AI Agency | Dubai, UAE</p>
         </div>
       `,
-        });
+    });
 
-        if (error) {
-            console.error('Email Error:', error);
-            return NextResponse.json({ error: error.message }, { status: 500 });
-        }
-
-        return NextResponse.json({ success: true, id: data?.id });
-    } catch (err: any) {
-        console.error('Newsletter API Error:', err);
-        return NextResponse.json({ error: err.message }, { status: 500 });
+    if (error) {
+      console.error('Email Error:', error);
+      return NextResponse.json({ error: error.message }, { status: 500 });
     }
+
+    return NextResponse.json({ success: true, id: data?.id });
+  } catch (err: any) {
+    console.error('Newsletter API Error:', err);
+    return NextResponse.json({ error: err.message }, { status: 500 });
+  }
 }

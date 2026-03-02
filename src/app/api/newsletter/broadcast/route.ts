@@ -2,35 +2,35 @@ import { Resend } from 'resend';
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
 export async function POST(req: NextRequest) {
-    try {
-        const { title, excerpt, image_url, category } = await req.json();
+  try {
+    const resend = new Resend(process.env.RESEND_API_KEY || 're_dummy');
+    const { title, excerpt, image_url, category } = await req.json();
 
-        // 1. Fetch all subscribers from database
-        const { data: subscribers, error: subError } = await supabase
-            .from('newsletter_subscribers')
-            .select('email');
+    // 1. Fetch all subscribers from database
+    const { data: subscribers, error: subError } = await supabase
+      .from('newsletter_subscribers')
+      .select('email');
 
-        if (subError) throw subError;
-        if (!subscribers || subscribers.length === 0) {
-            return NextResponse.json({ success: true, message: 'No subscribers to notify' });
-        }
+    if (subError) throw subError;
+    if (!subscribers || subscribers.length === 0) {
+      return NextResponse.json({ success: true, message: 'No subscribers to notify' });
+    }
 
-        const emails = subscribers.map(s => s.email);
+    const emails = subscribers.map(s => s.email);
 
-        // 2. Send broadcast via Resend (use batches if many)
-        // Note: On professional domain verification, change "from" to nexyrra@gmail.com
-        const { data, error } = await resend.emails.send({
-            from: 'Nexyrra Signals <newsletter@resend.dev>',
-            to: emails,
-            subject: `NEW SIGNAL: ${title}`,
-            html: `
+    // 2. Send broadcast via Resend (use batches if many)
+    // Note: On professional domain verification, change "from" to nexyrra@gmail.com
+    const { data, error } = await resend.emails.send({
+      from: 'Nexyrra Signals <newsletter@resend.dev>',
+      to: emails,
+      subject: `NEW SIGNAL: ${title}`,
+      html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; background: #08090f; color: white; padding: 40px; border-radius: 20px;">
           <div style="text-align: center; margin-bottom: 30px;">
             <span style="font-size: 11px; text-transform: uppercase; color: #8B5CF6; letter-spacing: 2px;">NEURAL INTELLIGENCE REPORT</span>
@@ -58,16 +58,16 @@ export async function POST(req: NextRequest) {
           </div>
         </div>
       `,
-        });
+    });
 
-        if (error) {
-            console.error('Broadcast Error:', error);
-            return NextResponse.json({ error: error.message }, { status: 500 });
-        }
-
-        return NextResponse.json({ success: true, count: emails.length });
-    } catch (err: any) {
-        console.error('Broadcast API Error:', err);
-        return NextResponse.json({ error: err.message }, { status: 500 });
+    if (error) {
+      console.error('Broadcast Error:', error);
+      return NextResponse.json({ error: error.message }, { status: 500 });
     }
+
+    return NextResponse.json({ success: true, count: emails.length });
+  } catch (err: any) {
+    console.error('Broadcast API Error:', err);
+    return NextResponse.json({ error: err.message }, { status: 500 });
+  }
 }
