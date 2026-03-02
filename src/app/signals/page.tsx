@@ -1,11 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
+import Navbar from '../../components/Navbar';
+import Footer from '../../components/Footer';
 import { motion } from 'framer-motion';
 import { Mail, Zap, ArrowRight, Bookmark, Filter, Sparkles, Send } from 'lucide-react';
-import { getNewsletterIssues, NewsletterIssue } from '@/lib/db';
+import { getNewsletterIssues, NewsletterIssue } from '../../lib/db';
 
 const SignalsPage = () => {
     const [email, setEmail] = useState('');
@@ -110,7 +110,7 @@ const SignalsPage = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {issues.map((issue, idx) => (
+                    {issues.map((issue: NewsletterIssue, idx: number) => (
                         <motion.div
                             key={issue.id}
                             initial={{ opacity: 0, y: 20 }}

@@ -4,6 +4,7 @@ import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Sparkles, ArrowRight, ShieldCheck, Zap, Network } from 'lucide-react';
 import Link from 'next/link';
+import NeuralBackground from './NeuralBackground';
 
 const Hero = () => {
     const containerRef = useRef<HTMLDivElement>(null);

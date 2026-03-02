@@ -23,7 +23,7 @@ import {
     Link as LinkIcon
 } from 'lucide-react';
 import Link from 'next/link';
-import { getNewsletterIssues, addNewsletterIssue, deleteNewsletterIssue, NewsletterIssue } from '@/lib/db';
+import { getNewsletterIssues, addNewsletterIssue, deleteNewsletterIssue, NewsletterIssue } from '../../../lib/db';
 
 const AdminDashboard = () => {
     const [issues, setIssues] = useState<NewsletterIssue[]>([]);
@@ -165,7 +165,7 @@ const AdminDashboard = () => {
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-900">
-                                {issues.map((issue) => (
+                                {issues.map((issue: NewsletterIssue) => (
                                     <tr key={issue.id} className="hover:bg-slate-900/50 transition-colors group">
                                         <td className="px-8 py-6 font-mono text-[10px] text-slate-600">#{issue.id.substr(0, 4)}</td>
                                         <td className="px-8 py-6 font-bold text-slate-200">{issue.title}</td>
