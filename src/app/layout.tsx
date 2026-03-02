@@ -22,6 +22,10 @@ export const metadata: Metadata = {
     title: 'Nexyrra: AI Agency',
     description: 'Autonomous AI Agents, Automation & More — Dubai, UAE',
   },
+  icons: {
+    icon: '/assets/logo.png',
+    apple: '/assets/logo.png',
+  },
 };
 
 export const viewport: Viewport = {
@@ -41,6 +45,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800;900&family=Orbitron:wght@400;500;600;700;800;900&display=swap"
           rel="stylesheet"
         />
+        <link rel="icon" href="/assets/logo.png" />
+        <link rel="apple-touch-icon" href="/assets/logo.png" />
       </head>
       <body suppressHydrationWarning>
         {children}
