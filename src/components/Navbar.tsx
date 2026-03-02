@@ -39,7 +39,7 @@ const Navbar = () => {
                 <NexyrraWordmark size={38} />
 
                 {/* Desktop Nav */}
-                <ul style={{ display: 'flex', gap: 36, listStyle: 'none', margin: 0 }}>
+                <ul className="hide-mobile" style={{ display: 'flex', gap: 36, listStyle: 'none', margin: 0 }}>
                     {links.map(l => {
                         const active = pathname === l.href || pathname?.startsWith(l.href + '/');
                         return (
@@ -61,9 +61,23 @@ const Navbar = () => {
                 </ul>
 
                 <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-                    <Link href="/contact" className="btn-primary" style={{ padding: '10px 22px', fontSize: 13, borderRadius: 10 }}>
+                    <Link href="/contact" className="btn-primary hide-mobile" style={{ padding: '10px 22px', fontSize: 13, borderRadius: 10 }}>
                         Get Started <ArrowUpRight size={14} />
                     </Link>
+
+                    {/* Mobile Toggle */}
+                    <button
+                        onClick={() => setIsMobileOpen(!isMobileOpen)}
+                        style={{
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            width: 44, height: 44, background: 'rgba(139,92,246,0.1)',
+                            border: '1px solid rgba(139,92,246,0.2)', borderRadius: 12,
+                            color: 'white', cursor: 'pointer'
+                        }}
+                        className="show-mobile-flex"
+                    >
+                        {isMobileOpen ? <X size={20} /> : <Menu size={20} />}
+                    </button>
                 </div>
             </div>
 

@@ -207,3 +207,64 @@ a {
 .anim-glow {
   animation: nex-glow 3s ease-in-out infinite;
 }
+
+/* ===== RESPONSIVE UTILITIES ===== */
+
+.container-nex {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+.show-mobile-flex,
+.show-mobile-block {
+  display: none !important;
+}
+
+@media (max-width: 1024px) {
+  .container-nex {
+    padding: 0 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container-nex {
+    padding: 0 20px;
+  }
+
+  .hide-mobile {
+    display: none !important;
+  }
+
+  .stack-mobile {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 32px !important;
+  }
+
+  .grid-mobile-1 {
+    grid-template-columns: 1fr !important;
+    gap: 48px !important;
+  }
+
+  .text-center-mobile {
+    text-align: center !important;
+  }
+
+  .center-mobile {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  .show-mobile-flex {
+    display: flex !important;
+  }
+
+  .show-mobile-block {
+    display: block !important;
+  }
+}

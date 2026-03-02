@@ -24,7 +24,7 @@ export default function Home() {
 
             {/* Stats Strip */}
             <div style={{ borderTop: '1px solid rgba(139,92,246,0.1)', borderBottom: '1px solid rgba(139,92,246,0.1)', background: 'rgba(14,15,26,0.6)', backdropFilter: 'blur(20px)' }}>
-                <div style={{ maxWidth: 1400, margin: '0 auto', padding: '60px 32px', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 32, textAlign: 'center' }}>
+                <div className="container-nex" style={{ padding: '60px 0', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 32, textAlign: 'center' }}>
                     {stats.map((s, i) => (
                         <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
                             <div className="font-cyber" style={{ fontSize: 'clamp(32px, 3.5vw, 56px)', fontWeight: 900, marginBottom: 8, background: 'linear-gradient(135deg, #8B5CF6, #22D3EE)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
@@ -39,7 +39,7 @@ export default function Home() {
             <Services />
 
             {/* Brand Mission Statement */}
-            <section style={{ padding: '120px 32px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+            <section className="container-nex" style={{ padding: '120px 0', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
                 <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at center, rgba(139,92,246,0.06) 0%, transparent 65%)', pointerEvents: 'none' }} />
                 <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
                     style={{ maxWidth: 900, margin: '0 auto', position: 'relative' }}>
@@ -53,7 +53,7 @@ export default function Home() {
             </section>
 
             {/* Final Global CTA */}
-            <section style={{ padding: '80px 32px 160px', textAlign: 'center', position: 'relative' }}>
+            <section className="container-nex" style={{ padding: '80px 0 160px', textAlign: 'center', position: 'relative' }}>
                 <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
                     <h2 className="font-title" style={{ fontSize: 'clamp(48px, 8vw, 120px)', fontWeight: 900, lineHeight: 0.95, letterSpacing: '-0.05em', marginBottom: 40 }}>
                         <span style={{ background: 'linear-gradient(135deg, #8B5CF6, #22D3EE)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>

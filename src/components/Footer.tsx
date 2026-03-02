@@ -13,9 +13,9 @@ const Footer = () => {
             <div style={{ position: 'relative', overflow: 'hidden' }}>
                 <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: 800, height: 300, background: 'radial-gradient(ellipse at top, rgba(139,92,246,0.06) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
-                <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 32px' }}>
+                <div className="container-nex">
                     {/* Main Grid */}
-                    <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', gap: 48, marginBottom: 64, position: 'relative' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))', gap: 48, marginBottom: 64, position: 'relative' }}>
                         {/* Brand */}
                         <div>
                             <div style={{ marginBottom: 24 }}><NexyrraWordmark size={36} /></div>
@@ -98,9 +98,9 @@ const Footer = () => {
                     </div>
 
                     {/* Bottom Bar */}
-                    <div style={{ paddingTop: 32, borderTop: '1px solid rgba(139,92,246,0.08)', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: 16 }}>
-                        <p style={{ color: '#334155', fontSize: 13 }}>© {year} Nexyrra AI Agency. All rights reserved. | Dubai, UAE 🇦🇪</p>
-                        <div style={{ display: 'flex', gap: 24 }}>
+                    <div className="stack-mobile" style={{ paddingTop: 32, borderTop: '1px solid rgba(139,92,246,0.08)', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: 16 }}>
+                        <p style={{ color: '#334155', fontSize: 13 }} className="text-center-mobile">© {year} Nexyrra AI Agency. All rights reserved. | Dubai, UAE 🇦🇪</p>
+                        <div className="center-mobile" style={{ display: 'flex', gap: 24 }}>
                             {['Terms of Service', 'Privacy Policy'].map(l => (
                                 <Link key={l} href="/privacy" style={{ color: '#334155', fontSize: 13, transition: 'color 0.2s' }}
                                     onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = '#8B5CF6'}

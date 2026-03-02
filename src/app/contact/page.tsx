@@ -27,9 +27,9 @@ export default function ContactPage() {
             <section style={{ paddingTop: 160, paddingBottom: 120, position: 'relative', overflow: 'hidden' }}>
                 <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: 900, height: 500, background: 'radial-gradient(ellipse, rgba(139,92,246,0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
-                <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 32px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'start' }}>
+                <div className="container-nex grid-mobile-1" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'start' }}>
                     {/* Left Info */}
-                    <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.9 }}>
+                    <motion.div className="text-center-mobile" initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.9 }}>
                         <span className="font-cyber" style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.3em', textTransform: 'uppercase', color: '#8B5CF6', display: 'block', marginBottom: 20 }}>Get In Touch</span>
                         <h1 className="font-title" style={{ fontSize: 'clamp(48px, 6vw, 80px)', fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.04em', marginBottom: 24 }}>
                             Let's Build Your <br />
@@ -37,17 +37,18 @@ export default function ContactPage() {
                                 AI Future
                             </span>
                         </h1>
-                        <p style={{ fontSize: 18, color: '#94A3B8', lineHeight: 1.9, marginBottom: 48, maxWidth: 480 }}>
+                        <p className="center-mobile" style={{ fontSize: 18, color: '#94A3B8', lineHeight: 1.9, marginBottom: 48, maxWidth: 480 }}>
                             Book a free 30-minute strategy session. We'll analyze your business and show you exactly how AI can transform it — no fluff, just actionable insights.
                         </p>
 
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: 20, marginBottom: 48 }}>
+                        <div className="center-mobile" style={{ display: 'flex', flexDirection: 'column', gap: 20, marginBottom: 48 }}>
                             {[
                                 { icon: Phone, label: '+971 50 395 3988', href: 'tel:+971503953988' },
                                 { icon: Mail, label: 'nexyrra@gmail.com', href: 'mailto:nexyrra@gmail.com' },
                                 { icon: MapPin, label: 'Dubai, United Arab Emirates 🇦🇪', href: '#' },
                             ].map(({ icon: Icon, label, href }) => (
                                 <a key={label} href={href} style={{ display: 'flex', alignItems: 'center', gap: 16, color: '#94A3B8', textDecoration: 'none', transition: 'color 0.2s', fontSize: 16, fontWeight: 500 }}
+                                    className="center-mobile"
                                     onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = '#8B5CF6'}
                                     onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = '#94A3B8'}>
                                     <div style={{ width: 44, height: 44, borderRadius: 12, background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
@@ -58,7 +59,7 @@ export default function ContactPage() {
                             ))}
                         </div>
 
-                        <a href="https://wa.me/971503953988" style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '16px 32px', background: '#25D366', borderRadius: 12, color: 'white', fontWeight: 800, fontSize: 15, textDecoration: 'none', transition: 'opacity 0.2s' }}
+                        <a href="https://wa.me/971503953988" className="center-mobile" style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '16px 32px', background: '#25D366', borderRadius: 12, color: 'white', fontWeight: 800, fontSize: 15, textDecoration: 'none', transition: 'opacity 0.2s' }}
                             onMouseEnter={e => (e.currentTarget as HTMLElement).style.opacity = '0.85'}
                             onMouseLeave={e => (e.currentTarget as HTMLElement).style.opacity = '1'}>
                             <MessageSquare size={18} /> Chat on WhatsApp
@@ -67,7 +68,7 @@ export default function ContactPage() {
 
                     {/* Right Form */}
                     <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2, duration: 0.8 }}>
-                        <div style={{ background: '#0e0f1a', border: '1px solid rgba(139,92,246,0.2)', borderRadius: 28, padding: 48, position: 'relative', overflow: 'hidden' }}>
+                        <div style={{ background: '#0e0f1a', border: '1px solid rgba(139,92,246,0.2)', borderRadius: 28, padding: 'clamp(24px, 6vw, 48px)', position: 'relative', overflow: 'hidden' }}>
                             <div style={{ position: 'absolute', top: 0, right: 0, width: 200, height: 200, background: 'radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
                             {status === 'success' ? (
@@ -86,7 +87,7 @@ export default function ContactPage() {
                                     <p style={{ color: '#475569', fontSize: 14, marginBottom: 32 }}>Free strategy session — no obligation, full Value.</p>
 
                                     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-                                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+                                        <div className="grid-mobile-1" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
                                             <div>
                                                 <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: '#475569', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.1em' }}>Name *</label>
                                                 <input required value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="Your name"

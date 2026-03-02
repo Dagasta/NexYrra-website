@@ -78,7 +78,7 @@ export default function CasesPage() {
             {/* Header */}
             <section style={{ paddingTop: 160, paddingBottom: 80, textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
                 <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: 900, height: 500, background: 'radial-gradient(ellipse, rgba(139,92,246,0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
-                <div style={{ maxWidth: 700, margin: '0 auto', padding: '0 32px', position: 'relative' }}>
+                <div className="container-nex" style={{ maxWidth: 700, position: 'relative' }}>
                     <span className="font-cyber" style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.3em', textTransform: 'uppercase', color: '#8B5CF6', display: 'block', marginBottom: 20 }}>Proven Results</span>
                     <h1 className="font-title" style={{ fontSize: 'clamp(48px, 7vw, 88px)', fontWeight: 900, lineHeight: 0.95, letterSpacing: '-0.04em', marginBottom: 24 }}>
                         Case{' '}
@@ -91,8 +91,8 @@ export default function CasesPage() {
             </section>
 
             {/* Cases Grid */}
-            <section style={{ maxWidth: 1400, margin: '0 auto', padding: '0 32px 160px' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(420px, 1fr))', gap: 24 }}>
+            <section className="container-nex" style={{ paddingBottom: 160 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 400px), 1fr))', gap: 24 }}>
                     {cases.map((c, i) => (
                         <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}>
                             <div className="card-nex" style={{ padding: 36, height: '100%', display: 'flex', flexDirection: 'column' }}>
@@ -128,7 +128,7 @@ export default function CasesPage() {
                 {/* CTA */}
                 <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
                     style={{ marginTop: 80, textAlign: 'center' }}>
-                    <div style={{ display: 'inline-block', padding: '80px', background: 'linear-gradient(135deg, rgba(139,92,246,0.1), rgba(34,211,238,0.05))', border: '1px solid rgba(139,92,246,0.2)', borderRadius: 32 }}>
+                    <div style={{ display: 'inline-block', padding: 'clamp(32px, 8vw, 80px)', background: 'linear-gradient(135deg, rgba(139,92,246,0.1), rgba(34,211,238,0.05))', border: '1px solid rgba(139,92,246,0.2)', borderRadius: 32, width: '100%' }}>
                         <TrendingUp size={48} style={{ color: '#8B5CF6', margin: '0 auto 24px', display: 'block' }} />
                         <h2 className="font-title" style={{ fontSize: 40, fontWeight: 900, marginBottom: 16, letterSpacing: '-0.02em' }}>
                             Your Results Could Be Next

@@ -30,8 +30,8 @@ export default function ServicesPage() {
             </section>
 
             {/* Services Grid */}
-            <section style={{ padding: '0 0 160px', maxWidth: 1400, margin: '0 auto', padding: '0 32px 160px' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(400px, 1fr))', gap: 24 }}>
+            <section className="container-nex" style={{ paddingBottom: 160 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 360px), 1fr))', gap: 24 }}>
                     {services.map((service, i) => (
                         <motion.div key={service.slug} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}>
                             <Link href={`/services/${service.slug}`} style={{ textDecoration: 'none', display: 'block', height: '100%' }}>

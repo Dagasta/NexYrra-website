@@ -28,8 +28,8 @@ export default function AboutPage() {
             {/* Hero */}
             <section style={{ paddingTop: 160, paddingBottom: 100, position: 'relative', overflow: 'hidden' }}>
                 <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: 900, height: 600, background: 'radial-gradient(ellipse, rgba(139,92,246,0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
-                <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 32px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'center' }}>
-                    <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9 }}>
+                <div className="container-nex grid-mobile-1" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'center' }}>
+                    <motion.div className="text-center-mobile" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9 }}>
                         <span className="font-cyber" style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.3em', textTransform: 'uppercase', color: '#8B5CF6', display: 'block', marginBottom: 20 }}>About Nexyrra</span>
                         <h1 className="font-title" style={{ fontSize: 'clamp(48px, 6vw, 84px)', fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.04em', marginBottom: 28 }}>
                             We Build AI That{' '}
@@ -40,7 +40,7 @@ export default function AboutPage() {
                         <p style={{ fontSize: 18, color: '#94A3B8', lineHeight: 1.9, marginBottom: 40, maxWidth: 520 }}>
                             Nexyrra is a UAE-licensed AI agency headquartered in Dubai. We specialize in turning complex AI technology into practical business advantages — for ambitious companies across the GCC and beyond.
                         </p>
-                        <div style={{ display: 'flex', gap: 16 }}>
+                        <div className="center-mobile" style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
                             <Link href="/contact" className="btn-primary" style={{ padding: '16px 36px', borderRadius: 12 }}>
                                 Work With Us <ArrowRight size={16} />
                             </Link>
@@ -71,7 +71,7 @@ export default function AboutPage() {
 
             {/* Mission */}
             <section style={{ padding: '100px 0', borderTop: '1px solid rgba(139,92,246,0.08)', borderBottom: '1px solid rgba(139,92,246,0.08)', background: 'rgba(14,15,26,0.3)', textAlign: 'center' }}>
-                <div style={{ maxWidth: 900, margin: '0 auto', padding: '0 32px' }}>
+                <div className="container-nex" style={{ maxWidth: 900 }}>
                     <span className="font-cyber" style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.3em', textTransform: 'uppercase', color: '#8B5CF6', display: 'block', marginBottom: 24 }}>Our Mission</span>
                     <blockquote className="font-title" style={{ fontSize: 'clamp(24px, 3.5vw, 44px)', fontWeight: 900, lineHeight: 1.4, fontStyle: 'italic', marginBottom: 32, letterSpacing: '-0.02em' }}>
                         "To make enterprise-grade AI accessible to every ambitious business in the GCC — turning what was once a{' '}
@@ -86,12 +86,12 @@ export default function AboutPage() {
 
             {/* Values */}
             <section style={{ padding: '100px 0' }}>
-                <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 32px' }}>
+                <div className="container-nex">
                     <div style={{ textAlign: 'center', marginBottom: 64 }}>
                         <span className="font-cyber" style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.3em', textTransform: 'uppercase', color: '#8B5CF6', display: 'block', marginBottom: 16 }}>Why Nexyrra</span>
                         <h2 className="font-title" style={{ fontSize: 'clamp(36px, 4vw, 56px)', fontWeight: 900, letterSpacing: '-0.03em' }}>Built Different</h2>
                     </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20 }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))', gap: 20 }}>
                         {values.map((v, i) => (
                             <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
                                 <div className="card-nex" style={{ padding: 32, height: '100%' }}>
@@ -108,7 +108,7 @@ export default function AboutPage() {
             </section>
 
             {/* CTA */}
-            <section style={{ padding: '80px 32px 120px', textAlign: 'center' }}>
+            <section className="container-nex" style={{ padding: '80px 0 120px', textAlign: 'center' }}>
                 <div style={{ maxWidth: 600, margin: '0 auto' }}>
                     <h2 className="font-title" style={{ fontSize: 48, fontWeight: 900, marginBottom: 20, letterSpacing: '-0.03em' }}>
                         Ready to Start?

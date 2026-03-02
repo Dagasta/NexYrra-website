@@ -53,8 +53,8 @@ export default function SignalDetailPage({ params }: { params: Promise<{ id: str
             <section style={{ paddingTop: 160, paddingBottom: 60, position: 'relative', overflow: 'hidden' }}>
                 <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: 900, height: 500, background: 'radial-gradient(ellipse, rgba(139,92,246,0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
-                <div style={{ maxWidth: 1000, margin: '0 auto', padding: '0 32px', position: 'relative' }}>
-                    <Link href="/signals" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: '#8B5CF6', fontSize: 13, fontWeight: 700, marginBottom: 40, fontFamily: 'var(--font-cyber)', textTransform: 'uppercase', letterSpacing: '0.15em', transition: 'gap 0.2s' }}
+                <div className="container-nex" style={{ maxWidth: 1000, position: 'relative' }}>
+                    <Link href="/signals" style={({ display: 'inline-flex', alignItems: 'center', gap: 8, color: '#8B5CF6', fontSize: 13, fontWeight: 700, marginBottom: 40, fontFamily: 'var(--font-cyber)', textTransform: 'uppercase', letterSpacing: '0.15em', transition: 'gap 0.2s' } as any)}
                         onMouseEnter={e => (e.currentTarget as HTMLElement).style.gap = '14px'}
                         onMouseLeave={e => (e.currentTarget as HTMLElement).style.gap = '8px'}>
                         <ArrowLeft size={16} /> Back to Archive
@@ -77,7 +77,7 @@ export default function SignalDetailPage({ params }: { params: Promise<{ id: str
                         {issue.excerpt}
                     </p>
 
-                    <div style={{ display: 'flex', gap: 12, paddingTop: 32, borderTop: '1px solid rgba(139,92,246,0.1)' }}>
+                    <div style={{ display: 'flex', gap: 12, paddingTop: 32, borderTop: '1px solid rgba(139,92,246,0.1)', flexWrap: 'wrap' }}>
                         <button className="btn-outline" style={{ padding: '10px 16px', borderRadius: 10, fontSize: 13 }}>
                             <Share2 size={16} /> Share Signal
                         </button>
@@ -90,7 +90,7 @@ export default function SignalDetailPage({ params }: { params: Promise<{ id: str
 
             {/* Signal Content Block */}
             <section style={{ paddingBottom: 120 }}>
-                <div style={{ maxWidth: 1000, margin: '0 auto', padding: '0 32px' }}>
+                <div className="container-nex" style={{ maxWidth: 1000 }}>
                     {issue.image_url && (
                         <div style={{ width: '100%', borderRadius: 24, overflow: 'hidden', marginBottom: 60, border: '1px solid rgba(139,92,246,0.2)', background: '#0e0f1a' }}>
                             <img src={issue.image_url} alt={issue.title} style={{ width: '100%', height: 'auto', display: 'block' }} />
@@ -103,12 +103,12 @@ export default function SignalDetailPage({ params }: { params: Promise<{ id: str
                             {issue.content || 'Report analysis loading... Full intelligence sync required for detailed data visualization.'}
                         </p>
 
-                        <div style={{ padding: '48px', background: 'rgba(139,92,246,0.05)', borderRadius: 28, border: '1px solid rgba(139,92,246,0.15)', marginTop: 80 }}>
+                        <div style={{ padding: 'clamp(24px, 6vw, 48px)', background: 'rgba(139,92,246,0.05)', borderRadius: 28, border: '1px solid rgba(139,92,246,0.15)', marginTop: 80 }}>
                             <h3 className="font-title" style={{ fontSize: 24, fontWeight: 900, marginBottom: 16 }}>Enterprise Access Required</h3>
                             <p style={{ color: '#94A3B8', fontSize: 16, marginBottom: 28, lineHeight: 1.7 }}>
                                 Full intelligence reports including proprietary datasets, predictive models, and deployment strategy guides are available exclusively to Nexyrra Partners and Elite Subscribers.
                             </p>
-                            <Link href="/contact" className="btn-primary" style={{ padding: '16px 36px', borderRadius: 12 }}>
+                            <Link href="/contact" className="btn-primary" style={{ padding: '16px 36px', borderRadius: 12, width: '100%', maxWidth: 300 }}>
                                 Request Direct Access <Zap size={16} />
                             </Link>
                         </div>

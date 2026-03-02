@@ -72,11 +72,11 @@ const SignalsPage = () => {
                 <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: 900, height: 500, background: 'radial-gradient(ellipse, rgba(139,92,246,0.12) 0%, transparent 70%)', pointerEvents: 'none' }} />
                 <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(139,92,246,0.04) 1px, transparent 1px), linear-gradient(to right, rgba(139,92,246,0.04) 1px, transparent 1px)', backgroundSize: '60px 60px', pointerEvents: 'none' }} />
 
-                <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 32px', position: 'relative' }}>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'start' }}>
+                <div className="container-nex" style={{ position: 'relative' }}>
+                    <div className="grid-mobile-1" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'start' }}>
                         {/* Left */}
-                        <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.9 }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 24 }}>
+                        <motion.div className="text-center-mobile" initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.9 }}>
+                            <div className="center-mobile" style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 24 }}>
                                 <Zap size={18} style={{ color: '#8B5CF6' }} />
                                 <span className="font-cyber" style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.3em', color: '#8B5CF6' }}>
                                     Exclusive AI Intelligence
@@ -88,10 +88,10 @@ const SignalsPage = () => {
                                     SIGNALS
                                 </span>
                             </h1>
-                            <p style={{ fontSize: 18, color: '#94A3B8', lineHeight: 1.8, maxWidth: 480, marginBottom: 40, fontWeight: 400 }}>
+                            <p className="center-mobile" style={{ fontSize: 18, color: '#94A3B8', lineHeight: 1.8, maxWidth: 480, marginBottom: 40, fontWeight: 400 }}>
                                 Premium AI intelligence for ambitious enterprise leaders. Actionable insights, zero noise — delivered direct to your inbox.
                             </p>
-                            <div style={{ display: 'flex', gap: 32, flexWrap: 'wrap' }}>
+                            <div className="center-mobile" style={{ display: 'flex', gap: 32, flexWrap: 'wrap' }}>
                                 {['5,000+ Subscribers', 'Weekly Deep-dives', 'Free Access'].map(t => (
                                     <div key={t} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#64748B', fontWeight: 600 }}>
                                         <CheckCircle size={14} style={{ color: '#8B5CF6' }} /> {t}
@@ -102,7 +102,7 @@ const SignalsPage = () => {
 
                         {/* Right - Subscribe Card */}
                         <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3, duration: 0.8 }}>
-                            <div style={{ background: '#0e0f1a', border: '1px solid rgba(139,92,246,0.2)', borderRadius: 28, padding: 48, position: 'relative', overflow: 'hidden' }}>
+                            <div style={{ background: '#0e0f1a', border: '1px solid rgba(139,92,246,0.2)', borderRadius: 28, padding: 'clamp(24px, 6vw, 48px)', position: 'relative', overflow: 'hidden' }}>
                                 <div style={{ position: 'absolute', top: 0, right: 0, width: 200, height: 200, background: 'radial-gradient(circle, rgba(139,92,246,0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
                                 {status === 'success' ? (
@@ -149,7 +149,7 @@ const SignalsPage = () => {
             </section>
 
             {/* Archive */}
-            <section style={{ padding: '100px 32px', maxWidth: 1400, margin: '0 auto' }}>
+            <section className="container-nex" style={{ paddingBottom: 160 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 56, flexWrap: 'wrap', gap: 24 }}>
                     <div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
@@ -163,7 +163,7 @@ const SignalsPage = () => {
                     </button>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))', gap: 24 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 360px), 1fr))', gap: 24 }}>
                     {issues.map((issue, i) => {
                         const cat = categoryColors[issue.category] || categoryColors['Strategic Alpha'];
                         return (
