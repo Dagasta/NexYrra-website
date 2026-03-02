@@ -15,12 +15,13 @@ export const metadata: Metadata = {
     siteName: 'Nexyrra',
     title: 'Nexyrra: AI Agency Dubai',
     description: 'Empowering Future with AI — UAE Licensed AI Agency',
-    images: [{ url: 'https://nexyrra.com/og-image.jpg', width: 1200, height: 630 }],
+    images: [{ url: '/assets/og-image.png', width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Nexyrra: AI Agency',
     description: 'Autonomous AI Agents, Automation & More — Dubai, UAE',
+    images: ['/assets/og-image.png'],
   },
   icons: {
     icon: '/assets/logo.png',
