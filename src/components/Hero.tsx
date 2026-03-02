@@ -1,139 +1,140 @@
 'use client';
 
-import React, { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { Sparkles, ArrowRight, ShieldCheck, Zap, Network } from 'lucide-react';
+import React from 'react';
 import Link from 'next/link';
-import NeuralBackground from './NeuralBackground';
+import { motion } from 'framer-motion';
+import { ArrowRight, Zap, ShieldCheck, Globe } from 'lucide-react';
 
 const Hero = () => {
-    const containerRef = useRef<HTMLDivElement>(null);
-    const { scrollYProgress } = useScroll({
-        target: containerRef,
-        offset: ['start start', 'end start'],
-    });
-
-    const y1 = useTransform(scrollYProgress, [0, 1], [0, 400]);
-    const opacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
-
     return (
-        <section
-            ref={containerRef}
-            className="relative min-h-screen flex items-center justify-center pt-24 pb-20 overflow-hidden"
-        >
-            {/* Dynamic Background */}
-            <div className="absolute inset-0 -z-10">
-                <div className="absolute inset-0 bg-[#020617]" />
+        <section style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', overflow: 'hidden', paddingTop: 80 }}>
 
-                {/* Animated Particles Simulation */}
-                <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-cyan-500/10 blur-[150px] animate-pulse rounded-full" />
-                <div className="absolute bottom-1/4 right-1/4 w-[800px] h-[800px] bg-violet-600/10 blur-[200px] animate-pulse rounded-full" />
+            {/* Background */}
+            <div style={{ position: 'absolute', inset: 0, background: '#08090f' }} />
 
-                {/* Grid Overlay */}
-                <div
-                    className="absolute inset-0 opacity-[0.05]"
-                    style={{
-                        backgroundImage: 'linear-gradient(to right, #ffffff 1px, transparent 1px), linear-gradient(to bottom, #ffffff 1px, transparent 1px)',
-                        backgroundSize: '80px 80px'
-                    }}
-                />
+            {/* Purple glow top-center */}
+            <div style={{ position: 'absolute', top: '-5%', left: '50%', transform: 'translateX(-50%)', width: 900, height: 600, background: 'radial-gradient(ellipse at center, rgba(139,92,246,0.15) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
-                {/* Radial Fade */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent" />
-            </div>
+            {/* Cyan glow bottom right */}
+            <div style={{ position: 'absolute', bottom: '10%', right: '-5%', width: 500, height: 500, background: 'radial-gradient(ellipse, rgba(34,211,238,0.08) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
-            <div className="max-w-[1440px] mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center relative z-10 w-full">
-                <motion.div
-                    style={{ y: y1, opacity }}
-                    initial={{ opacity: 0, x: -50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 1, ease: 'easeOut' }}
-                >
-                    {/* Badge */}
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 0.5, duration: 0.5 }}
-                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900/50 border border-slate-800 backdrop-blur-md mb-8 group hover:border-cyan-500/50 transition-colors"
-                    >
-                        <Sparkles className="w-4 h-4 text-cyan-400 group-hover:scale-110 transition-transform" />
-                        <span className="text-xs font-black tracking-widest uppercase text-slate-300">
-                            Forging the future of AI
-                        </span>
+            {/* Grid */}
+            <div style={{
+                position: 'absolute', inset: 0, pointerEvents: 'none',
+                backgroundImage:
+                    'linear-gradient(rgba(139,92,246,0.04) 1px, transparent 1px),' +
+                    'linear-gradient(to right, rgba(139,92,246,0.04) 1px, transparent 1px)',
+                backgroundSize: '60px 60px',
+            }} />
+
+            {/* Gradient fade bottom */}
+            <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 200, background: 'linear-gradient(to top, #08090f, transparent)', pointerEvents: 'none' }} />
+
+            <div style={{ maxWidth: 1400, margin: '0 auto', padding: '80px 32px', position: 'relative', zIndex: 1, width: '100%' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'center' }}>
+
+                    {/* Left - Content */}
+                    <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, ease: 'easeOut' }}>
+                        {/* Badges */}
+                        <div style={{ display: 'flex', gap: 12, marginBottom: 32, flexWrap: 'wrap' }}>
+                            {['AI Agency', 'UAE Licensed'].map(b => (
+                                <span key={b} style={{ padding: '6px 16px', borderRadius: 999, border: '1px solid rgba(139,92,246,0.3)', fontSize: 12, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#8B5CF6', background: 'rgba(139,92,246,0.08)' }} className="font-cyber">
+                                    {b}
+                                </span>
+                            ))}
+                        </div>
+
+                        <h1 className="font-title" style={{ fontSize: 'clamp(48px, 6vw, 88px)', fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.04em', marginBottom: 24 }}>
+                            <span style={{ color: 'white' }}>Empowering</span><br />
+                            <span style={{ color: 'white' }}>Future</span><br />
+                            <span style={{ background: 'linear-gradient(90deg, #8B5CF6, #22D3EE)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', display: 'inline-block' }}>
+                                with AI
+                            </span>
+                        </h1>
+
+                        <p style={{ fontSize: 18, color: '#94A3B8', lineHeight: 1.8, marginBottom: 40, maxWidth: 500, fontWeight: 400 }}>
+                            Nexyrra architects autonomous AI ecosystems for enterprise leaders — from intelligent automation to custom AI solutions that deliver measurable ROI.
+                        </p>
+
+                        <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginBottom: 48 }}>
+                            <Link href="#services" className="btn-primary" style={{ fontSize: 16, padding: '16px 40px', borderRadius: 14 }}>
+                                Grow Your Business <ArrowRight size={18} />
+                            </Link>
+                            <Link href="/signals" className="btn-outline" style={{ fontSize: 16, padding: '16px 40px', borderRadius: 14 }}>
+                                Nexyrra Signals <Zap size={18} style={{ color: '#8B5CF6' }} />
+                            </Link>
+                        </div>
+
+                        {/* Trust Signals */}
+                        <div style={{ display: 'flex', gap: 32, flexWrap: 'wrap' }}>
+                            {[
+                                { icon: ShieldCheck, label: 'Enterprise Grade' },
+                                { icon: Globe, label: 'UAE Licensed' },
+                                { icon: Zap, label: 'AI-First' },
+                            ].map(({ icon: Icon, label }) => (
+                                <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#64748B', fontSize: 13, fontWeight: 600 }}>
+                                    <Icon size={14} style={{ color: '#8B5CF6' }} />
+                                    {label}
+                                </div>
+                            ))}
+                        </div>
                     </motion.div>
 
-                    <h1 className="text-6xl md:text-8xl font-black tracking-tight leading-[0.9] mb-8 font-title">
-                        <span className="text-white">EVOLVE BEYOND</span> <br />
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-violet-600">
-                            INTELLIGENCE
-                        </span>
-                    </h1>
+                    {/* Right - Visual */}
+                    <motion.div initial={{ opacity: 0, scale: 0.85 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.1, ease: 'easeOut', delay: 0.2 }}
+                        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
 
-                    <p className="text-xl md:text-2xl text-slate-400 leading-relaxed mb-12 max-w-2xl font-light">
-                        Architecting elite AI ecosystems that redefined business authority. Nexyrra transforms $100k+ value into autonomous scalable reality.
-                    </p>
+                        {/* Spinning rings */}
+                        <div style={{ position: 'relative', width: 420, height: 420, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <div style={{ position: 'absolute', inset: 0, border: '1px solid rgba(139,92,246,0.12)', borderRadius: '50%', animation: 'nex-spin 25s linear infinite' }} />
+                            <div style={{ position: 'absolute', inset: 40, border: '1px solid rgba(34,211,238,0.08)', borderRadius: '50%', animation: 'nex-spin 18s linear infinite reverse' }} />
+                            <div style={{ position: 'absolute', inset: 80, border: '1px solid rgba(139,92,246,0.12)', borderRadius: '50%', animation: 'nex-spin 12s linear infinite' }} />
 
-                    <div className="flex flex-col sm:flex-row gap-6">
-                        <Link
-                            href="/contact"
-                            className="px-8 py-5 rounded-2xl bg-white text-slate-950 text-lg font-bold flex items-center justify-center gap-3 hover:bg-cyan-400 hover:scale-105 transition-all duration-300 group"
-                        >
-                            Secure AI Audit
-                            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                        </Link>
-                        <Link
-                            href="/signals"
-                            className="px-8 py-5 rounded-2xl bg-slate-900/50 border border-slate-800 backdrop-blur-md text-white text-lg font-bold flex items-center justify-center gap-3 hover:border-cyan-500/50 hover:bg-slate-900 transition-all duration-300"
-                        >
-                            Nexyrra Signals
-                            <Zap className="w-5 h-5 text-cyan-400" />
-                        </Link>
-                    </div>
+                            {/* Center card */}
+                            <div style={{ position: 'relative', width: 220, height: 220, background: '#0e0f1a', borderRadius: 32, border: '1px solid rgba(139,92,246,0.25)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 80px rgba(139,92,246,0.15), 0 0 40px rgba(34,211,238,0.05)' }}
+                                className="anim-glow">
+                                <div style={{ width: 72, height: 72, borderRadius: 24, background: 'linear-gradient(135deg, #8B5CF6, #22D3EE)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
+                                    <Zap size={36} color="white" />
+                                </div>
+                                <span className="font-cyber" style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.2em', color: '#8B5CF6', textTransform: 'uppercase' }}>Nexyrra</span>
+                                <span style={{ fontSize: 10, color: '#475569', marginTop: 4, fontWeight: 600 }}>AI Intelligence</span>
+                            </div>
 
-                    <div className="mt-16 flex items-center gap-10 grayscale opacity-40 hover:grayscale-0 hover:opacity-100 transition-all duration-500">
-                        <div className="flex items-center gap-2">
-                            <ShieldCheck className="w-5 h-5" />
-                            <span className="text-xs font-black uppercase tracking-widest">Enterprise Secured</span>
+                            {/* Floating chips (Calculated on client to prevent hydration mismatch) */}
+                            {(() => {
+                                const chips = [
+                                    { label: 'AI Agents', angle: 340, color: '#8B5CF6' },
+                                    { label: 'Automation', angle: 100, color: '#22D3EE' },
+                                    { label: 'Analytics', angle: 220, color: '#A78BFA' },
+                                ];
+                                return chips.map(({ label, angle, color }) => {
+                                    const rad = (angle * Math.PI) / 180;
+                                    const r = 175;
+                                    const x = Math.cos(rad) * r;
+                                    const y = Math.sin(rad) * r;
+                                    return (
+                                        <div key={label} style={{
+                                            position: 'absolute',
+                                            left: `calc(50% + ${x}px - 52px)`,
+                                            top: `calc(50% + ${y}px - 16px)`,
+                                            padding: '6px 14px',
+                                            background: '#13152a',
+                                            border: `1px solid ${color}33`,
+                                            borderRadius: 999,
+                                            fontSize: 11,
+                                            fontWeight: 700,
+                                            color,
+                                            whiteSpace: 'nowrap',
+                                        }} className="font-cyber"
+                                            suppressHydrationWarning>
+                                            {label}
+                                        </div>
+                                    );
+                                });
+                            })()}
                         </div>
-                        <div className="flex items-center gap-2">
-                            <Network className="w-5 h-5" />
-                            <span className="text-xs font-black uppercase tracking-widest">Neural Optimized</span>
-                        </div>
-                    </div>
-                </motion.div>
-
-                {/* Right Content - Abstract Neural Grid/Visual */}
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 1.2, ease: 'easeOut' }}
-                    className="relative aspect-square flex items-center justify-center hidden lg:flex"
-                >
-                    {/* Animated Rings */}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-[80%] h-[80%] border border-cyan-500/10 rounded-full animate-[spin_20s_linear_infinite]" />
-                        <div className="absolute w-[60%] h-[60%] border border-violet-500/10 rounded-full animate-[spin_15s_linear_infinite_reverse]" />
-                        <div className="absolute w-[40%] h-[40%] border border-cyan-500/20 rounded-full animate-[spin_10s_linear_infinite]" />
-                    </div>
-
-                    {/* Glowing Center */}
-                    <div className="relative w-64 h-64 bg-slate-900 rounded-3xl border border-slate-800 flex items-center justify-center shadow-[0_0_50px_rgba(6,182,212,0.15)] overflow-hidden group">
-                        <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent group-hover:from-cyan-500/10 transition-colors" />
-                        <Sparkles className="w-24 h-24 text-cyan-400 animate-pulse" />
-
-                        {/* Visual Code Artifacts */}
-                        <div className="absolute top-4 left-4 font-mono text-[10px] text-cyan-950/50 leading-tight">
-                            01010101<br />
-                            AI_CORE_ACTIVE<br />
-                            NEST_INIT_0xFA
-                        </div>
-                        <div className="absolute bottom-4 right-4 font-mono text-[10px] text-violet-950/50 leading-tight text-right">
-                            00110011<br />
-                            SIGNAL_EMIT<br />
-                            ARCH_v4.2
-                        </div>
-                    </div>
-                </motion.div>
+                    </motion.div>
+                </div>
             </div>
         </section>
     );

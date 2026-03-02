@@ -1,37 +1,43 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800;900&family=Orbitron:wght@400;500;600;700;800;900&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===== NEXYRRA BRAND DESIGN SYSTEM ===== */
 
 :root {
-  /* Color Palette - Premium AI Tech */
-  --bg-dark: #020617; /* Deepest blue-black */
-  --bg-darker: #00020a;
-  --bg-glass: rgba(15, 23, 42, 0.7);
-  
-  --accent-primary: #00f2ff; /* Electric Cyan */
-  --accent-secondary: #7000ff; /* Deep Violet */
-  --accent-tertiary: #f43f5e; /* Cyber Rose */
-  
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-  
-  --border-glass: rgba(255, 255, 255, 0.1);
-  --glow-cyan: rgba(0, 242, 255, 0.3);
-  --glow-violet: rgba(112, 0, 255, 0.3);
+  --nex-bg: #08090f;
+  --nex-bg-card: #0e0f1a;
+  --nex-bg-elevated: #13152a;
+  --nex-violet: #8B5CF6;
+  --nex-violet-deep: #7C3AED;
+  --nex-violet-glow: rgba(139, 92, 246, 0.25);
+  --nex-cyan: #22D3EE;
+  --nex-cyan-glow: rgba(34, 211, 238, 0.15);
+  --nex-border: rgba(139, 92, 246, 0.15);
+  --nex-border-hover: rgba(139, 92, 246, 0.4);
+  --nex-text: #F1F5F9;
+  --nex-muted: #64748B;
 
   --font-main: 'Inter', system-ui, sans-serif;
   --font-title: 'Outfit', 'Inter', sans-serif;
-  --font-cyber: 'Orbitron', 'Outfit', sans-serif;
+  --font-cyber: 'Orbitron', monospace;
 }
 
-* {
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background-color: var(--bg-dark);
-  color: var(--text-primary);
+  background-color: var(--nex-bg);
+  color: var(--nex-text);
   font-family: var(--font-main);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
@@ -39,54 +45,165 @@ body {
   min-height: 100vh;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-title);
   font-weight: 700;
   letter-spacing: -0.02em;
 }
 
-.text-gradient {
-  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+a {
+  text-decoration: none;
 }
 
-.bg-glass {
-  background: var(--bg-glass);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--border-glass);
+.font-cyber {
+  font-family: var(--font-cyber) !important;
 }
 
-.glow-border:hover {
-  border-color: var(--accent-primary);
-  box-shadow: 0 0 15px var(--glow-cyan);
-  transition: all 0.3s ease;
+.font-title {
+  font-family: var(--font-title) !important;
 }
 
-/* Animations */
-@keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-  100% { transform: translateY(0px); }
+.font-main {
+  font-family: var(--font-main) !important;
 }
 
-.animate-float {
-  animation: float 6s ease-in-out infinite;
+.card-nex {
+  background: var(--nex-bg-card);
+  border: 1px solid var(--nex-border);
+  border-radius: 20px;
+  transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
 }
 
-/* Custom Scrollbar */
+.card-nex:hover {
+  border-color: var(--nex-border-hover);
+  box-shadow: 0 0 30px var(--nex-violet-glow);
+  transform: translateY(-4px);
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 32px;
+  background: var(--nex-violet);
+  color: white;
+  font-weight: 800;
+  font-family: var(--font-title);
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 15px;
+  text-decoration: none;
+}
+
+.btn-primary:hover {
+  background: var(--nex-violet-deep);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px var(--nex-violet-glow);
+}
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 32px;
+  background: transparent;
+  color: var(--nex-text);
+  font-weight: 700;
+  font-family: var(--font-title);
+  border-radius: 12px;
+  border: 1px solid var(--nex-border);
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 15px;
+  text-decoration: none;
+}
+
+.btn-outline:hover {
+  border-color: var(--nex-violet);
+  color: var(--nex-violet);
+  box-shadow: 0 0 20px var(--nex-violet-glow);
+}
+
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
 }
+
 ::-webkit-scrollbar-track {
-  background: var(--bg-darker);
+  background: var(--nex-bg);
 }
+
 ::-webkit-scrollbar-thumb {
-  background: var(--accent-secondary);
+  background: var(--nex-violet);
   border-radius: 10px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--accent-primary);
+  background: var(--nex-cyan);
+}
+
+@keyframes nex-pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes nex-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes nex-float {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes nex-glow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 20px var(--nex-violet-glow);
+  }
+
+  50% {
+    box-shadow: 0 0 50px var(--nex-violet-glow), 0 0 80px rgba(34, 211, 238, 0.1);
+  }
+}
+
+.anim-float {
+  animation: nex-float 6s ease-in-out infinite;
+}
+
+.anim-pulse {
+  animation: nex-pulse 2s ease-in-out infinite;
+}
+
+.anim-glow {
+  animation: nex-glow 3s ease-in-out infinite;
 }

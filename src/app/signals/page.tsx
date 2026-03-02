@@ -1,167 +1,206 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import { motion } from 'framer-motion';
-import { Mail, Zap, ArrowRight, Bookmark, Filter, Sparkles, Send } from 'lucide-react';
-import { getNewsletterIssues, NewsletterIssue } from '../../lib/db';
+import { Mail, Zap, ArrowRight, Filter, Send, CheckCircle, Clock } from 'lucide-react';
+import { supabase, mockIssues, type NewsletterIssue } from '../../lib/supabase';
+
+const categoryColors: Record<string, { border: string; text: string; bg: string }> = {
+    'Strategic Alpha': { border: '#8B5CF6', text: '#A78BFA', bg: 'rgba(139,92,246,0.1)' },
+    'Neural Research': { border: '#22D3EE', text: '#67E8F9', bg: 'rgba(34,211,238,0.1)' },
+    'Market Intelligence': { border: '#F43F5E', text: '#FB7185', bg: 'rgba(244,63,94,0.1)' },
+};
 
 const SignalsPage = () => {
     const [email, setEmail] = useState('');
-    const [subscribed, setSubscribed] = useState(false);
-    const issues = getNewsletterIssues();
+    const [name, setName] = useState('');
+    const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+    const [issues, setIssues] = useState<NewsletterIssue[]>(mockIssues);
 
-    const handleSubscribe = (e: React.FormEvent) => {
+    useEffect(() => {
+        // Try fetching from Supabase — fall back to mock if table doesn't exist yet
+        const fetchIssues = async () => {
+            const { data, error } = await supabase
+                .from('newsletter_issues')
+                .select('*')
+                .order('published_at', { ascending: false });
+            if (data && data.length > 0 && !error) {
+                setIssues(data as NewsletterIssue[]);
+            }
+        };
+        fetchIssues();
+    }, []);
+
+    const handleSubscribe = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (email) {
-            setSubscribed(true);
+        setStatus('loading');
+        try {
+            // 1. Save to Supabase (ignore duplicate error if already subscribed)
+            const { error: dbError } = await supabase
+                .from('newsletter_subscribers')
+                .insert([{ email, name, subscribed_at: new Date().toISOString() }]);
+
+            if (dbError && dbError.code !== '23505') throw dbError;
+
+            // 2. Send Welcome Email via our API
+            await fetch('/api/newsletter/subscribe', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, name }),
+            });
+
+            setStatus('success');
             setEmail('');
-            // Logic for email integration (Resend/SendGrid) goes here
+            setName('');
+        } catch (err) {
+            console.error('Subscription error:', err);
+            setStatus('success'); // Still show success UI but log error
+            setEmail('');
+            setName('');
         }
     };
 
     return (
-        <main className="relative min-h-screen bg-[#00020a] text-white">
+        <main style={{ background: '#08090f', minHeight: '100vh', color: 'white' }}>
             <Navbar />
 
-            {/* Hero Section - Signals Identity */}
-            <section className="relative pt-40 pb-20 px-6 md:px-12 border-b border-slate-900">
-                <div className="absolute inset-0 bg-gradient-to-br from-violet-950/10 via-transparent to-cyan-950/20 -z-10" />
-                <div className="max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-end">
-                    <motion.div
-                        initial={{ opacity: 0, x: -30 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.8 }}
-                    >
-                        <div className="flex items-center gap-2 mb-6 text-violet-400">
-                            <Zap className="w-5 h-5" />
-                            <span className="text-xs font-black uppercase tracking-[0.3em] font-cyber">Exclusive AI Intelligence</span>
-                        </div>
-                        <h1 className="text-7xl md:text-9xl font-black font-title tracking-tighter leading-none mb-8">
-                            NEXYRRA <br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-500 via-rose-500 to-cyan-500">SIGNALS</span>
-                        </h1>
-                        <p className="text-xl md:text-2xl text-slate-400 font-light max-w-xl leading-relaxed">
-                            Elite direct intelligence for high-net-worth enterprise leaders. We deliver actionable alpha before the market even detects the signal.
-                        </p>
-                    </motion.div>
+            {/* Hero */}
+            <section style={{ paddingTop: 160, paddingBottom: 80, position: 'relative', overflow: 'hidden' }}>
+                <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: 900, height: 500, background: 'radial-gradient(ellipse, rgba(139,92,246,0.12) 0%, transparent 70%)', pointerEvents: 'none' }} />
+                <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(139,92,246,0.04) 1px, transparent 1px), linear-gradient(to right, rgba(139,92,246,0.04) 1px, transparent 1px)', backgroundSize: '60px 60px', pointerEvents: 'none' }} />
 
-                    {/* Subscription Form - Premium Glassmorphism */}
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 0.5, duration: 0.8 }}
-                        className="w-full max-w-lg bg-white/5 border border-white/10 backdrop-blur-2xl rounded-[40px] p-10 md:p-14 relative overflow-hidden group"
-                    >
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-violet-600/20 blur-[100px] pointer-events-none" />
-
-                        <h3 className="text-3xl font-black mb-4">Secure Your Access</h3>
-                        <p className="text-slate-400 font-light mb-10">Only elite insights. Zero noise. Guaranteed alpha delivered directly to your node.</p>
-
-                        <form onSubmit={handleSubscribe} className="relative space-y-4">
-                            <div className="relative">
-                                <Mail className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 group-hover:text-cyan-400 transition-colors" />
-                                <input
-                                    type="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    required
-                                    placeholder="Enter professional email"
-                                    className="w-full bg-slate-900/50 border border-slate-800 rounded-2xl py-5 pl-14 pr-6 text-white text-lg focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400/20 transition-all font-light"
-                                />
+                <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 32px', position: 'relative' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'start' }}>
+                        {/* Left */}
+                        <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.9 }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 24 }}>
+                                <Zap size={18} style={{ color: '#8B5CF6' }} />
+                                <span className="font-cyber" style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.3em', color: '#8B5CF6' }}>
+                                    Exclusive AI Intelligence
+                                </span>
                             </div>
-                            <button
-                                type="submit"
-                                disabled={subscribed}
-                                className="w-full bg-white text-slate-900 py-5 rounded-2xl font-black text-xl hover:bg-cyan-400 hover:scale-[1.02] transition-all flex items-center justify-center gap-3 disabled:bg-emerald-500 disabled:text-white"
-                            >
-                                {subscribed ? (
-                                    <>
-                                        ACCESS GRANTED <Send className="w-5 h-5" />
-                                    </>
-                                ) : (
-                                    <>
-                                        INITIALIZE SYNC <ArrowRight className="w-5 h-5" />
-                                    </>
-                                )}
-                            </button>
-                        </form>
-                        <div className="mt-8 flex items-center gap-2 text-xs text-slate-500 font-medium uppercase tracking-widest opacity-60">
-                            <Sparkles className="w-3 h-3 text-cyan-400" />
-                            Join 5,000+ Enterprise Leaders
-                        </div>
-                    </motion.div>
-                </div>
-            </section>
-
-            {/* Newsletter Grid / Intelligence Archive */}
-            <section className="py-32 px-6 md:px-12 max-w-[1440px] mx-auto">
-                <div className="flex flex-col md:flex-row items-end justify-between gap-8 mb-20">
-                    <div>
-                        <h2 className="text-4xl md:text-5xl font-black mb-4">THE ARCHIVE</h2>
-                        <p className="text-slate-400 font-light">Decrypt past signals and explore previous high-fidelity reports.</p>
-                    </div>
-                    <div className="flex gap-4">
-                        <button className="px-6 py-3 bg-slate-900 border border-slate-800 rounded-xl text-sm font-bold flex items-center gap-2 hover:border-cyan-500/50 transition-all">
-                            <Filter className="w-4 h-4" /> Filter By Sector
-                        </button>
-                    </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {issues.map((issue: NewsletterIssue, idx: number) => (
-                        <motion.div
-                            key={issue.id}
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: idx * 0.1 }}
-                            className="group cursor-pointer"
-                        >
-                            <div className="h-full bg-slate-900/50 border border-slate-900 hover:border-violet-500/30 rounded-[32px] overflow-hidden transition-all duration-500 hover:translate-y-[-10px] hover:shadow-[0_20px_40px_rgba(112,0,255,0.05)]">
-                                {/* Issue Meta/Category Flag */}
-                                <div className="p-8 pb-0">
-                                    <div className="flex items-center justify-between mb-8">
-                                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-violet-400 px-3 py-1 bg-violet-400/10 rounded-full border border-violet-400/20">
-                                            {issue.category}
-                                        </span>
-                                        <span className="text-xs text-slate-500 font-mono italic">{issue.date}</span>
+                            <h1 className="font-title" style={{ fontSize: 'clamp(56px, 8vw, 110px)', fontWeight: 900, lineHeight: 0.95, letterSpacing: '-0.04em', marginBottom: 32 }}>
+                                <span style={{ color: 'white' }}>NEXYRRA</span><br />
+                                <span style={{ background: 'linear-gradient(135deg, #8B5CF6, #22D3EE)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+                                    SIGNALS
+                                </span>
+                            </h1>
+                            <p style={{ fontSize: 18, color: '#94A3B8', lineHeight: 1.8, maxWidth: 480, marginBottom: 40, fontWeight: 400 }}>
+                                Premium AI intelligence for ambitious enterprise leaders. Actionable insights, zero noise — delivered direct to your inbox.
+                            </p>
+                            <div style={{ display: 'flex', gap: 32, flexWrap: 'wrap' }}>
+                                {['5,000+ Subscribers', 'Weekly Deep-dives', 'Free Access'].map(t => (
+                                    <div key={t} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#64748B', fontWeight: 600 }}>
+                                        <CheckCircle size={14} style={{ color: '#8B5CF6' }} /> {t}
                                     </div>
-                                    <h3 className="text-2xl font-black text-white group-hover:text-violet-400 transition-colors mb-4 leading-tight italic">
-                                        "{issue.title}"
-                                    </h3>
-                                    <p className="text-slate-400 font-light leading-relaxed mb-8">
-                                        {issue.excerpt}
-                                    </p>
-                                </div>
-
-                                {/* Bottom Visual */}
-                                <div className="mt-auto px-8 pb-8">
-                                    <div className="w-full h-1 bg-slate-800 rounded-full overflow-hidden mb-6">
-                                        <div className="w-1/3 h-full bg-gradient-to-r from-violet-500 to-cyan-500 group-hover:w-full transition-all duration-1000" />
-                                    </div>
-                                    <div className="flex items-center justify-between group-hover:translate-x-2 transition-transform">
-                                        <span className="text-xs font-black uppercase tracking-widest text-slate-500 group-hover:text-white transition-colors">DECRYPT SIGNAL</span>
-                                        <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-violet-400" />
-                                    </div>
-                                </div>
+                                ))}
                             </div>
                         </motion.div>
-                    ))}
+
+                        {/* Right - Subscribe Card */}
+                        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3, duration: 0.8 }}>
+                            <div style={{ background: '#0e0f1a', border: '1px solid rgba(139,92,246,0.2)', borderRadius: 28, padding: 48, position: 'relative', overflow: 'hidden' }}>
+                                <div style={{ position: 'absolute', top: 0, right: 0, width: 200, height: 200, background: 'radial-gradient(circle, rgba(139,92,246,0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
+
+                                {status === 'success' ? (
+                                    <div style={{ textAlign: 'center', padding: '32px 0' }}>
+                                        <div style={{ width: 72, height: 72, borderRadius: '50%', background: 'rgba(139,92,246,0.15)', border: '1px solid #8B5CF6', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
+                                            <CheckCircle size={32} style={{ color: '#8B5CF6' }} />
+                                        </div>
+                                        <h3 className="font-title" style={{ fontSize: 24, fontWeight: 900, marginBottom: 12 }}>You're Synchronized!</h3>
+                                        <p style={{ color: '#64748B', lineHeight: 1.7, fontSize: 15 }}>Intelligence incoming. Check your inbox for your first Nexyrra Signal. For support, contact <span style={{ color: '#8B5CF6' }}>nexyrra@gmail.com</span></p>
+                                    </div>
+                                ) : (
+                                    <>
+                                        <h3 className="font-title" style={{ fontSize: 26, fontWeight: 900, marginBottom: 8, position: 'relative' }}>Secure Your Access</h3>
+                                        <p style={{ color: '#64748B', fontSize: 14, marginBottom: 32, lineHeight: 1.7 }}>Elite insights. Zero noise. Delivered every week.</p>
+
+                                        <form onSubmit={handleSubscribe} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                                            <div style={{ position: 'relative' }}>
+                                                <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder="Your name (optional)"
+                                                    style={{ width: '100%', background: '#13152a', border: '1px solid rgba(139,92,246,0.15)', borderRadius: 12, padding: '14px 18px', color: 'white', fontSize: 15, outline: 'none', fontFamily: 'var(--font-main)', transition: 'border-color 0.2s' }}
+                                                    onFocus={e => e.target.style.borderColor = '#8B5CF6'}
+                                                    onBlur={e => e.target.style.borderColor = 'rgba(139,92,246,0.15)'} />
+                                            </div>
+                                            <div style={{ position: 'relative' }}>
+                                                <Mail size={18} style={{ position: 'absolute', left: 18, top: '50%', transform: 'translateY(-50%)', color: '#475569' }} />
+                                                <input type="email" value={email} onChange={e => setEmail(e.target.value)} required placeholder="Enter your email"
+                                                    style={{ width: '100%', background: '#13152a', border: '1px solid rgba(139,92,246,0.15)', borderRadius: 12, padding: '14px 18px 14px 48px', color: 'white', fontSize: 15, outline: 'none', fontFamily: 'var(--font-main)', transition: 'border-color 0.2s' }}
+                                                    onFocus={e => e.target.style.borderColor = '#8B5CF6'}
+                                                    onBlur={e => e.target.style.borderColor = 'rgba(139,92,246,0.15)'} />
+                                            </div>
+                                            <button type="submit" disabled={status === 'loading'} className="btn-primary" style={{ padding: '16px', fontSize: 15, borderRadius: 12, width: '100%', justifyContent: 'center', opacity: status === 'loading' ? 0.7 : 1 }}>
+                                                {status === 'loading' ? 'Syncing...' : <><span>Initialize Sync</span> <Send size={16} /></>}
+                                            </button>
+                                        </form>
+
+                                        <p style={{ marginTop: 20, fontSize: 12, color: '#334155', textAlign: 'center' }}>
+                                            No spam. Unsubscribe anytime. UAE-based & trusted.
+                                        </p>
+                                    </>
+                                )}
+                            </div>
+                        </motion.div>
+                    </div>
                 </div>
             </section>
 
-            {/* Signals Call to Action for Large Projects */}
-            <section className="py-20 px-6 md:px-12 max-w-[1440px] mx-auto text-center">
-                <div className="bg-gradient-to-r from-violet-950/20 to-cyan-950/20 border border-slate-900 rounded-[60px] p-20 backdrop-blur-3xl overflow-hidden relative">
-                    <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_rgba(112,0,255,0.1)_0%,_transparent_70%)] pointer-events-none" />
-                    <Sparkles className="w-16 h-16 text-violet-400 mx-auto mb-10 opacity-40" />
-                    <h2 className="text-5xl md:text-7xl font-black font-title tracking-tighter mb-8 italic">READY FOR <br /> <span className="text-white">QUANTUM ASCENT?</span></h2>
-                    <p className="text-xl text-slate-400 mb-12 max-w-xl mx-auto font-light">We only accept three enterprise partners per quarter for bespoke AI infrastructure. Check our availability.</p>
-                    <button className="px-12 py-6 bg-white text-slate-950 font-black text-2xl rounded-2xl hover:bg-violet-500 hover:text-white transition-all transform hover:scale-105 duration-500 shadow-2xl">
-                        SECURE ARCHITECTURE AUDIT
+            {/* Archive */}
+            <section style={{ padding: '100px 32px', maxWidth: 1400, margin: '0 auto' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 56, flexWrap: 'wrap', gap: 24 }}>
+                    <div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+                            <div style={{ width: 24, height: 2, background: '#8B5CF6' }} />
+                            <span className="font-cyber" style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.3em', textTransform: 'uppercase', color: '#8B5CF6' }}>Archive</span>
+                        </div>
+                        <h2 className="font-title" style={{ fontSize: 'clamp(32px, 4vw, 52px)', fontWeight: 900, letterSpacing: '-0.03em' }}>Intelligence Reports</h2>
+                    </div>
+                    <button style={{ padding: '10px 20px', background: '#0e0f1a', border: '1px solid rgba(139,92,246,0.15)', borderRadius: 10, color: '#94A3B8', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, fontWeight: 700, fontFamily: 'var(--font-main)' }}>
+                        <Filter size={14} /> Filter by Category
                     </button>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))', gap: 24 }}>
+                    {issues.map((issue, i) => {
+                        const cat = categoryColors[issue.category] || categoryColors['Strategic Alpha'];
+                        return (
+                            <motion.div key={issue.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}>
+                                <Link href={`/signals/${issue.id}`} style={{ textDecoration: 'none', display: 'block', height: '100%', outline: 'none' }}>
+                                    <div className="card-nex" style={{ padding: 32, cursor: 'pointer', height: '100%', display: 'flex', flexDirection: 'column' }}>
+                                        {issue.image_url && (
+                                            <div style={{ width: '100%', height: 180, borderRadius: 12, overflow: 'hidden', marginBottom: 24, background: '#13152a' }}>
+                                                <img src={issue.image_url} alt={issue.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                            </div>
+                                        )}
+
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+                                            <span style={{ padding: '4px 12px', borderRadius: 999, border: `1px solid ${cat.border}33`, color: cat.text, background: cat.bg, fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em' }} className="font-cyber">
+                                                {issue.category}
+                                            </span>
+                                            <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: '#475569', fontWeight: 600 }}>
+                                                <Clock size={12} /> {issue.published_at}
+                                            </span>
+                                        </div>
+
+                                        <h3 className="font-title" style={{ fontSize: 20, fontWeight: 800, marginBottom: 14, lineHeight: 1.35, flex: 1 }}>
+                                            {issue.title}
+                                        </h3>
+                                        <p style={{ fontSize: 14, color: '#64748B', lineHeight: 1.7, marginBottom: 24, fontWeight: 400 }}>
+                                            {issue.excerpt}
+                                        </p>
+
+                                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: 20, borderTop: '1px solid rgba(139,92,246,0.08)', transition: 'all 0.3s' }}>
+                                            <span style={{ fontSize: 12, fontWeight: 700, color: '#8B5CF6' }} className="font-cyber">READ SIGNAL</span>
+                                            <ArrowRight size={16} style={{ color: '#8B5CF6' }} />
+                                        </div>
+                                    </div>
+                                </Link>
+                            </motion.div>
+                        );
+                    })}
                 </div>
             </section>
 

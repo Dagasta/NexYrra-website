@@ -2,162 +2,84 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import {
-    BarChart3,
-    Workflow,
-    Zap,
-    Bot,
-    Database,
-    ShieldCheck,
-    Sparkles,
-    Search,
-    CheckCircle2,
-    Cpu,
-    ArrowRight
-} from 'lucide-react';
-
-const services = [
-    {
-        title: 'AI-Powered Business Insights',
-        description: 'Transforming raw data into actionable intelligence through high-end predictive modeling and neural trend mapping.',
-        icon: BarChart3,
-        color: 'from-cyan-400 to-blue-500',
-        features: ['Real-time KPI Tracking', 'Sentiment Analysis', 'Forecasting Engines'],
-        premium: true
-    },
-    {
-        title: 'Automated Content Generation',
-        description: 'Autonomous high-fidelity content pipelines that preserve brand voice while scaling output by 1000%+. ',
-        icon: Sparkles,
-        color: 'from-blue-500 to-violet-600',
-        features: ['Multi-format Output', 'SEO Optimization', 'Style Personalization'],
-        premium: true
-    },
-    {
-        title: 'AI-Driven Marketing Automation',
-        description: 'Hyper-personalized customer journeys driven by behavioral AI architectures that maximize conversion and LTV.',
-        icon: Zap,
-        color: 'from-violet-600 to-rose-500',
-        features: ['Dynamic Retargeting', 'Trigger-based Flows', 'Lead Scoring'],
-        premium: true
-    },
-    {
-        title: 'AI Chatbots & Virtual Assistants',
-        description: 'Next-gen cognitive agents that handle 90% of complex queries with human-like precision and infinite scalability.',
-        icon: Bot,
-        color: 'from-rose-500 to-orange-400',
-        features: ['Multilingual Support', 'CRM Integration', 'Adaptive Learning'],
-        premium: true
-    },
-    {
-        title: 'Predictive Analytics',
-        description: 'Strategic probability engines that anticipate market shifts before they occur, ensuring your business stays ahead.',
-        icon: Database,
-        color: 'from-cyan-400 to-emerald-400',
-        features: ['Churn Prediction', 'Risk Assessment', 'Market Simulation'],
-        premium: true
-    },
-    {
-        title: 'AI Model Implementation',
-        description: 'Deployment of custom LLMs and diffusion models tailored to your proprietary data and unique operational needs.',
-        icon: Cpu,
-        color: 'from-blue-400 to-cyan-400',
-        features: ['On-prem Solutions', 'API Integration', 'Fine-tuning Hub'],
-        premium: true
-    }
-];
+import { CheckCircle, ArrowRight } from 'lucide-react';
+import Link from 'next/link';
+import { services } from '../lib/services-data';
 
 const Services = () => {
     return (
-        <section id="services" className="relative py-32 overflow-hidden">
-            {/* Background Decorative Element */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-br from-cyan-950/10 via-[#020617] to-violet-950/10 -z-10 blur-3xl opacity-50" />
+        <section id="services" style={{ padding: '120px 0', background: '#08090f', position: 'relative', overflow: 'hidden' }}>
+            <div style={{ position: 'absolute', top: '30%', right: '-10%', width: 600, height: 600, background: 'radial-gradient(ellipse, rgba(139,92,246,0.07) 0%, transparent 70%)', pointerEvents: 'none' }} />
+            <div style={{ position: 'absolute', bottom: '10%', left: '-5%', width: 400, height: 400, background: 'radial-gradient(ellipse, rgba(34,211,238,0.05) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
-            <div className="max-w-[1440px] mx-auto px-6 md:px-12 relative">
-                <div className="max-w-3xl mb-24">
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        className="flex items-center gap-3 mb-6"
-                    >
-                        <div className="w-10 h-[1px] bg-cyan-500" />
-                        <span className="text-sm font-black uppercase tracking-[0.3em] text-cyan-400 font-cyber">Our Intelligence Suite</span>
-                    </motion.div>
-                    <motion.h2
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.1 }}
-                        className="text-5xl md:text-7xl font-title font-black text-white leading-[1.1] mb-8"
-                    >
-                        SCALING <span className="text-gradient">AUTHORITY</span> <br /> THROUGH AI
-                    </motion.h2>
-                    <motion.p
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.2 }}
-                        className="text-xl text-slate-400 leading-relaxed font-light"
-                    >
-                        We don't just "use" AI—we architect competitive moats. Our high-end services are designed for enterprise-level transformation and extreme ROI.
-                    </motion.p>
-                </div>
+            <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 32px' }}>
+                <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} style={{ marginBottom: 80 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
+                        <div style={{ width: 32, height: 2, background: '#8B5CF6', borderRadius: 2 }} />
+                        <span className="font-cyber" style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.3em', color: '#8B5CF6' }}>
+                            Our AI Services
+                        </span>
+                    </div>
+                    <h2 className="font-title" style={{ fontSize: 'clamp(40px, 5vw, 72px)', fontWeight: 900, lineHeight: 1.1, marginBottom: 20, letterSpacing: '-0.03em' }}>
+                        Intelligence Suite for <br />
+                        <span style={{ background: 'linear-gradient(90deg, #8B5CF6 0%, #22D3EE 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+                            Modern Enterprise
+                        </span>
+                    </h2>
+                    <p style={{ fontSize: 18, color: '#94A3B8', maxWidth: 560, lineHeight: 1.8, fontWeight: 400 }}>
+                        From autonomous agents to bulk marketing — every service is engineered to deliver measurable ROI.
+                    </p>
+                </motion.div>
 
-                {/* Services Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {services.map((service, index) => (
-                        <motion.div
-                            key={service.title}
-                            initial={{ opacity: 0, y: 40 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: index * 0.1, duration: 0.8 }}
-                            className="group relative"
-                        >
-                            {/* Card - Premium Glass Design */}
-                            <div className="h-full bg-slate-900 border border-slate-800 hover:border-cyan-500/50 rounded-3xl p-8 transition-all duration-500 hover:shadow-[0_0_30px_rgba(6,182,212,0.1)] flex flex-col items-start">
-                                <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${service.color} p-4 mb-8 flex items-center justify-center text-white transition-all duration-500 group-hover:scale-110 shadow-lg group-hover:shadow-[0_0_20px_rgba(255,255,255,0.15)]`}>
-                                    <service.icon className="w-8 h-8" />
-                                </div>
-                                <h3 className="text-2xl font-black text-white mb-4 font-cyber group-hover:text-cyan-400 transition-colors uppercase leading-tight">
-                                    {service.title}
-                                </h3>
-                                <p className="text-slate-400 mb-8 leading-relaxed font-light flex-grow">
-                                    {service.description}
-                                </p>
-                                <div className="space-y-3 mb-10 w-full">
-                                    {service.features.map((feature, idx) => (
-                                        <div key={idx} className="flex items-center gap-2 text-slate-300">
-                                            <CheckCircle2 className="w-4 h-4 text-cyan-500" />
-                                            <span className="text-xs font-bold uppercase tracking-wider">{feature}</span>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))', gap: 20, marginBottom: 80 }}>
+                    {services.map((service, i) => (
+                        <motion.div key={service.slug} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.07 }}>
+                            <Link href={`/services/${service.slug}`} style={{ textDecoration: 'none', display: 'block', height: '100%' }}>
+                                <div className="card-nex" style={{ padding: 32, height: '100%', display: 'flex', flexDirection: 'column', cursor: 'pointer' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 24 }}>
+                                        <div style={{ width: 56, height: 56, borderRadius: 16, background: 'linear-gradient(135deg, rgba(139,92,246,0.2), rgba(34,211,238,0.1))', border: '1px solid rgba(139,92,246,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28 }}>
+                                            {service.icon}
                                         </div>
-                                    ))}
+                                        <div>
+                                            <h3 className="font-title" style={{ fontSize: 17, fontWeight: 800, color: 'white', lineHeight: 1.3 }}>{service.title}</h3>
+                                            <span style={{ fontSize: 12, color: '#8B5CF6', fontFamily: 'var(--font-main)' }}>{service.titleAr}</span>
+                                        </div>
+                                    </div>
+
+                                    <p style={{ fontSize: 14, color: '#94A3B8', lineHeight: 1.8, marginBottom: 24, flex: 1, fontWeight: 400 }}>
+                                        {service.description}
+                                    </p>
+
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 24 }}>
+                                        {service.features.map(f => (
+                                            <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                                <CheckCircle size={13} style={{ color: '#8B5CF6', flexShrink: 0 }} />
+                                                <span style={{ fontSize: 12, color: '#CBD5E1', fontWeight: 600 }}>{f}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: 20, borderTop: '1px solid rgba(139,92,246,0.08)' }}>
+                                        <span style={{ fontSize: 12, fontWeight: 700, color: '#8B5CF6', fontFamily: 'var(--font-cyber)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                                            {service.tagline}
+                                        </span>
+                                        <ArrowRight size={16} style={{ color: '#8B5CF6' }} />
+                                    </div>
                                 </div>
-                                <button className="flex items-center gap-2 text-white font-bold text-sm uppercase tracking-widest border-b border-transparent hover:border-cyan-400 transition-all duration-300">
-                                    Deploy Model
-                                    <ArrowRight className="w-4 h-4" />
-                                </button>
-                            </div>
+                            </Link>
                         </motion.div>
                     ))}
                 </div>
 
-                {/* Bottom Call to Action */}
-                <motion.div
-                    initial={{ opacity: 0, y: 40 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.6 }}
-                    className="mt-20 p-12 bg-gradient-to-r from-cyan-950/20 to-violet-950/20 border border-slate-800 rounded-[40px] flex flex-col lg:flex-row items-center justify-between gap-10 backdrop-blur-xl"
-                >
+                <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+                    style={{ background: 'linear-gradient(135deg, rgba(139,92,246,0.12), rgba(34,211,238,0.06))', border: '1px solid rgba(139,92,246,0.2)', borderRadius: 24, padding: '64px 80px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 40, flexWrap: 'wrap' }}>
                     <div>
-                        <h3 className="text-3xl font-black text-white mb-3">Custom Enterprise Solutions</h3>
-                        <p className="text-slate-400 text-lg font-light">Require a bespoke AI architecture that doesn't fit standard categories?</p>
+                        <h3 className="font-title" style={{ fontSize: 32, fontWeight: 900, marginBottom: 10 }}>Custom Enterprise Solutions</h3>
+                        <p style={{ color: '#94A3B8', fontSize: 16, fontWeight: 400 }}>Need a bespoke AI architecture? We build it from scratch for you.</p>
                     </div>
-                    <button className="px-10 py-5 bg-white text-slate-950 rounded-2xl font-black text-lg hover:bg-cyan-400 hover:scale-105 transition-all duration-500 whitespace-nowrap">
-                        Request Strategy Session
-                    </button>
+                    <Link href="/contact" className="btn-primary" style={{ padding: '18px 48px', fontSize: 16, whiteSpace: 'nowrap', borderRadius: 14 }}>
+                        Request Strategy Session <ArrowRight size={18} />
+                    </Link>
                 </motion.div>
             </div>
         </section>

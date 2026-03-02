@@ -1,284 +1,390 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-    LayoutDashboard,
-    FilePlus,
-    Files,
-    Users,
-    Settings,
-    LogOut,
-    Trash2,
-    Edit,
-    Plus,
-    X,
-    Sparkles,
-    Zap,
-    Calendar,
-    AlertTriangle,
-    ArrowRight,
-    Send,
-    Link as LinkIcon
-} from 'lucide-react';
-import Link from 'next/link';
-import { getNewsletterIssues, addNewsletterIssue, deleteNewsletterIssue, NewsletterIssue } from '../../../lib/db';
+import { LayoutDashboard, FilePlus, Users, Settings, LogOut, Trash2, Eye, X, Upload, Image as ImageIcon, Sparkles, TrendingUp, Mail } from 'lucide-react';
+import { supabase, type NewsletterIssue } from '../../../lib/supabase';
+
+const ADMIN_CREDENTIALS = { id: 'admin', password: 'nexyrra2026' };
 
 const AdminDashboard = () => {
+    const router = useRouter();
+    const [authed, setAuthed] = useState(false);
+    const [loginId, setLoginId] = useState('');
+    const [loginPass, setLoginPass] = useState('');
+    const [loginError, setLoginError] = useState('');
     const [issues, setIssues] = useState<NewsletterIssue[]>([]);
+    const [subCount, setSubCount] = useState(0);
     const [showAddModal, setShowAddModal] = useState(false);
-    const [newIssue, setNewIssue] = useState({
+    const [uploading, setUploading] = useState(false);
+    const [activeNav, setActiveNav] = useState('dashboard');
+    const fileRef = useRef<HTMLInputElement>(null);
+
+    const [form, setForm] = useState({
         title: '',
         excerpt: '',
         content: '',
-        date: new Date().toISOString().split('T')[0],
-        category: 'Market Intelligence' as NewsletterIssue['category']
+        category: 'Strategic Alpha' as NewsletterIssue['category'],
+        image_url: '',
     });
-    const router = useRouter();
 
     useEffect(() => {
-        // Simple Auth check
-        const isAdmin = localStorage.getItem('nexyrra_admin');
-        if (!isAdmin) {
-            router.push('/admin/login');
-        } else {
-            setIssues(getNewsletterIssues());
+        if (authed) {
+            fetchIssues();
+            fetchSubscriberCount();
         }
-    }, [router]);
+    }, [authed]);
 
-    const handleLogout = () => {
-        localStorage.removeItem('nexyrra_admin');
-        router.push('/admin/login');
+    const fetchIssues = async () => {
+        const { data } = await supabase.from('newsletter_issues').select('*').order('published_at', { ascending: false });
+        if (data) setIssues(data as NewsletterIssue[]);
     };
 
-    const handleDelete = (id: string) => {
-        if (confirm('Are you sure you want to delete this issue?')) {
-            deleteNewsletterIssue(id);
-            setIssues(getNewsletterIssues());
-        }
+    const fetchSubscriberCount = async () => {
+        const { count } = await supabase.from('newsletter_subscribers').select('*', { count: 'exact', head: true });
+        setSubCount(count || 0);
     };
 
-    const handleAddIssue = (e: React.FormEvent) => {
+    const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
-        addNewsletterIssue(newIssue);
-        setIssues(getNewsletterIssues());
-        setShowAddModal(false);
-        setNewIssue({
-            title: '',
-            excerpt: '',
-            content: '',
-            date: new Date().toISOString().split('T')[0],
-            category: 'Market Intelligence'
-        });
+        if (loginId === ADMIN_CREDENTIALS.id && loginPass === ADMIN_CREDENTIALS.password) {
+            setAuthed(true);
+        } else {
+            setLoginError('Invalid credentials. Access denied.');
+        }
     };
+
+    const handleImageUpload = async (file: File) => {
+        setUploading(true);
+        console.log('Starting secure upload via API...');
+        const path = `newsletter/${Date.now()}_${file.name}`;
+
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('path', path);
+
+            const response = await fetch('/api/admin/upload', {
+                method: 'POST',
+                body: formData,
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                console.error('API Error:', data.error);
+                alert(`Upload failed: ${data.error}. If it says "bucket not found", please ensure a bucket named "nexyrra-media" exists in your Supabase storage.`);
+                setUploading(false);
+                return;
+            }
+
+            if (data.publicUrl) {
+                setForm(f => ({ ...f, image_url: data.publicUrl }));
+                console.log('Upload successful! Public URL:', data.publicUrl);
+            }
+        } catch (e: any) {
+            console.error('Unexpected error during secure upload:', e);
+            alert('An unexpected error occurred: ' + (e.message || 'Check console logs.'));
+        } finally {
+            setUploading(false);
+        }
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        // 1. Save to Supabase
+        const { error } = await supabase.from('newsletter_issues').insert([{
+            ...form,
+            published_at: new Date().toISOString().split('T')[0],
+        }]);
+
+        if (error) {
+            alert('Error saving to database: ' + error.message);
+            return;
+        }
+
+        // 2. Trigger Broadcast Email to Subscribers
+        console.log('Publishing signal... Sending broadcast emails...');
+        try {
+            const response = await fetch('/api/newsletter/broadcast', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    title: form.title,
+                    excerpt: form.excerpt,
+                    image_url: form.image_url,
+                    category: form.category
+                })
+            });
+
+            if (!response.ok) {
+                const data = await response.json();
+                console.warn('Broadcast partial failure:', data.error);
+                // We still proceed since the data is saved in DB
+            }
+        } catch (err) {
+            console.error('Broadcast network error:', err);
+        }
+
+        setShowAddModal(false);
+        setForm({ title: '', excerpt: '', content: '', category: 'Strategic Alpha', image_url: '' });
+        fetchIssues();
+    };
+
+    const handleDelete = async (id: string) => {
+        if (!confirm('Delete this intelligence report?')) return;
+        await supabase.from('newsletter_issues').delete().eq('id', id);
+        fetchIssues();
+    };
+
+    // ======================== LOGIN PAGE ========================
+    if (!authed) {
+        return (
+            <main style={{ minHeight: '100vh', background: '#08090f', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 32, position: 'relative', overflow: 'hidden' }}>
+                <div style={{ position: 'absolute', top: '-10%', left: '50%', transform: 'translateX(-50%)', width: 800, height: 600, background: 'radial-gradient(ellipse, rgba(139,92,246,0.12) 0%, transparent 70%)', pointerEvents: 'none' }} />
+
+                <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}
+                    style={{ width: '100%', maxWidth: 440, background: '#0e0f1a', border: '1px solid rgba(139,92,246,0.2)', borderRadius: 28, padding: 48, position: 'relative', overflow: 'hidden' }}>
+                    <div style={{ position: 'absolute', top: 0, right: 0, width: 160, height: 160, background: 'radial-gradient(circle, rgba(139,92,246,0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 40 }}>
+                        <div style={{ width: 44, height: 44, borderRadius: 14, background: 'linear-gradient(135deg, #8B5CF6, #22D3EE)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <Sparkles size={22} color="white" />
+                        </div>
+                        <div>
+                            <span className="font-cyber" style={{ fontSize: 18, fontWeight: 900, color: 'white', display: 'block' }}>NEXYRRA</span>
+                            <span style={{ fontSize: 11, color: '#475569', fontWeight: 600 }}>Command Control</span>
+                        </div>
+                    </div>
+
+                    <h2 className="font-title" style={{ fontSize: 26, fontWeight: 900, marginBottom: 8, color: 'white' }}>Admin Access</h2>
+                    <p style={{ color: '#475569', fontSize: 14, marginBottom: 32 }}>Authorized personnel only.</p>
+
+                    <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                        <input value={loginId} onChange={e => setLoginId(e.target.value)} placeholder="Operator ID"
+                            style={{ background: '#13152a', border: '1px solid rgba(139,92,246,0.15)', borderRadius: 12, padding: '14px 18px', color: 'white', fontSize: 15, outline: 'none', fontFamily: 'var(--font-main)', width: '100%' }} />
+                        <input type="password" value={loginPass} onChange={e => setLoginPass(e.target.value)} placeholder="Access Token"
+                            style={{ background: '#13152a', border: '1px solid rgba(139,92,246,0.15)', borderRadius: 12, padding: '14px 18px', color: 'white', fontSize: 15, outline: 'none', fontFamily: 'var(--font-main)', width: '100%' }} />
+                        {loginError && <p style={{ color: '#F87171', fontSize: 13, fontWeight: 600 }}>{loginError}</p>}
+                        <button type="submit" className="btn-primary" style={{ padding: '16px', fontSize: 15, justifyContent: 'center', borderRadius: 12, marginTop: 8 }}>
+                            Initialize Access
+                        </button>
+                    </form>
+                </motion.div>
+            </main>
+        );
+    }
+
+    // ======================== DASHBOARD ========================
+    const statsCards = [
+        { label: 'Total Signals', value: issues.length, icon: FilePlus, color: '#8B5CF6' },
+        { label: 'Subscribers', value: subCount, icon: Mail, color: '#22D3EE' },
+        { label: 'Categories', value: 3, icon: TrendingUp, color: '#A78BFA' },
+        { label: 'Published', value: issues.length, icon: Eye, color: '#F472B6' },
+    ];
 
     return (
-        <main className="min-h-screen bg-[#020617] text-white flex">
+        <main style={{ minHeight: '100vh', background: '#08090f', display: 'flex', color: 'white' }}>
             {/* Sidebar */}
-            <aside className="w-64 border-r border-slate-900 flex flex-col p-6 hidden md:flex">
-                <div className="flex items-center gap-2 mb-12">
-                    <Sparkles className="w-8 h-8 text-cyan-400" />
-                    <span className="text-xl font-black font-cyber tracking-tighter">NEX<span className="text-cyan-400">YRRA</span></span>
+            <aside style={{ width: 260, background: '#0e0f1a', borderRight: '1px solid rgba(139,92,246,0.1)', display: 'flex', flexDirection: 'column', position: 'sticky', top: 0, height: '100vh', padding: '32px 0' }}>
+                <div style={{ padding: '0 24px 32px', borderBottom: '1px solid rgba(139,92,246,0.08)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                        <div style={{ width: 36, height: 36, borderRadius: 10, background: 'linear-gradient(135deg, #8B5CF6, #22D3EE)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <Sparkles size={18} color="white" />
+                        </div>
+                        <span className="font-cyber" style={{ fontSize: 16, fontWeight: 900, color: 'white' }}>
+                            NEX<span style={{ color: '#8B5CF6' }}>YRRA</span>
+                        </span>
+                    </div>
                 </div>
 
-                <nav className="flex-grow space-y-2">
+                <nav style={{ padding: '24px 16px', flex: 1, display: 'flex', flexDirection: 'column', gap: 4 }}>
                     {[
-                        { name: 'Dashboard', icon: LayoutDashboard, active: true },
-                        { name: 'Newsletter', icon: Files, active: false },
-                        { name: 'Subscribers', icon: Users, active: false },
-                        { name: 'Settings', icon: Settings, active: false },
-                    ].map((item) => (
-                        <button
-                            key={item.name}
-                            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-sm tracking-widest uppercase ${item.active ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/20' : 'text-slate-500 hover:text-white hover:bg-slate-900'
-                                }`}
-                        >
-                            <item.icon className="w-4 h-4" />
-                            {item.name}
+                        { id: 'dashboard', label: 'Dashboard', Icon: LayoutDashboard },
+                        { id: 'signals', label: 'Signals', Icon: FilePlus },
+                        { id: 'subscribers', label: 'Subscribers', Icon: Users },
+                        { id: 'settings', label: 'Settings', Icon: Settings },
+                    ].map(({ id, label, Icon }) => (
+                        <button key={id} onClick={() => setActiveNav(id)}
+                            style={{
+                                display: 'flex', alignItems: 'center', gap: 12, padding: '12px 16px', borderRadius: 12, border: 'none', cursor: 'pointer', fontSize: 14, fontWeight: 700, width: '100%', textAlign: 'left', fontFamily: 'var(--font-main)', transition: 'all 0.2s',
+                                background: activeNav === id ? 'rgba(139,92,246,0.15)' : 'transparent',
+                                color: activeNav === id ? '#A78BFA' : '#64748B',
+                                borderLeft: activeNav === id ? '2px solid #8B5CF6' : '2px solid transparent',
+                            }}>
+                            <Icon size={16} /> {label}
                         </button>
                     ))}
                 </nav>
 
-                <button
-                    onClick={handleLogout}
-                    className="mt-auto flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-rose-500 transition-all font-bold text-sm tracking-widest uppercase"
-                >
-                    <LogOut className="w-4 h-4" />
-                    Terminate
-                </button>
+                <div style={{ padding: '16px' }}>
+                    <button onClick={() => setAuthed(false)}
+                        style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', borderRadius: 12, border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 700, color: '#64748B', background: 'transparent', width: '100%', fontFamily: 'var(--font-main)', transition: 'color 0.2s' }}
+                        onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = '#F87171'}
+                        onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = '#64748B'}>
+                        <LogOut size={16} /> Sign Out
+                    </button>
+                </div>
             </aside>
 
-            {/* Main Content Area */}
-            <div className="flex-grow overflow-y-auto h-screen p-6 md:p-12 relative">
-                <header className="flex items-center justify-between mb-12">
+            {/* Main Content */}
+            <div style={{ flex: 1, padding: 40, overflow: 'auto' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 40 }}>
                     <div>
-                        <h1 className="text-3xl font-black mb-2 uppercase italic tracking-tighter">Command Control</h1>
-                        <p className="text-slate-500 font-mono text-xs uppercase tracking-widest">Active Operative Session v1.0.4</p>
+                        <h1 className="font-title" style={{ fontSize: 28, fontWeight: 900, marginBottom: 4 }}>Command Dashboard</h1>
+                        <p style={{ color: '#475569', fontSize: 14 }}>Manage Nexyrra Signals intelligence reports</p>
                     </div>
-
-                    <button
-                        onClick={() => setShowAddModal(true)}
-                        className="px-6 py-3 bg-white text-slate-950 rounded-xl font-black text-xs uppercase tracking-[0.2em] flex items-center gap-2 hover:bg-cyan-400 transition-all transform hover:scale-105"
-                    >
-                        <Plus className="w-4 h-4" /> Deploy Signal
+                    <button onClick={() => setShowAddModal(true)} className="btn-primary" style={{ padding: '12px 28px', fontSize: 14, borderRadius: 12 }}>
+                        <FilePlus size={16} /> New Signal
                     </button>
-                </header>
+                </div>
 
-                {/* Stats Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                    {[
-                        { label: 'Active Signals', val: issues.length, icon: Zap, color: 'text-cyan-400' },
-                        { label: 'Total Synchronized', val: '5,284', icon: Users, color: 'text-violet-400' },
-                        { label: 'Mean Open Rate', val: '68.2%', icon: Send, color: 'text-rose-400' },
-                    ].map((stat) => (
-                        <div key={stat.label} className="p-8 bg-slate-900/50 border border-slate-800 rounded-3xl relative overflow-hidden">
-                            <div className="absolute top-0 right-0 p-4 opacity-10">
-                                <stat.icon className={`w-12 h-12 ${stat.color}`} />
+                {/* Stats */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20, marginBottom: 40 }}>
+                    {statsCards.map((s) => (
+                        <div key={s.label} style={{ background: '#0e0f1a', border: '1px solid rgba(139,92,246,0.12)', borderRadius: 18, padding: 24 }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
+                                <div style={{ width: 40, height: 40, borderRadius: 12, background: s.color + '22', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                    <s.icon size={18} style={{ color: s.color }} />
+                                </div>
                             </div>
-                            <div className="text-xs font-black uppercase tracking-widest text-slate-500 mb-2">{stat.label}</div>
-                            <div className="text-4xl font-black font-cyber tracking-tighter">{stat.val}</div>
+                            <div className="font-cyber" style={{ fontSize: 32, fontWeight: 900, color: 'white', marginBottom: 4 }}>{s.value}</div>
+                            <div style={{ fontSize: 13, color: '#475569', fontWeight: 600 }}>{s.label}</div>
                         </div>
                     ))}
                 </div>
 
-                {/* Issues Archive Manager */}
-                <div className="bg-slate-900/30 border border-slate-900 rounded-[32px] overflow-hidden">
-                    <div className="p-8 border-b border-slate-900 flex items-center justify-between bg-slate-900/50">
-                        <h3 className="text-lg font-black uppercase tracking-widest flex items-center gap-3">
-                            <Files className="w-5 h-5 text-cyan-400" /> Deployments Archive
-                        </h3>
-                        <Link href="/signals" className="text-xs font-bold text-slate-500 hover:text-white transition-colors flex items-center gap-1 uppercase tracking-widest">
-                            View Live <ArrowRight className="w-3 h-3" />
-                        </Link>
+                {/* Issues Table */}
+                <div style={{ background: '#0e0f1a', border: '1px solid rgba(139,92,246,0.12)', borderRadius: 20, overflow: 'hidden' }}>
+                    <div style={{ padding: '20px 28px', borderBottom: '1px solid rgba(139,92,246,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <h3 className="font-title" style={{ fontSize: 17, fontWeight: 800 }}>Published Signals</h3>
+                        <span className="font-cyber" style={{ fontSize: 11, color: '#475569', fontWeight: 700, letterSpacing: '0.2em' }}>{issues.length} TOTAL</span>
                     </div>
-
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-left font-light border-collapse">
+                    <div style={{ overflowX: 'auto' }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                             <thead>
-                                <tr className="border-b border-slate-900 text-slate-500 uppercase text-[10px] font-black tracking-[0.3em]">
-                                    <th className="px-8 py-6">ID</th>
-                                    <th className="px-8 py-6">Intelligence Title</th>
-                                    <th className="px-8 py-6">Phase/Category</th>
-                                    <th className="px-8 py-6">Date Synchronized</th>
-                                    <th className="px-8 py-6 text-right">Actions</th>
+                                <tr style={{ borderBottom: '1px solid rgba(139,92,246,0.08)' }}>
+                                    {['Title', 'Category', 'Date', 'Actions'].map(h => (
+                                        <th key={h} style={{ padding: '14px 20px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.15em', whiteSpace: 'nowrap' }} className="font-cyber">{h}</th>
+                                    ))}
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-slate-900">
-                                {issues.map((issue: NewsletterIssue) => (
-                                    <tr key={issue.id} className="hover:bg-slate-900/50 transition-colors group">
-                                        <td className="px-8 py-6 font-mono text-[10px] text-slate-600">#{issue.id.substr(0, 4)}</td>
-                                        <td className="px-8 py-6 font-bold text-slate-200">{issue.title}</td>
-                                        <td className="px-8 py-6">
-                                            <span className="px-3 py-1 bg-slate-800 rounded-full text-[10px] font-bold uppercase tracking-widest text-slate-400">
-                                                {issue.category}
-                                            </span>
-                                        </td>
-                                        <td className="px-8 py-6 text-slate-500 text-xs font-mono">{issue.date}</td>
-                                        <td className="px-8 py-6 text-right">
-                                            <div className="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                <button onClick={() => handleDelete(issue.id)} className="p-2 bg-rose-500/10 hover:bg-rose-500 text-rose-500 hover:text-white rounded-lg transition-all">
-                                                    <Trash2 className="w-4 h-4" />
+                            <tbody>
+                                {issues.length === 0 ? (
+                                    <tr><td colSpan={4} style={{ padding: '48px 20px', textAlign: 'center', color: '#475569', fontSize: 15 }}>No signals published yet. Click "New Signal" to create one.</td></tr>
+                                ) : (
+                                    issues.map(issue => (
+                                        <tr key={issue.id} style={{ borderBottom: '1px solid rgba(139,92,246,0.05)', transition: 'background 0.2s' }}
+                                            onMouseEnter={e => (e.currentTarget as HTMLElement).style.background = 'rgba(139,92,246,0.04)'}
+                                            onMouseLeave={e => (e.currentTarget as HTMLElement).style.background = 'transparent'}>
+                                            <td style={{ padding: '16px 20px' }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                                                    {issue.image_url && <img src={issue.image_url} alt="" style={{ width: 40, height: 40, borderRadius: 8, objectFit: 'cover', flexShrink: 0 }} />}
+                                                    <span style={{ fontWeight: 700, fontSize: 14, maxWidth: 280, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>{issue.title}</span>
+                                                </div>
+                                            </td>
+                                            <td style={{ padding: '16px 20px' }}>
+                                                <span style={{ padding: '4px 12px', borderRadius: 999, background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.2)', color: '#A78BFA', fontSize: 11, fontWeight: 700 }} className="font-cyber">{issue.category}</span>
+                                            </td>
+                                            <td style={{ padding: '16px 20px', color: '#64748B', fontSize: 13, fontWeight: 600 }}>{issue.published_at}</td>
+                                            <td style={{ padding: '16px 20px' }}>
+                                                <button onClick={() => handleDelete(issue.id)} style={{ padding: '6px 14px', borderRadius: 8, background: 'rgba(244,63,94,0.1)', border: '1px solid rgba(244,63,94,0.2)', color: '#F87171', cursor: 'pointer', fontSize: 12, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6, fontFamily: 'var(--font-main)' }}>
+                                                    <Trash2 size={12} /> Delete
                                                 </button>
-                                                <button className="p-2 bg-cyan-500/10 hover:bg-cyan-500 text-cyan-500 hover:text-white rounded-lg transition-all">
-                                                    <Edit className="w-4 h-4" />
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))}
+                                            </td>
+                                        </tr>
+                                    ))
+                                )}
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-            {/* Add Modal */}
+            {/* Add Signal Modal */}
             <AnimatePresence>
                 {showAddModal && (
-                    <div className="fixed inset-0 z-[1000] flex items-center justify-center p-6">
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            onClick={() => setShowAddModal(false)}
-                            className="absolute inset-0 bg-[#020617]/90 backdrop-blur-md"
-                        />
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                            animate={{ opacity: 1, scale: 1, y: 0 }}
-                            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                            className="w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-[40px] p-10 md:p-14 relative z-10 shadow-2xl overflow-hidden"
-                        >
-                            <div className="absolute top-0 right-0 p-8 opacity-5">
-                                <FilePlus className="w-32 h-32 text-cyan-400" />
-                            </div>
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                        style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(8px)', zIndex: 999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 32 }}>
+                        <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }}
+                            style={{ width: '100%', maxWidth: 600, background: '#0e0f1a', border: '1px solid rgba(139,92,246,0.2)', borderRadius: 24, padding: 40, maxHeight: '90vh', overflowY: 'auto' }}>
 
-                            <div className="flex items-center justify-between mb-10">
-                                <h3 className="text-2xl font-black uppercase italic tracking-tighter">New Intelligence Signal</h3>
-                                <button onClick={() => setShowAddModal(false)} className="text-slate-500 hover:text-white"><X size={32} /></button>
-                            </div>
-
-                            <form onSubmit={handleAddIssue} className="space-y-6">
-                                <div className="grid grid-cols-2 gap-6">
-                                    <div className="space-y-2">
-                                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 pl-2">Sync Date</label>
-                                        <div className="relative">
-                                            <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
-                                            <input
-                                                type="date"
-                                                value={newIssue.date}
-                                                onChange={(e) => setNewIssue({ ...newIssue, date: e.target.value })}
-                                                className="w-full bg-slate-950 border border-slate-800 rounded-xl py-4 pl-12 pr-4 text-white font-mono text-sm focus:outline-none focus:border-cyan-500/50"
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 pl-2">Classification</label>
-                                        <select
-                                            value={newIssue.category}
-                                            onChange={(e) => setNewIssue({ ...newIssue, category: e.target.value as any })}
-                                            className="w-full bg-slate-950 border border-slate-800 rounded-xl py-4 px-4 text-white font-mono text-sm focus:outline-none focus:border-cyan-500/50"
-                                        >
-                                            <option>Market Intelligence</option>
-                                            <option>Neural Research</option>
-                                            <option>Strategic Alpha</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 pl-2">Intelligence Title</label>
-                                    <input
-                                        type="text"
-                                        value={newIssue.title}
-                                        required
-                                        onChange={(e) => setNewIssue({ ...newIssue, title: e.target.value })}
-                                        placeholder="Enter high-impact title"
-                                        className="w-full bg-slate-950 border border-slate-800 rounded-xl py-4 px-4 text-white font-bold focus:outline-none focus:border-cyan-500/50 placeholder:text-slate-700"
-                                    />
-                                </div>
-
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 pl-2">Quick Decrypt (Excerpt)</label>
-                                    <textarea
-                                        value={newIssue.excerpt}
-                                        required
-                                        onChange={(e) => setNewIssue({ ...newIssue, excerpt: e.target.value })}
-                                        placeholder="Brief summary of the intelligence..."
-                                        className="w-full bg-slate-950 border border-slate-800 rounded-xl py-4 px-4 text-white font-light focus:outline-none focus:border-cyan-500/50 min-h-[100px] placeholder:text-slate-700"
-                                    />
-                                </div>
-
-                                <button
-                                    type="submit"
-                                    className="w-full bg-white text-slate-900 py-5 rounded-2xl font-black text-sm uppercase tracking-[0.3em] hover:bg-cyan-400 hover:scale-[1.02] transition-all flex items-center justify-center gap-3 shadow-xl"
-                                >
-                                    DEPLOY SIGNAL <Zap className="w-5 h-5" />
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28 }}>
+                                <h3 className="font-title" style={{ fontSize: 22, fontWeight: 900 }}>New Intelligence Report</h3>
+                                <button onClick={() => setShowAddModal(false)} style={{ background: 'none', border: 'none', color: '#64748B', cursor: 'pointer', padding: 4 }}>
+                                    <X size={22} />
                                 </button>
+                            </div>
+
+                            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                                {/* Title */}
+                                <div>
+                                    <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: '#94A3B8', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.1em' }}>Report Title *</label>
+                                    <input required value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} placeholder="e.g. Precision AI: Scaling Authority in 2026"
+                                        style={{ width: '100%', background: '#13152a', border: '1px solid rgba(139,92,246,0.15)', borderRadius: 10, padding: '12px 16px', color: 'white', fontSize: 14, outline: 'none', fontFamily: 'var(--font-main)' }} />
+                                </div>
+
+                                {/* Category */}
+                                <div>
+                                    <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: '#94A3B8', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.1em' }}>Category *</label>
+                                    <select value={form.category} onChange={e => setForm(f => ({ ...f, category: e.target.value as NewsletterIssue['category'] }))}
+                                        style={{ width: '100%', background: '#13152a', border: '1px solid rgba(139,92,246,0.15)', borderRadius: 10, padding: '12px 16px', color: 'white', fontSize: 14, outline: 'none', fontFamily: 'var(--font-main)' }}>
+                                        <option value="Strategic Alpha">Strategic Alpha</option>
+                                        <option value="Neural Research">Neural Research</option>
+                                        <option value="Market Intelligence">Market Intelligence</option>
+                                    </select>
+                                </div>
+
+                                {/* Excerpt */}
+                                <div>
+                                    <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: '#94A3B8', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.1em' }}>Excerpt *</label>
+                                    <textarea required value={form.excerpt} onChange={e => setForm(f => ({ ...f, excerpt: e.target.value }))} placeholder="Short summary for the archive view..." rows={3}
+                                        style={{ width: '100%', background: '#13152a', border: '1px solid rgba(139,92,246,0.15)', borderRadius: 10, padding: '12px 16px', color: 'white', fontSize: 14, outline: 'none', fontFamily: 'var(--font-main)', resize: 'vertical' }} />
+                                </div>
+
+                                {/* Content */}
+                                <div>
+                                    <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: '#94A3B8', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.1em' }}>Full Content</label>
+                                    <textarea value={form.content} onChange={e => setForm(f => ({ ...f, content: e.target.value }))} placeholder="Full newsletter content..." rows={6}
+                                        style={{ width: '100%', background: '#13152a', border: '1px solid rgba(139,92,246,0.15)', borderRadius: 10, padding: '12px 16px', color: 'white', fontSize: 14, outline: 'none', fontFamily: 'var(--font-main)', resize: 'vertical' }} />
+                                </div>
+
+                                {/* Image Upload */}
+                                <div>
+                                    <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: '#94A3B8', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.1em' }}>Cover Image</label>
+                                    <input ref={fileRef} type="file" accept="image/*" style={{ display: 'none' }}
+                                        onChange={e => { const f = e.target.files?.[0]; if (f) handleImageUpload(f); }} />
+                                    {form.image_url ? (
+                                        <div style={{ position: 'relative' }}>
+                                            <img src={form.image_url} alt="Preview" style={{ width: '100%', height: 160, objectFit: 'cover', borderRadius: 10 }} />
+                                            <button type="button" onClick={() => setForm(f => ({ ...f, image_url: '' }))} style={{ position: 'absolute', top: 8, right: 8, background: 'rgba(0,0,0,0.7)', border: 'none', borderRadius: '50%', width: 28, height: 28, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', cursor: 'pointer' }}>
+                                                <X size={14} />
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <button type="button" onClick={() => fileRef.current?.click()} disabled={uploading}
+                                            style={{ width: '100%', padding: '32px', background: '#13152a', border: '2px dashed rgba(139,92,246,0.2)', borderRadius: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, cursor: 'pointer', color: '#64748B', transition: 'border-color 0.2s' }}
+                                            onMouseEnter={e => (e.currentTarget as HTMLElement).style.borderColor = '#8B5CF6'}
+                                            onMouseLeave={e => (e.currentTarget as HTMLElement).style.borderColor = 'rgba(139,92,246,0.2)'}>
+                                            {uploading ? <Upload size={24} style={{ animation: 'nex-pulse 1s infinite', color: '#8B5CF6' }} /> : <ImageIcon size={24} />}
+                                            <span style={{ fontSize: 13, fontWeight: 600 }}>{uploading ? 'Uploading...' : 'Click to upload image'}</span>
+                                        </button>
+                                    )}
+                                </div>
+
+                                <div style={{ display: 'flex', gap: 12, marginTop: 8 }}>
+                                    <button type="button" onClick={() => setShowAddModal(false)} className="btn-outline" style={{ flex: 1, padding: '14px', justifyContent: 'center', borderRadius: 12 }}>
+                                        Cancel
+                                    </button>
+                                    <button type="submit" className="btn-primary" style={{ flex: 2, padding: '14px', justifyContent: 'center', borderRadius: 12 }}>
+                                        Publish Signal
+                                    </button>
+                                </div>
                             </form>
                         </motion.div>
-                    </div>
+                    </motion.div>
                 )}
             </AnimatePresence>
         </main>
