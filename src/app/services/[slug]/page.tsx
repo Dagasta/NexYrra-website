@@ -48,7 +48,7 @@ export default function ServicePage({ params }: { params: Promise<{ slug: string
                             <h1 className="font-title" style={{ fontSize: 'clamp(40px, 5vw, 72px)', fontWeight: 900, lineHeight: 1.1, marginBottom: 16, letterSpacing: '-0.03em' }}>
                                 {service.title}
                             </h1>
-                            <p style={{ fontSize: 22, fontWeight: 600, color: '#8B5CF6', marginBottom: 24, fontFamily: 'var(--font-cyber)', fontSize: 16 }}>
+                            <p style={{ fontWeight: 600, color: '#8B5CF6', marginBottom: 24, fontFamily: 'var(--font-cyber)', fontSize: 16 }}>
                                 {service.tagline}
                             </p>
                             <p style={{ fontSize: 18, color: '#94A3B8', lineHeight: 1.8, marginBottom: 40 }}>{service.description}</p>
