@@ -91,8 +91,8 @@ const Hero = () => {
                             <div style={{ position: 'absolute', inset: 40, border: '1px solid rgba(34,211,238,0.08)', borderRadius: '50%', animation: 'nex-spin 18s linear infinite reverse' }} />
                             <div style={{ position: 'absolute', inset: 80, border: '1px solid rgba(139,92,246,0.12)', borderRadius: '50%', animation: 'nex-spin 12s linear infinite' }} />
 
-                            {/* Center card */}
-                            <div style={{ position: 'relative', width: 'min(220px, 45vw)', height: 'min(220px, 45vw)', background: '#0e0f1a', borderRadius: 32, border: '1px solid rgba(139,92,246,0.25)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 80px rgba(139,92,246,0.15), 0 0 40px rgba(34,211,238,0.05)' }}
+                            {/* Center Logo Group (Frameless) */}
+                            <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: 2 }}
                                 className="anim-glow">
                                 <div style={{ marginBottom: 16 }}>
                                     <NexyrraLogo size={80} />
