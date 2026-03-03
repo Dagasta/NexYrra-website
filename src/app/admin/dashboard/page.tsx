@@ -49,8 +49,19 @@ const AdminDashboard = () => {
     };
 
     const fetchSubscribers = async () => {
-        const { data } = await supabase.from('newsletter_subscribers').select('*').order('created_at', { ascending: false });
+        const { data, error } = await supabase.from('newsletter_subscribers').select('*').order('created_at', { ascending: false });
+        if (error) {
+            console.error('FETCH ERROR (Subscribers):', error);
+        }
         if (data) setSubscribers(data);
+    };
+
+    const handleDeleteSubscriber = async (id: string) => {
+        if (!confirm('Permanently de-synchronize this operator from the network?')) return;
+        const { error } = await supabase.from('newsletter_subscribers').delete().eq('id', id);
+        if (error) alert('Error: ' + error.message);
+        fetchSubscribers();
+        fetchSubscriberCount();
     };
 
     const handleLogin = (e: React.FormEvent) => {
@@ -144,6 +155,21 @@ const AdminDashboard = () => {
         if (!confirm('Delete this intelligence report?')) return;
         await supabase.from('newsletter_issues').delete().eq('id', id);
         fetchIssues();
+    };
+
+    const handleWipeAllSignals = async () => {
+        if (!confirm('CRITICAL: Purge all intelligence reports from the database? This cannot be undone.')) return;
+        const { error } = await supabase.from('newsletter_issues').delete().neq('id', '0'); // Delete all
+        if (error) alert('Error: ' + error.message);
+        fetchIssues();
+    };
+
+    const handleWipeAllSubscribers = async () => {
+        if (!confirm('CRITICAL: Purge all subscribers? This will de-synchronize the entire network.')) return;
+        const { error } = await supabase.from('newsletter_subscribers').delete().neq('id', '0'); // Delete all
+        if (error) alert('Error: ' + error.message);
+        fetchSubscribers();
+        fetchSubscriberCount();
     };
 
     // ======================== LOGIN PAGE ========================
@@ -243,9 +269,14 @@ const AdminDashboard = () => {
                                 <h1 className="font-title" style={{ fontSize: 28, fontWeight: 900, marginBottom: 4 }}>Command Dashboard</h1>
                                 <p style={{ color: '#475569', fontSize: 14 }}>Manage Nexyrra Signals intelligence reports</p>
                             </div>
-                            <button onClick={() => setShowAddModal(true)} className="btn-primary" style={{ padding: '12px 28px', fontSize: 14, borderRadius: 12 }}>
-                                <FilePlus size={16} /> New Signal
-                            </button>
+                            <div style={{ display: 'flex', gap: 12 }}>
+                                <button onClick={handleWipeAllSignals} style={{ padding: '12px 20px', fontSize: 13, borderRadius: 12, border: '1px solid rgba(244,63,94,0.3)', background: 'transparent', color: '#F87171', fontWeight: 700, cursor: 'pointer' }}>
+                                    Wipe All Signals
+                                </button>
+                                <button onClick={() => setShowAddModal(true)} className="btn-primary" style={{ padding: '12px 28px', fontSize: 14, borderRadius: 12 }}>
+                                    <FilePlus size={16} /> New Signal
+                                </button>
+                            </div>
                         </div>
 
                         {/* Stats */}
@@ -311,10 +342,21 @@ const AdminDashboard = () => {
                     </>
                 ) : (
                     <>
-                        <div style={{ marginBottom: 40 }}>
-                            <h1 className="font-title" style={{ fontSize: 28, fontWeight: 900, marginBottom: 4 }}>Intelligence Network</h1>
-                            <p style={{ color: '#475569', fontSize: 14 }}>Authorized newsletter subscribers</p>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 40 }}>
+                            <div>
+                                <h1 className="font-title" style={{ fontSize: 28, fontWeight: 900, marginBottom: 4 }}>Intelligence Network</h1>
+                                <p style={{ color: '#475569', fontSize: 14 }}>Authorized newsletter subscribers</p>
+                            </div>
+                            <button onClick={handleWipeAllSubscribers} style={{ padding: '12px 24px', fontSize: 14, borderRadius: 12, border: '1px solid rgba(244,63,94,0.4)', background: 'rgba(244,63,94,0.05)', color: '#F87171', fontWeight: 700, cursor: 'pointer' }}>
+                                Purge Network List
+                            </button>
                         </div>
+
+                        {subCount > 0 && subscribers.length === 0 && (
+                            <div style={{ padding: '16px 20px', background: 'rgba(234, 179, 8, 0.1)', border: '1px solid rgba(234, 179, 8, 0.2)', borderRadius: 12, marginBottom: 24, color: '#facc15', fontSize: 14 }}>
+                                <strong>⚠️ RLS Warning:</strong> Database shows {subCount} records, but they are hidden. Please ensure RLS (Row Level Security) is disabled for "Select" on the `newsletter_subscribers` table in your Supabase dashboard.
+                            </div>
+                        )}
 
                         <div style={{ background: '#0e0f1a', border: '1px solid rgba(139,92,246,0.12)', borderRadius: 20, overflow: 'hidden' }}>
                             <div style={{ padding: '20px 28px', borderBottom: '1px solid rgba(139,92,246,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -325,14 +367,14 @@ const AdminDashboard = () => {
                                 <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                                     <thead>
                                         <tr style={{ borderBottom: '1px solid rgba(139,92,246,0.08)' }}>
-                                            {['Subscriber Email', 'Name / Handle', 'Sync Date', 'Status'].map(h => (
+                                            {['Subscriber Email', 'Name / Handle', 'Sync Date', 'Status', 'Actions'].map(h => (
                                                 <th key={h} style={{ padding: '14px 20px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.15em', whiteSpace: 'nowrap' }} className="font-cyber">{h}</th>
                                             ))}
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {subscribers.length === 0 ? (
-                                            <tr><td colSpan={4} style={{ padding: '48px 20px', textAlign: 'center', color: '#475569', fontSize: 15 }}>No subscribers found.</td></tr>
+                                            <tr><td colSpan={5} style={{ padding: '48px 20px', textAlign: 'center', color: '#475569', fontSize: 15 }}>No subscribers found. New signups will appear here automatically.</td></tr>
                                         ) : (
                                             subscribers.map(sub => (
                                                 <tr key={sub.id} style={{ borderBottom: '1px solid rgba(139,92,246,0.05)', transition: 'background 0.2s' }}>
@@ -350,6 +392,13 @@ const AdminDashboard = () => {
                                                     </td>
                                                     <td style={{ padding: '16px 20px' }}>
                                                         <span style={{ padding: '4px 10px', borderRadius: 6, background: 'rgba(34,211,238,0.1)', color: '#22D3EE', fontSize: 10, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Synchronized</span>
+                                                    </td>
+                                                    <td style={{ padding: '16px 20px' }}>
+                                                        <button onClick={() => handleDeleteSubscriber(sub.id)} style={{ background: 'none', border: 'none', color: '#475569', cursor: 'pointer', transition: 'color 0.2s' }}
+                                                            onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = '#F87171'}
+                                                            onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = '#475569'}>
+                                                            <Trash2 size={16} />
+                                                        </button>
                                                     </td>
                                                 </tr>
                                             ))

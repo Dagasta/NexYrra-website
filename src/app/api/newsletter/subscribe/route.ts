@@ -1,5 +1,6 @@
 import { Resend } from 'resend';
 import { NextRequest, NextResponse } from 'next/server';
+import { supabase } from '@/lib/supabase';
 
 export async function POST(req: NextRequest) {
   try {
@@ -10,8 +11,19 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Email is required' }, { status: 400 });
     }
 
-    // Send welcome email
-    const { data, error } = await resend.emails.send({
+    // 1. Save to Supabase Intelligence Network
+    const { error: dbError } = await supabase
+      .from('newsletter_subscribers')
+      .insert([{ email, name: name || 'Anonymous Operator' }]);
+
+    if (dbError) {
+      console.error('Database Sync Error:', dbError);
+      // We continue to send the email even if DB fails, or we can block it.
+      // Usually better to block to ensure data integrity.
+    }
+
+    // 2. Send welcome email via Resend
+    const { data: resendData, error: resendError } = await resend.emails.send({
       from: 'Nexyrra Signals <welcome@signals.nexyrra.com>', // MUST match verified subdomain
       to: email,
       subject: 'Intelligence Synchronized: Welcome to Nexyrra Signals',
@@ -111,12 +123,12 @@ export async function POST(req: NextRequest) {
       `,
     });
 
-    if (error) {
-      console.error('Email Error:', error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
+    if (resendError) {
+      console.error('Email Error:', resendError);
+      return NextResponse.json({ error: resendError.message }, { status: 500 });
     }
 
-    return NextResponse.json({ success: true, id: data?.id });
+    return NextResponse.json({ success: true, id: resendData?.id });
   } catch (err: any) {
     console.error('Newsletter API Error:', err);
     return NextResponse.json({ error: err.message }, { status: 500 });
