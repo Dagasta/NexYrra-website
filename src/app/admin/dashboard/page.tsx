@@ -17,6 +17,7 @@ const AdminDashboard = () => {
     const [issues, setIssues] = useState<NewsletterIssue[]>([]);
     const [subCount, setSubCount] = useState(0);
     const [subscribers, setSubscribers] = useState<{ id: string; email: string; created_at: string; name?: string }[]>([]);
+    const [fetchError, setFetchError] = useState<string | null>(null);
     const [showAddModal, setShowAddModal] = useState(false);
     const [uploading, setUploading] = useState(false);
     const [activeNav, setActiveNav] = useState('dashboard');
@@ -49,9 +50,11 @@ const AdminDashboard = () => {
     };
 
     const fetchSubscribers = async () => {
+        setFetchError(null);
         const { data, error } = await supabase.from('newsletter_subscribers').select('*').order('created_at', { ascending: false });
         if (error) {
             console.error('FETCH ERROR (Subscribers):', error);
+            setFetchError(error.message);
         }
         if (data) setSubscribers(data);
     };
@@ -347,10 +350,25 @@ const AdminDashboard = () => {
                                 <h1 className="font-title" style={{ fontSize: 28, fontWeight: 900, marginBottom: 4 }}>Intelligence Network</h1>
                                 <p style={{ color: '#475569', fontSize: 14 }}>Authorized newsletter subscribers</p>
                             </div>
-                            <button onClick={handleWipeAllSubscribers} style={{ padding: '12px 24px', fontSize: 14, borderRadius: 12, border: '1px solid rgba(244,63,94,0.4)', background: 'rgba(244,63,94,0.05)', color: '#F87171', fontWeight: 700, cursor: 'pointer' }}>
-                                Purge Network List
-                            </button>
+                            <div style={{ display: 'flex', gap: 12 }}>
+                                <button onClick={fetchSubscribers} style={{ padding: '12px 20px', fontSize: 13, borderRadius: 12, border: '1px solid rgba(34,211,238,0.2)', background: 'transparent', color: '#22D3EE', fontWeight: 700, cursor: 'pointer' }}>
+                                    Retry Sync
+                                </button>
+                                <button onClick={handleWipeAllSubscribers} style={{ padding: '12px 24px', fontSize: 14, borderRadius: 12, border: '1px solid rgba(244,63,94,0.4)', background: 'rgba(244,63,94,0.05)', color: '#F87171', fontWeight: 700, cursor: 'pointer' }}>
+                                    Purge Network List
+                                </button>
+                            </div>
                         </div>
+
+                        {fetchError && (
+                            <div style={{ padding: '20px', background: 'rgba(244,63,94,0.1)', border: '1px solid rgba(244,63,94,0.3)', borderRadius: 16, marginBottom: 30 }}>
+                                <div style={{ color: '#F87171', fontWeight: 900, fontSize: 13, marginBottom: 8, letterSpacing: '0.1em' }}>🔴 SYSTEM ERROR: DATABASE REJECTED QUERY</div>
+                                <p style={{ color: '#FCA5A5', fontSize: 14, margin: 0, fontFamily: 'monospace' }}>{fetchError}</p>
+                                <p style={{ color: '#FCA5A5', fontSize: 12, marginTop: 12, opacity: 0.8 }}>
+                                    Tip: If the error says "column created_at does not exist", you might need to check your table schema.
+                                </p>
+                            </div>
+                        )}
 
                         {subCount > 0 && subscribers.length === 0 && (
                             <div style={{ padding: '16px 20px', background: 'rgba(234, 179, 8, 0.1)', border: '1px solid rgba(234, 179, 8, 0.2)', borderRadius: 12, marginBottom: 24, color: '#facc15', fontSize: 14 }}>
