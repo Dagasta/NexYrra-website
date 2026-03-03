@@ -16,6 +16,7 @@ const AdminDashboard = () => {
     const [loginError, setLoginError] = useState('');
     const [issues, setIssues] = useState<NewsletterIssue[]>([]);
     const [subCount, setSubCount] = useState(0);
+    const [subscribers, setSubscribers] = useState<{ id: string; email: string; created_at: string; name?: string }[]>([]);
     const [showAddModal, setShowAddModal] = useState(false);
     const [uploading, setUploading] = useState(false);
     const [activeNav, setActiveNav] = useState('dashboard');
@@ -33,6 +34,7 @@ const AdminDashboard = () => {
         if (authed) {
             fetchIssues();
             fetchSubscriberCount();
+            fetchSubscribers();
         }
     }, [authed]);
 
@@ -44,6 +46,11 @@ const AdminDashboard = () => {
     const fetchSubscriberCount = async () => {
         const { count } = await supabase.from('newsletter_subscribers').select('*', { count: 'exact', head: true });
         setSubCount(count || 0);
+    };
+
+    const fetchSubscribers = async () => {
+        const { data } = await supabase.from('newsletter_subscribers').select('*').order('created_at', { ascending: false });
+        if (data) setSubscribers(data);
     };
 
     const handleLogin = (e: React.FormEvent) => {
@@ -203,9 +210,7 @@ const AdminDashboard = () => {
                 <nav style={{ padding: '24px 16px', flex: 1, display: 'flex', flexDirection: 'column', gap: 4 }}>
                     {[
                         { id: 'dashboard', label: 'Dashboard', Icon: LayoutDashboard },
-                        { id: 'signals', label: 'Signals', Icon: FilePlus },
                         { id: 'subscribers', label: 'Subscribers', Icon: Users },
-                        { id: 'settings', label: 'Settings', Icon: Settings },
                     ].map(({ id, label, Icon }) => (
                         <button key={id} onClick={() => setActiveNav(id)}
                             style={{
@@ -231,76 +236,130 @@ const AdminDashboard = () => {
 
             {/* Main Content */}
             <div style={{ flex: 1, padding: 40, overflow: 'auto' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 40 }}>
-                    <div>
-                        <h1 className="font-title" style={{ fontSize: 28, fontWeight: 900, marginBottom: 4 }}>Command Dashboard</h1>
-                        <p style={{ color: '#475569', fontSize: 14 }}>Manage Nexyrra Signals intelligence reports</p>
-                    </div>
-                    <button onClick={() => setShowAddModal(true)} className="btn-primary" style={{ padding: '12px 28px', fontSize: 14, borderRadius: 12 }}>
-                        <FilePlus size={16} /> New Signal
-                    </button>
-                </div>
-
-                {/* Stats */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20, marginBottom: 40 }}>
-                    {statsCards.map((s) => (
-                        <div key={s.label} style={{ background: '#0e0f1a', border: '1px solid rgba(139,92,246,0.12)', borderRadius: 18, padding: 24 }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
-                                <div style={{ width: 40, height: 40, borderRadius: 12, background: s.color + '22', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                    <s.icon size={18} style={{ color: s.color }} />
-                                </div>
+                {activeNav === 'dashboard' ? (
+                    <>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 40 }}>
+                            <div>
+                                <h1 className="font-title" style={{ fontSize: 28, fontWeight: 900, marginBottom: 4 }}>Command Dashboard</h1>
+                                <p style={{ color: '#475569', fontSize: 14 }}>Manage Nexyrra Signals intelligence reports</p>
                             </div>
-                            <div className="font-cyber" style={{ fontSize: 32, fontWeight: 900, color: 'white', marginBottom: 4 }}>{s.value}</div>
-                            <div style={{ fontSize: 13, color: '#475569', fontWeight: 600 }}>{s.label}</div>
+                            <button onClick={() => setShowAddModal(true)} className="btn-primary" style={{ padding: '12px 28px', fontSize: 14, borderRadius: 12 }}>
+                                <FilePlus size={16} /> New Signal
+                            </button>
                         </div>
-                    ))}
-                </div>
 
-                {/* Issues Table */}
-                <div style={{ background: '#0e0f1a', border: '1px solid rgba(139,92,246,0.12)', borderRadius: 20, overflow: 'hidden' }}>
-                    <div style={{ padding: '20px 28px', borderBottom: '1px solid rgba(139,92,246,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <h3 className="font-title" style={{ fontSize: 17, fontWeight: 800 }}>Published Signals</h3>
-                        <span className="font-cyber" style={{ fontSize: 11, color: '#475569', fontWeight: 700, letterSpacing: '0.2em' }}>{issues.length} TOTAL</span>
-                    </div>
-                    <div style={{ overflowX: 'auto' }}>
-                        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                            <thead>
-                                <tr style={{ borderBottom: '1px solid rgba(139,92,246,0.08)' }}>
-                                    {['Title', 'Category', 'Date', 'Actions'].map(h => (
-                                        <th key={h} style={{ padding: '14px 20px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.15em', whiteSpace: 'nowrap' }} className="font-cyber">{h}</th>
-                                    ))}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {issues.length === 0 ? (
-                                    <tr><td colSpan={4} style={{ padding: '48px 20px', textAlign: 'center', color: '#475569', fontSize: 15 }}>No signals published yet. Click "New Signal" to create one.</td></tr>
-                                ) : (
-                                    issues.map(issue => (
-                                        <tr key={issue.id} style={{ borderBottom: '1px solid rgba(139,92,246,0.05)', transition: 'background 0.2s' }}
-                                            onMouseEnter={e => (e.currentTarget as HTMLElement).style.background = 'rgba(139,92,246,0.04)'}
-                                            onMouseLeave={e => (e.currentTarget as HTMLElement).style.background = 'transparent'}>
-                                            <td style={{ padding: '16px 20px' }}>
-                                                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                                                    {issue.image_url && <img src={issue.image_url} alt="" style={{ width: 40, height: 40, borderRadius: 8, objectFit: 'cover', flexShrink: 0 }} />}
-                                                    <span style={{ fontWeight: 700, fontSize: 14, maxWidth: 280, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>{issue.title}</span>
-                                                </div>
-                                            </td>
-                                            <td style={{ padding: '16px 20px' }}>
-                                                <span style={{ padding: '4px 12px', borderRadius: 999, background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.2)', color: '#A78BFA', fontSize: 11, fontWeight: 700 }} className="font-cyber">{issue.category}</span>
-                                            </td>
-                                            <td style={{ padding: '16px 20px', color: '#64748B', fontSize: 13, fontWeight: 600 }}>{issue.published_at}</td>
-                                            <td style={{ padding: '16px 20px' }}>
-                                                <button onClick={() => handleDelete(issue.id)} style={{ padding: '6px 14px', borderRadius: 8, background: 'rgba(244,63,94,0.1)', border: '1px solid rgba(244,63,94,0.2)', color: '#F87171', cursor: 'pointer', fontSize: 12, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6, fontFamily: 'var(--font-main)' }}>
-                                                    <Trash2 size={12} /> Delete
-                                                </button>
-                                            </td>
+                        {/* Stats */}
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20, marginBottom: 40 }}>
+                            {statsCards.map((s) => (
+                                <div key={s.label} style={{ background: '#0e0f1a', border: '1px solid rgba(139,92,246,0.12)', borderRadius: 18, padding: 24 }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
+                                        <div style={{ width: 40, height: 40, borderRadius: 12, background: s.color + '22', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                            <s.icon size={18} style={{ color: s.color }} />
+                                        </div>
+                                    </div>
+                                    <div className="font-cyber" style={{ fontSize: 32, fontWeight: 900, color: 'white', marginBottom: 4 }}>{s.value}</div>
+                                    <div style={{ fontSize: 13, color: '#475569', fontWeight: 600 }}>{s.label}</div>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Issues Table */}
+                        <div style={{ background: '#0e0f1a', border: '1px solid rgba(139,92,246,0.12)', borderRadius: 20, overflow: 'hidden' }}>
+                            <div style={{ padding: '20px 28px', borderBottom: '1px solid rgba(139,92,246,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                <h3 className="font-title" style={{ fontSize: 17, fontWeight: 800 }}>Published Signals</h3>
+                                <span className="font-cyber" style={{ fontSize: 11, color: '#475569', fontWeight: 700, letterSpacing: '0.2em' }}>{issues.length} TOTAL</span>
+                            </div>
+                            <div style={{ overflowX: 'auto' }}>
+                                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                                    <thead>
+                                        <tr style={{ borderBottom: '1px solid rgba(139,92,246,0.08)' }}>
+                                            {['Title', 'Category', 'Date', 'Actions'].map(h => (
+                                                <th key={h} style={{ padding: '14px 20px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.15em', whiteSpace: 'nowrap' }} className="font-cyber">{h}</th>
+                                            ))}
                                         </tr>
-                                    ))
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                                    </thead>
+                                    <tbody>
+                                        {issues.length === 0 ? (
+                                            <tr><td colSpan={4} style={{ padding: '48px 20px', textAlign: 'center', color: '#475569', fontSize: 15 }}>No signals published yet. Click "New Signal" to create one.</td></tr>
+                                        ) : (
+                                            issues.map(issue => (
+                                                <tr key={issue.id} style={{ borderBottom: '1px solid rgba(139,92,246,0.05)', transition: 'background 0.2s' }}
+                                                    onMouseEnter={e => (e.currentTarget as HTMLElement).style.background = 'rgba(139,92,246,0.04)'}
+                                                    onMouseLeave={e => (e.currentTarget as HTMLElement).style.background = 'transparent'}>
+                                                    <td style={{ padding: '16px 20px' }}>
+                                                        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                                                            {issue.image_url && <img src={issue.image_url} alt="" style={{ width: 40, height: 40, borderRadius: 8, objectFit: 'cover', flexShrink: 0 }} />}
+                                                            <span style={{ fontWeight: 700, fontSize: 14, maxWidth: 280, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>{issue.title}</span>
+                                                        </div>
+                                                    </td>
+                                                    <td style={{ padding: '16px 20px' }}>
+                                                        <span style={{ padding: '4px 12px', borderRadius: 999, background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.2)', color: '#A78BFA', fontSize: 11, fontWeight: 700 }} className="font-cyber">{issue.category}</span>
+                                                    </td>
+                                                    <td style={{ padding: '16px 20px', color: '#64748B', fontSize: 13, fontWeight: 600 }}>{issue.published_at}</td>
+                                                    <td style={{ padding: '16px 20px' }}>
+                                                        <button onClick={() => handleDelete(issue.id)} style={{ padding: '6px 14px', borderRadius: 8, background: 'rgba(244,63,94,0.1)', border: '1px solid rgba(244,63,94,0.2)', color: '#F87171', cursor: 'pointer', fontSize: 12, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6, fontFamily: 'var(--font-main)' }}>
+                                                            <Trash2 size={12} /> Delete
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))
+                                        )}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </>
+                ) : (
+                    <>
+                        <div style={{ marginBottom: 40 }}>
+                            <h1 className="font-title" style={{ fontSize: 28, fontWeight: 900, marginBottom: 4 }}>Intelligence Network</h1>
+                            <p style={{ color: '#475569', fontSize: 14 }}>Authorized newsletter subscribers</p>
+                        </div>
+
+                        <div style={{ background: '#0e0f1a', border: '1px solid rgba(139,92,246,0.12)', borderRadius: 20, overflow: 'hidden' }}>
+                            <div style={{ padding: '20px 28px', borderBottom: '1px solid rgba(139,92,246,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                <h3 className="font-title" style={{ fontSize: 17, fontWeight: 800 }}>Subscriber List</h3>
+                                <span className="font-cyber" style={{ fontSize: 11, color: '#475569', fontWeight: 700, letterSpacing: '0.2em' }}>{subscribers.length} TOTAL</span>
+                            </div>
+                            <div style={{ overflowX: 'auto' }}>
+                                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                                    <thead>
+                                        <tr style={{ borderBottom: '1px solid rgba(139,92,246,0.08)' }}>
+                                            {['Subscriber Email', 'Name / Handle', 'Sync Date', 'Status'].map(h => (
+                                                <th key={h} style={{ padding: '14px 20px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.15em', whiteSpace: 'nowrap' }} className="font-cyber">{h}</th>
+                                            ))}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {subscribers.length === 0 ? (
+                                            <tr><td colSpan={4} style={{ padding: '48px 20px', textAlign: 'center', color: '#475569', fontSize: 15 }}>No subscribers found.</td></tr>
+                                        ) : (
+                                            subscribers.map(sub => (
+                                                <tr key={sub.id} style={{ borderBottom: '1px solid rgba(139,92,246,0.05)', transition: 'background 0.2s' }}>
+                                                    <td style={{ padding: '16px 20px' }}>
+                                                        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                                                            <div style={{ width: 32, height: 32, borderRadius: 50, background: 'rgba(139,92,246,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#8B5CF6', fontSize: 12, fontWeight: 800 }}>
+                                                                {sub.email.charAt(0).toUpperCase()}
+                                                            </div>
+                                                            <span style={{ fontWeight: 700, fontSize: 14 }}>{sub.email}</span>
+                                                        </div>
+                                                    </td>
+                                                    <td style={{ padding: '16px 20px', color: '#cbd5e1', fontSize: 14 }}>{sub.name || 'Anonymous Operator'}</td>
+                                                    <td style={{ padding: '16px 20px', color: '#64748B', fontSize: 13, fontWeight: 600 }}>
+                                                        {new Date(sub.created_at).toLocaleDateString()}
+                                                    </td>
+                                                    <td style={{ padding: '16px 20px' }}>
+                                                        <span style={{ padding: '4px 10px', borderRadius: 6, background: 'rgba(34,211,238,0.1)', color: '#22D3EE', fontSize: 10, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Synchronized</span>
+                                                    </td>
+                                                </tr>
+                                            ))
+                                        )}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </>
+                )}
             </div>
 
             {/* Add Signal Modal */}
