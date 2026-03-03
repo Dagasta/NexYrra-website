@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
 
     // Send welcome email
     const { data, error } = await resend.emails.send({
-      from: 'Nexyrra Signals <signals@nexyrra.com>', // REQUIREMENT: You MUST verify the nexyrra.com domain in Resend dashboard for this to work
+      from: 'Nexyrra Signals <welcome@signals.nexyrra.com>', // MUST match verified subdomain
       to: email,
       subject: 'Welcome to Nexyrra Signals: Intelligence Synchronized',
       html: `

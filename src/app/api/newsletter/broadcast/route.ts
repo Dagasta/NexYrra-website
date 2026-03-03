@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
 
     // 2. Send broadcast via Resend (use batches if many)
     const { data, error } = await resend.emails.send({
-      from: 'Nexyrra Signals <signals@nexyrra.com>', // REQUIREMENT: You MUST verify the nexyrra.com domain in Resend dashboard for this to work
+      from: 'Nexyrra Signals <intelligence@signals.nexyrra.com>', // MUST match verified subdomain
       to: emails,
       subject: `NEW SIGNAL: ${title}`,
       html: `
