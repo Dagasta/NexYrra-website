@@ -19,6 +19,7 @@ const AdminDashboard = () => {
     const [subscribers, setSubscribers] = useState<{ id: string; email: string; created_at: string; name?: string }[]>([]);
     const [fetchError, setFetchError] = useState<string | null>(null);
     const [showAddModal, setShowAddModal] = useState(false);
+    const [editingIssue, setEditingIssue] = useState<NewsletterIssue | null>(null);
     const [uploading, setUploading] = useState(false);
     const [activeNav, setActiveNav] = useState('dashboard');
     const fileRef = useRef<HTMLInputElement>(null);
@@ -51,7 +52,8 @@ const AdminDashboard = () => {
 
     const fetchSubscribers = async () => {
         setFetchError(null);
-        const { data, error } = await supabase.from('newsletter_subscribers').select('*').order('created_at', { ascending: false });
+        // We remove the strict order to fix the 'created_at' missing error
+        const { data, error } = await supabase.from('newsletter_subscribers').select('*');
         if (error) {
             console.error('FETCH ERROR (Subscribers):', error);
             setFetchError(error.message);
@@ -115,43 +117,66 @@ const AdminDashboard = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        // 1. Save to Supabase
-        const { error } = await supabase.from('newsletter_issues').insert([{
-            ...form,
-            published_at: new Date().toISOString().split('T')[0],
-        }]);
+        if (editingIssue) {
+            // UPDATE existing
+            const { error } = await supabase.from('newsletter_issues').update({
+                title: form.title,
+                excerpt: form.excerpt,
+                content: form.content,
+                category: form.category,
+                image_url: form.image_url,
+            }).eq('id', editingIssue.id);
 
-        if (error) {
-            alert('Error saving to database: ' + error.message);
-            return;
-        }
-
-        // 2. Trigger Broadcast Email to Subscribers
-        console.log('Publishing signal... Sending broadcast emails...');
-        try {
-            const response = await fetch('/api/newsletter/broadcast', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    title: form.title,
-                    excerpt: form.excerpt,
-                    image_url: form.image_url,
-                    category: form.category
-                })
-            });
-
-            if (!response.ok) {
-                const data = await response.json();
-                console.warn('Broadcast partial failure:', data.error);
-                // We still proceed since the data is saved in DB
+            if (error) {
+                alert('Error updating: ' + error.message);
+                return;
             }
-        } catch (err) {
-            console.error('Broadcast network error:', err);
+            setEditingIssue(null);
+        } else {
+            // INSERT new
+            const { error } = await supabase.from('newsletter_issues').insert([{
+                ...form,
+                published_at: new Date().toISOString().split('T')[0],
+            }]);
+
+            if (error) {
+                alert('Error saving to database: ' + error.message);
+                return;
+            }
+
+            // 2. Trigger Broadcast Email to Subscribers (Only for NEW posts)
+            console.log('Publishing signal... Sending broadcast emails...');
+            try {
+                await fetch('/api/newsletter/broadcast', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        title: form.title,
+                        excerpt: form.excerpt,
+                        image_url: form.image_url,
+                        category: form.category
+                    })
+                });
+            } catch (err) {
+                console.error('Broadcast network error:', err);
+            }
         }
 
         setShowAddModal(false);
         setForm({ title: '', excerpt: '', content: '', category: 'Strategic Alpha', image_url: '' });
         fetchIssues();
+    };
+
+    const handleEditClick = (issue: NewsletterIssue) => {
+        setForm({
+            title: issue.title,
+            excerpt: issue.excerpt,
+            content: issue.content || '',
+            category: issue.category,
+            image_url: issue.image_url || '',
+        });
+        setEditingIssue(issue);
+        setShowAddModal(true);
     };
 
     const handleDelete = async (id: string) => {
@@ -331,9 +356,14 @@ const AdminDashboard = () => {
                                                     </td>
                                                     <td style={{ padding: '16px 20px', color: '#64748B', fontSize: 13, fontWeight: 600 }}>{issue.published_at}</td>
                                                     <td style={{ padding: '16px 20px' }}>
-                                                        <button onClick={() => handleDelete(issue.id)} style={{ padding: '6px 14px', borderRadius: 8, background: 'rgba(244,63,94,0.1)', border: '1px solid rgba(244,63,94,0.2)', color: '#F87171', cursor: 'pointer', fontSize: 12, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6, fontFamily: 'var(--font-main)' }}>
-                                                            <Trash2 size={12} /> Delete
-                                                        </button>
+                                                        <div style={{ display: 'flex', gap: 8 }}>
+                                                            <button onClick={() => handleEditClick(issue)} style={{ padding: '6px 14px', borderRadius: 8, background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.2)', color: '#A78BFA', cursor: 'pointer', fontSize: 12, fontWeight: 700, fontFamily: 'var(--font-main)' }}>
+                                                                Edit
+                                                            </button>
+                                                            <button onClick={() => handleDelete(issue.id)} style={{ padding: '6px 14px', borderRadius: 8, background: 'rgba(244,63,94,0.1)', border: '1px solid rgba(244,63,94,0.2)', color: '#F87171', cursor: 'pointer', fontSize: 12, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6, fontFamily: 'var(--font-main)' }}>
+                                                                <Trash2 size={12} /> Delete
+                                                            </button>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             ))
@@ -438,8 +468,8 @@ const AdminDashboard = () => {
                             style={{ width: '100%', maxWidth: 600, background: '#0e0f1a', border: '1px solid rgba(139,92,246,0.2)', borderRadius: 24, padding: 40, maxHeight: '90vh', overflowY: 'auto' }}>
 
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28 }}>
-                                <h3 className="font-title" style={{ fontSize: 22, fontWeight: 900 }}>New Intelligence Report</h3>
-                                <button onClick={() => setShowAddModal(false)} style={{ background: 'none', border: 'none', color: '#64748B', cursor: 'pointer', padding: 4 }}>
+                                <h3 className="font-title" style={{ fontSize: 22, fontWeight: 900 }}>{editingIssue ? 'Refine Intelligence' : 'New Intelligence Report'}</h3>
+                                <button onClick={() => { setShowAddModal(false); setEditingIssue(null); }} style={{ background: 'none', border: 'none', color: '#64748B', cursor: 'pointer', padding: 4 }}>
                                     <X size={22} />
                                 </button>
                             </div>
@@ -501,11 +531,11 @@ const AdminDashboard = () => {
                                 </div>
 
                                 <div style={{ display: 'flex', gap: 12, marginTop: 8 }}>
-                                    <button type="button" onClick={() => setShowAddModal(false)} className="btn-outline" style={{ flex: 1, padding: '14px', justifyContent: 'center', borderRadius: 12 }}>
+                                    <button type="button" onClick={() => { setShowAddModal(false); setEditingIssue(null); }} className="btn-outline" style={{ flex: 1, padding: '14px', justifyContent: 'center', borderRadius: 12 }}>
                                         Cancel
                                     </button>
                                     <button type="submit" className="btn-primary" style={{ flex: 2, padding: '14px', justifyContent: 'center', borderRadius: 12 }}>
-                                        Publish Signal
+                                        {editingIssue ? 'Update Signal' : 'Publish Signal'}
                                     </button>
                                 </div>
                             </form>
