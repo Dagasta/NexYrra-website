@@ -22,6 +22,7 @@ const NexyrraLogo = ({ size = 52 }: { size?: number }) => (
                 height: '100%',
                 objectFit: 'contain',
                 filter: 'drop-shadow(0 0 12px rgba(139,92,246,0.5))',
+                mixBlendMode: 'screen'
             }}
         />
     </div>
