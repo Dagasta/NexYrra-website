@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ArrowRight, Zap, ShieldCheck, Globe } from 'lucide-react';
+import { NexyrraLogo } from './Logo';
 
 const Hero = () => {
     return (
@@ -93,8 +94,8 @@ const Hero = () => {
                             {/* Center card */}
                             <div style={{ position: 'relative', width: 'min(220px, 45vw)', height: 'min(220px, 45vw)', background: '#0e0f1a', borderRadius: 32, border: '1px solid rgba(139,92,246,0.25)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 80px rgba(139,92,246,0.15), 0 0 40px rgba(34,211,238,0.05)' }}
                                 className="anim-glow">
-                                <div style={{ width: 72, height: 72, borderRadius: 24, background: 'linear-gradient(135deg, #8B5CF6, #22D3EE)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
-                                    <Zap size={36} color="white" />
+                                <div style={{ marginBottom: 16 }}>
+                                    <NexyrraLogo size={80} />
                                 </div>
                                 <span className="font-cyber" style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.2em', color: '#8B5CF6', textTransform: 'uppercase' }}>Nexyrra</span>
                                 <span style={{ fontSize: 10, color: '#475569', marginTop: 4, fontWeight: 600 }}>AI Intelligence</span>
