@@ -25,9 +25,8 @@ export async function POST(req: NextRequest) {
     const emails = subscribers.map(s => s.email);
 
     // 2. Send broadcast via Resend (use batches if many)
-    // Note: On professional domain verification, change "from" to nexyrra@gmail.com
     const { data, error } = await resend.emails.send({
-      from: 'Nexyrra Signals <newsletter@resend.dev>',
+      from: 'Nexyrra Signals <signals@nexyrra.com>', // REQUIREMENT: You MUST verify the nexyrra.com domain in Resend dashboard for this to work
       to: emails,
       subject: `NEW SIGNAL: ${title}`,
       html: `
@@ -46,7 +45,7 @@ export async function POST(req: NextRequest) {
           
           <p style="color: #94A3B8; font-size: 16px; line-height: 1.8;">${excerpt}</p>
           
-          <a href="http://localhost:3000/signals" style="display: block; width: 100%; padding: 18px; background: #8B5CF6; color: white; text-align: center; text-decoration: none; border-radius: 12px; font-weight: 800; font-size: 15px; margin-top: 40px;">
+          <a href="https://www.nexyrra.com/signals" style="display: block; width: 100%; padding: 18px; background: #8B5CF6; color: white; text-align: center; text-decoration: none; border-radius: 12px; font-weight: 800; font-size: 15px; margin-top: 40px;">
             READ FULL SIGNAL
           </a>
 

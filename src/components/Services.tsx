@@ -12,7 +12,7 @@ const Services = () => {
             <div style={{ position: 'absolute', top: '30%', right: '-10%', width: 600, height: 600, background: 'radial-gradient(ellipse, rgba(139,92,246,0.07) 0%, transparent 70%)', pointerEvents: 'none' }} />
             <div style={{ position: 'absolute', bottom: '10%', left: '-5%', width: 400, height: 400, background: 'radial-gradient(ellipse, rgba(34,211,238,0.05) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
-            <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 32px' }}>
+            <div className="container-nex">
                 <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} style={{ marginBottom: 80 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
                         <div style={{ width: 32, height: 2, background: '#8B5CF6', borderRadius: 2 }} />
@@ -31,7 +31,7 @@ const Services = () => {
                     </p>
                 </motion.div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))', gap: 20, marginBottom: 80 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 360px), 1fr))', gap: 20, marginBottom: 80 }}>
                     {services.map((service, i) => (
                         <motion.div key={service.slug} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.07 }}>
                             <Link href={`/services/${service.slug}`} style={{ textDecoration: 'none', display: 'block', height: '100%' }}>
@@ -72,7 +72,7 @@ const Services = () => {
                 </div>
 
                 <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-                    style={{ background: 'linear-gradient(135deg, rgba(139,92,246,0.12), rgba(34,211,238,0.06))', border: '1px solid rgba(139,92,246,0.2)', borderRadius: 24, padding: '64px 80px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 40, flexWrap: 'wrap' }}>
+                    style={{ background: 'linear-gradient(135deg, rgba(139,92,246,0.12), rgba(34,211,238,0.06))', border: '1px solid rgba(139,92,246,0.2)', borderRadius: 24, padding: 'clamp(32px, 5vw, 64px) clamp(24px, 5vw, 80px)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 40, flexWrap: 'wrap' }}>
                     <div>
                         <h3 className="font-title" style={{ fontSize: 32, fontWeight: 900, marginBottom: 10 }}>Custom Enterprise Solutions</h3>
                         <p style={{ color: '#94A3B8', fontSize: 16, fontWeight: 400 }}>Need a bespoke AI architecture? We build it from scratch for you.</p>

@@ -24,14 +24,14 @@ export default function ServicePage({ params }: { params: Promise<{ slug: string
             <section style={{ paddingTop: 160, paddingBottom: 80, position: 'relative', overflow: 'hidden' }}>
                 <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: 900, height: 500, background: 'radial-gradient(ellipse, rgba(139,92,246,0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
-                <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 32px' }}>
+                <div className="container-nex" style={{ maxWidth: 1400, position: 'relative' }}>
                     <Link href="/services" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: '#8B5CF6', fontSize: 13, fontWeight: 700, marginBottom: 40, fontFamily: 'var(--font-cyber)', textTransform: 'uppercase', letterSpacing: '0.15em', transition: 'gap 0.2s' }}
                         onMouseEnter={e => (e.currentTarget as HTMLElement).style.gap = '14px'}
                         onMouseLeave={e => (e.currentTarget as HTMLElement).style.gap = '8px'}>
                         <ArrowLeft size={16} /> All Services
                     </Link>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'start' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 500px), 1fr))', gap: 60, alignItems: 'start' }}>
                         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 32 }}>
                                 <div style={{ width: 72, height: 72, borderRadius: 20, background: 'linear-gradient(135deg, rgba(139,92,246,0.2), rgba(34,211,238,0.1))', border: '1px solid rgba(139,92,246,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 36 }}>
@@ -84,7 +84,7 @@ export default function ServicePage({ params }: { params: Promise<{ slug: string
 
             {/* Full Description */}
             <section style={{ padding: '80px 0', borderTop: '1px solid rgba(139,92,246,0.08)' }}>
-                <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 32px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80 }}>
+                <div className="container-nex" style={{ maxWidth: 1400, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 600px), 1fr))', gap: 60 }}>
                     <div>
                         <h2 className="font-title" style={{ fontSize: 36, fontWeight: 900, marginBottom: 24, letterSpacing: '-0.02em' }}>
                             How It Works
@@ -96,7 +96,7 @@ export default function ServicePage({ params }: { params: Promise<{ slug: string
 
                     <div>
                         <h2 className="font-title" style={{ fontSize: 36, fontWeight: 900, marginBottom: 24, letterSpacing: '-0.02em' }}>Use Cases</h2>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 200px), 1fr))', gap: 16 }}>
                             {service.useCases.map((uc, i) => (
                                 <div key={i} style={{ padding: '20px 24px', background: '#0e0f1a', border: '1px solid rgba(139,92,246,0.12)', borderRadius: 16 }}>
                                     <div style={{ width: 32, height: 32, borderRadius: 8, background: 'linear-gradient(135deg, #8B5CF6, #22D3EE)', marginBottom: 12 }} />
@@ -118,9 +118,9 @@ export default function ServicePage({ params }: { params: Promise<{ slug: string
 
             {/* Other Services */}
             <section style={{ padding: '80px 0 120px', borderTop: '1px solid rgba(139,92,246,0.06)' }}>
-                <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 32px' }}>
+                <div className="container-nex" style={{ maxWidth: 1400 }}>
                     <h3 className="font-title" style={{ fontSize: 28, fontWeight: 900, marginBottom: 40 }}>Other Services</h3>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))', gap: 20 }}>
                         {otherServices.map(s => (
                             <Link key={s.slug} href={`/services/${s.slug}`} className="card-nex" style={{ padding: 28, display: 'flex', gap: 16, alignItems: 'flex-start', textDecoration: 'none' }}>
                                 <span style={{ fontSize: 28, flexShrink: 0 }}>{s.icon}</span>
