@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LayoutDashboard, FilePlus, Users, Settings, LogOut, Trash2, Eye, X, Upload, Image as ImageIcon, Sparkles, TrendingUp, Mail } from 'lucide-react';
+import { LayoutDashboard, FilePlus, Users, Settings, LogOut, Trash2, Eye, X, Upload, Image as ImageIcon, Sparkles, TrendingUp, Mail, Menu } from 'lucide-react';
 import { supabase, type NewsletterIssue } from '../../../lib/supabase';
 
 const ADMIN_CREDENTIALS = { id: 'admin', password: 'nexyrra2026' };
@@ -22,7 +22,98 @@ const AdminDashboard = () => {
     const [editingIssue, setEditingIssue] = useState<NewsletterIssue | null>(null);
     const [uploading, setUploading] = useState(false);
     const [activeNav, setActiveNav] = useState('dashboard');
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const fileRef = useRef<HTMLInputElement>(null);
+
+    // Advanced Responsive Architecture
+    const responsiveStyles = `
+        @media (max-width: 1024px) {
+            .admin-container {
+                flex-direction: column !important;
+                overflow-x: hidden !important;
+            }
+            .admin-sidebar {
+                position: fixed !important;
+                z-index: 2000 !important;
+                transform: translateX(-100%) !important;
+                left: 0 !important;
+                top: 0 !important;
+                bottom: 0 !important;
+                background: #0e0f1a !important;
+                transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+                box-shadow: none !important;
+                width: 280px !important;
+                height: 100vh !important;
+                flex-shrink: 0 !important;
+            }
+            .admin-sidebar.open {
+                transform: translateX(0) !important;
+                box-shadow: 20px 0 60px rgba(0,0,0,0.8) !important;
+            }
+            .admin-main {
+                padding: 100px 20px 40px 20px !important;
+                width: 100% !important;
+                margin: 0 !important;
+                flex: 1 !important;
+            }
+            .mobile-only-flex {
+                display: flex !important;
+            }
+            .mobile-only-block {
+                display: block !important;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 12px !important;
+            }
+            .header-flex {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 20px !important;
+            }
+            .header-actions {
+                width: 100% !important;
+                flex-direction: column !important;
+                gap: 10px !important;
+            }
+            .header-actions button {
+                width: 100% !important;
+                justify-content: center !important;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .stats-grid {
+                grid-template-columns: 1fr !important;
+            }
+            .login-card {
+                padding: 32px 20px !important;
+                margin: 16px !important;
+                border-radius: 20px !important;
+            }
+            .admin-main {
+                padding: 90px 16px 40px 16px !important;
+            }
+        }
+
+        .admin-sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(4px);
+            z-index: 1500;
+        }
+
+        .admin-sidebar-overlay.visible {
+            display: block !important;
+        }
+
+        /* Essential Reset for Mobile Content */
+        .mobile-only-flex, .mobile-only-block {
+            display: none;
+        }
+    `;
 
     const [form, setForm] = useState({
         title: '',
@@ -30,6 +121,7 @@ const AdminDashboard = () => {
         content: '',
         category: 'Strategic Alpha' as NewsletterIssue['category'],
         image_url: '',
+        image_urls: [] as string[],
     });
 
     useEffect(() => {
@@ -78,40 +170,51 @@ const AdminDashboard = () => {
         }
     };
 
-    const handleImageUpload = async (file: File) => {
+    const handleImageUpload = async (files: FileList) => {
         setUploading(true);
-        console.log('Starting secure upload via API...');
-        const path = `newsletter/${Date.now()}_${file.name}`;
+        console.log(`Starting secure upload for ${files.length} files via API...`);
 
-        try {
-            const formData = new FormData();
-            formData.append('file', file);
-            formData.append('path', path);
+        const uploadedUrls: string[] = [];
 
-            const response = await fetch('/api/admin/upload', {
-                method: 'POST',
-                body: formData,
-            });
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            const path = `newsletter/${Date.now()}_${file.name}`;
 
-            const data = await response.json();
+            try {
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('path', path);
 
-            if (!response.ok) {
-                console.error('API Error:', data.error);
-                alert(`Upload failed: ${data.error}. If it says "bucket not found", please ensure a bucket named "nexyrra-media" exists in your Supabase storage.`);
-                setUploading(false);
-                return;
+                const response = await fetch('/api/admin/upload', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    console.error('API Error:', data.error);
+                    alert(`Upload failed for ${file.name}: ${data.error}`);
+                    continue;
+                }
+
+                if (data.publicUrl) {
+                    uploadedUrls.push(data.publicUrl);
+                    console.log('Upload successful! Public URL:', data.publicUrl);
+                }
+            } catch (e: any) {
+                console.error('Unexpected error during secure upload:', e);
+                alert('An unexpected error occurred: ' + (e.message || 'Check console logs.'));
             }
-
-            if (data.publicUrl) {
-                setForm(f => ({ ...f, image_url: data.publicUrl }));
-                console.log('Upload successful! Public URL:', data.publicUrl);
-            }
-        } catch (e: any) {
-            console.error('Unexpected error during secure upload:', e);
-            alert('An unexpected error occurred: ' + (e.message || 'Check console logs.'));
-        } finally {
-            setUploading(false);
         }
+
+        setForm(f => ({
+            ...f,
+            image_urls: [...(f.image_urls || []), ...uploadedUrls],
+            // Set first image as cover if none exists
+            image_url: f.image_url || uploadedUrls[0] || ''
+        }));
+        setUploading(false);
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -125,6 +228,7 @@ const AdminDashboard = () => {
                 content: form.content,
                 category: form.category,
                 image_url: form.image_url,
+                image_urls: form.image_urls,
             }).eq('id', editingIssue.id);
 
             if (error) {
@@ -154,6 +258,7 @@ const AdminDashboard = () => {
                         title: form.title,
                         excerpt: form.excerpt,
                         image_url: form.image_url,
+                        image_urls: form.image_urls,
                         category: form.category
                     })
                 });
@@ -163,7 +268,7 @@ const AdminDashboard = () => {
         }
 
         setShowAddModal(false);
-        setForm({ title: '', excerpt: '', content: '', category: 'Strategic Alpha', image_url: '' });
+        setForm({ title: '', excerpt: '', content: '', category: 'Strategic Alpha', image_url: '', image_urls: [] });
         fetchIssues();
     };
 
@@ -174,6 +279,7 @@ const AdminDashboard = () => {
             content: issue.content || '',
             category: issue.category,
             image_url: issue.image_url || '',
+            image_urls: issue.image_urls || [],
         });
         setEditingIssue(issue);
         setShowAddModal(true);
@@ -207,6 +313,7 @@ const AdminDashboard = () => {
                 <div style={{ position: 'absolute', top: '-10%', left: '50%', transform: 'translateX(-50%)', width: 800, height: 600, background: 'radial-gradient(ellipse, rgba(139,92,246,0.12) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
                 <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}
+                    className="login-card"
                     style={{ width: '100%', maxWidth: 440, background: '#0e0f1a', border: '1px solid rgba(139,92,246,0.2)', borderRadius: 28, padding: 48, position: 'relative', overflow: 'hidden' }}>
                     <div style={{ position: 'absolute', top: 0, right: 0, width: 160, height: 160, background: 'radial-gradient(circle, rgba(139,92,246,0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
@@ -247,9 +354,31 @@ const AdminDashboard = () => {
     ];
 
     return (
-        <main style={{ minHeight: '100vh', background: '#08090f', display: 'flex', color: 'white' }}>
+        <main className="admin-container" style={{ minHeight: '100vh', background: '#08090f', display: 'flex', color: 'white', position: 'relative' }}>
+            <style>{responsiveStyles}</style>
+
+            {/* Mobile Header */}
+            <div style={{ position: 'fixed', top: 0, left: 0, right: 0, height: 64, background: '#0e0f1a', borderBottom: '1px solid rgba(139,92,246,0.1)', display: 'none', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', zIndex: 900 }} className="mobile-only-flex">
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <div style={{ width: 32, height: 32, borderRadius: 8, background: 'linear-gradient(135deg, #8B5CF6, #22D3EE)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <Sparkles size={16} color="white" />
+                    </div>
+                    <span className="font-cyber" style={{ fontSize: 14, fontWeight: 900 }}>NEXYRRA</span>
+                </div>
+                <button onClick={() => setIsSidebarOpen(true)} style={{ background: 'none', border: 'none', color: '#A78BFA', cursor: 'pointer', padding: 8 }}>
+                    <Menu size={24} />
+                </button>
+            </div>
+
+            {/* Sidebar Overlay */}
+            <div
+                onClick={() => setIsSidebarOpen(false)}
+                className={`admin-sidebar-overlay ${isSidebarOpen ? 'visible' : ''}`}
+            />
+
             {/* Sidebar */}
-            <aside style={{ width: 260, background: '#0e0f1a', borderRight: '1px solid rgba(139,92,246,0.1)', display: 'flex', flexDirection: 'column', position: 'sticky', top: 0, height: '100vh', padding: '32px 0' }}>
+            <aside className={`admin-sidebar ${isSidebarOpen ? 'open' : ''}`}
+                style={{ width: 260, background: '#0e0f1a', borderRight: '1px solid rgba(139,92,246,0.1)', display: 'flex', flexDirection: 'column', position: 'sticky', top: 0, height: '100vh', padding: '32px 0' }}>
                 <div style={{ padding: '0 24px 32px', borderBottom: '1px solid rgba(139,92,246,0.08)' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                         <div style={{ width: 36, height: 36, borderRadius: 10, background: 'linear-gradient(135deg, #8B5CF6, #22D3EE)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -266,7 +395,7 @@ const AdminDashboard = () => {
                         { id: 'dashboard', label: 'Dashboard', Icon: LayoutDashboard },
                         { id: 'subscribers', label: 'Subscribers', Icon: Users },
                     ].map(({ id, label, Icon }) => (
-                        <button key={id} onClick={() => setActiveNav(id)}
+                        <button key={id} onClick={() => { setActiveNav(id); setIsSidebarOpen(false); }}
                             style={{
                                 display: 'flex', alignItems: 'center', gap: 12, padding: '12px 16px', borderRadius: 12, border: 'none', cursor: 'pointer', fontSize: 14, fontWeight: 700, width: '100%', textAlign: 'left', fontFamily: 'var(--font-main)', transition: 'all 0.2s',
                                 background: activeNav === id ? 'rgba(139,92,246,0.15)' : 'transparent',
@@ -289,15 +418,18 @@ const AdminDashboard = () => {
             </aside>
 
             {/* Main Content */}
-            <div style={{ flex: 1, padding: 40, overflow: 'auto' }}>
+            <div className="admin-main" style={{ flex: 1, padding: '40px 60px', overflow: 'auto', marginTop: 0 }}>
+                {/* Visual Spacer for mobile header */}
+                <div style={{ height: 64, display: 'none' }} className="mobile-only-block" />
+
                 {activeNav === 'dashboard' ? (
                     <>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 40 }}>
+                        <div className="header-flex" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 40 }}>
                             <div>
                                 <h1 className="font-title" style={{ fontSize: 28, fontWeight: 900, marginBottom: 4 }}>Command Dashboard</h1>
                                 <p style={{ color: '#475569', fontSize: 14 }}>Manage Nexyrra Signals intelligence reports</p>
                             </div>
-                            <div style={{ display: 'flex', gap: 12 }}>
+                            <div className="header-actions" style={{ display: 'flex', gap: 12 }}>
                                 <button onClick={handleWipeAllSignals} style={{ padding: '12px 20px', fontSize: 13, borderRadius: 12, border: '1px solid rgba(244,63,94,0.3)', background: 'transparent', color: '#F87171', fontWeight: 700, cursor: 'pointer' }}>
                                     Wipe All Signals
                                 </button>
@@ -308,7 +440,7 @@ const AdminDashboard = () => {
                         </div>
 
                         {/* Stats */}
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20, marginBottom: 40 }}>
+                        <div className="stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20, marginBottom: 40 }}>
                             {statsCards.map((s) => (
                                 <div key={s.label} style={{ background: '#0e0f1a', border: '1px solid rgba(139,92,246,0.12)', borderRadius: 18, padding: 24 }}>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
@@ -324,12 +456,12 @@ const AdminDashboard = () => {
 
                         {/* Issues Table */}
                         <div style={{ background: '#0e0f1a', border: '1px solid rgba(139,92,246,0.12)', borderRadius: 20, overflow: 'hidden' }}>
-                            <div style={{ padding: '20px 28px', borderBottom: '1px solid rgba(139,92,246,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                            <div style={{ padding: '20px 28px', borderBottom: '1px solid rgba(139,92,246,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
                                 <h3 className="font-title" style={{ fontSize: 17, fontWeight: 800 }}>Published Signals</h3>
                                 <span className="font-cyber" style={{ fontSize: 11, color: '#475569', fontWeight: 700, letterSpacing: '0.2em' }}>{issues.length} TOTAL</span>
                             </div>
                             <div style={{ overflowX: 'auto' }}>
-                                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                                <table style={{ minWidth: 600, width: '100%', borderCollapse: 'collapse' }}>
                                     <thead>
                                         <tr style={{ borderBottom: '1px solid rgba(139,92,246,0.08)' }}>
                                             {['Title', 'Category', 'Date', 'Actions'].map(h => (
@@ -375,12 +507,12 @@ const AdminDashboard = () => {
                     </>
                 ) : (
                     <>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 40 }}>
+                        <div className="header-flex" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 40 }}>
                             <div>
                                 <h1 className="font-title" style={{ fontSize: 28, fontWeight: 900, marginBottom: 4 }}>Intelligence Network</h1>
                                 <p style={{ color: '#475569', fontSize: 14 }}>Authorized newsletter subscribers</p>
                             </div>
-                            <div style={{ display: 'flex', gap: 12 }}>
+                            <div className="header-actions" style={{ display: 'flex', gap: 12 }}>
                                 <button onClick={fetchSubscribers} style={{ padding: '12px 20px', fontSize: 13, borderRadius: 12, border: '1px solid rgba(34,211,238,0.2)', background: 'transparent', color: '#22D3EE', fontWeight: 700, cursor: 'pointer' }}>
                                     Retry Sync
                                 </button>
@@ -407,12 +539,12 @@ const AdminDashboard = () => {
                         )}
 
                         <div style={{ background: '#0e0f1a', border: '1px solid rgba(139,92,246,0.12)', borderRadius: 20, overflow: 'hidden' }}>
-                            <div style={{ padding: '20px 28px', borderBottom: '1px solid rgba(139,92,246,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                            <div style={{ padding: '20px 28px', borderBottom: '1px solid rgba(139,92,246,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
                                 <h3 className="font-title" style={{ fontSize: 17, fontWeight: 800 }}>Subscriber List</h3>
                                 <span className="font-cyber" style={{ fontSize: 11, color: '#475569', fontWeight: 700, letterSpacing: '0.2em' }}>{subscribers.length} TOTAL</span>
                             </div>
                             <div style={{ overflowX: 'auto' }}>
-                                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                                <table style={{ minWidth: 800, width: '100%', borderCollapse: 'collapse' }}>
                                     <thead>
                                         <tr style={{ borderBottom: '1px solid rgba(139,92,246,0.08)' }}>
                                             {['Subscriber Email', 'Name / Handle', 'Sync Date', 'Status', 'Actions'].map(h => (
@@ -463,8 +595,9 @@ const AdminDashboard = () => {
             <AnimatePresence>
                 {showAddModal && (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                        style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(8px)', zIndex: 999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 32 }}>
+                        style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(8px)', zIndex: 1100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
                         <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }}
+                            className="modal-content"
                             style={{ width: '100%', maxWidth: 600, background: '#0e0f1a', border: '1px solid rgba(139,92,246,0.2)', borderRadius: 24, padding: 40, maxHeight: '90vh', overflowY: 'auto' }}>
 
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28 }}>
@@ -509,32 +642,49 @@ const AdminDashboard = () => {
 
                                 {/* Image Upload */}
                                 <div>
-                                    <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: '#94A3B8', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.1em' }}>Cover Image</label>
-                                    <input ref={fileRef} type="file" accept="image/*" style={{ display: 'none' }}
-                                        onChange={e => { const f = e.target.files?.[0]; if (f) handleImageUpload(f); }} />
-                                    {form.image_url ? (
-                                        <div style={{ position: 'relative' }}>
-                                            <img src={form.image_url} alt="Preview" style={{ width: '100%', height: 160, objectFit: 'cover', borderRadius: 10 }} />
-                                            <button type="button" onClick={() => setForm(f => ({ ...f, image_url: '' }))} style={{ position: 'absolute', top: 8, right: 8, background: 'rgba(0,0,0,0.7)', border: 'none', borderRadius: '50%', width: 28, height: 28, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', cursor: 'pointer' }}>
-                                                <X size={14} />
-                                            </button>
-                                        </div>
-                                    ) : (
+                                    <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: '#94A3B8', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.1em' }}>Intelligence Imagery (Multiple Supported)</label>
+                                    <input ref={fileRef} type="file" accept="image/*" multiple style={{ display: 'none' }}
+                                        onChange={e => { if (e.target.files) handleImageUpload(e.target.files); }} />
+
+                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 12, marginBottom: 12 }}>
+                                        {form.image_urls?.map((url, idx) => (
+                                            <div key={idx} style={{ position: 'relative', borderRadius: 12, overflow: 'hidden', height: 100, border: '1px solid rgba(139,92,246,0.3)' }}>
+                                                <img src={url} alt={`Preview ${idx}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                                <button type="button"
+                                                    onClick={() => setForm(f => ({ ...f, image_urls: f.image_urls?.filter((_, i) => i !== idx), image_url: f.image_url === url ? (f.image_urls?.filter((_, i) => i !== idx)[0] || '') : f.image_url }))}
+                                                    style={{ position: 'absolute', top: 4, right: 4, background: 'rgba(244,63,94,0.8)', border: 'none', borderRadius: '50%', width: 22, height: 22, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', cursor: 'pointer' }}>
+                                                    <X size={12} />
+                                                </button>
+                                                {form.image_url === url && (
+                                                    <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: '#8B5CF6', color: 'white', fontSize: 9, fontWeight: 900, textAlign: 'center', padding: '2px 0' }}>COVER</div>
+                                                )}
+                                                {form.image_url !== url && (
+                                                    <button type="button"
+                                                        onClick={() => setForm(f => ({ ...f, image_url: url }))}
+                                                        style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.4)', opacity: 0, transition: 'opacity 0.2s', border: 'none', color: 'white', fontSize: 10, fontWeight: 700, cursor: 'pointer' }}
+                                                        onMouseEnter={e => (e.currentTarget as HTMLElement).style.opacity = '1'}
+                                                        onMouseLeave={e => (e.currentTarget as HTMLElement).style.opacity = '0'}>
+                                                        Set Cover
+                                                    </button>
+                                                )}
+                                            </div>
+                                        ))}
+
                                         <button type="button" onClick={() => fileRef.current?.click()} disabled={uploading}
-                                            style={{ width: '100%', padding: '32px', background: '#13152a', border: '2px dashed rgba(139,92,246,0.2)', borderRadius: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, cursor: 'pointer', color: '#64748B', transition: 'border-color 0.2s' }}
+                                            style={{ height: 100, background: '#13152a', border: '2px dashed rgba(139,92,246,0.2)', borderRadius: 12, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 6, cursor: 'pointer', color: '#64748B', transition: 'border-color 0.2s' }}
                                             onMouseEnter={e => (e.currentTarget as HTMLElement).style.borderColor = '#8B5CF6'}
                                             onMouseLeave={e => (e.currentTarget as HTMLElement).style.borderColor = 'rgba(139,92,246,0.2)'}>
-                                            {uploading ? <Upload size={24} style={{ animation: 'nex-pulse 1s infinite', color: '#8B5CF6' }} /> : <ImageIcon size={24} />}
-                                            <span style={{ fontSize: 13, fontWeight: 600 }}>{uploading ? 'Uploading...' : 'Click to upload image'}</span>
+                                            {uploading ? <Upload size={20} style={{ animation: 'nex-pulse 1s infinite', color: '#8B5CF6' }} /> : <FilePlus size={20} />}
+                                            <span style={{ fontSize: 11, fontWeight: 600 }}>{uploading ? 'Processing...' : 'Add Images'}</span>
                                         </button>
-                                    )}
+                                    </div>
                                 </div>
 
-                                <div style={{ display: 'flex', gap: 12, marginTop: 8 }}>
-                                    <button type="button" onClick={() => { setShowAddModal(false); setEditingIssue(null); }} className="btn-outline" style={{ flex: 1, padding: '14px', justifyContent: 'center', borderRadius: 12 }}>
+                                <div style={{ display: 'flex', gap: 12, marginTop: 12 }}>
+                                    <button type="button" onClick={() => { setShowAddModal(false); setEditingIssue(null); }} className="btn-outline" style={{ flex: 1, padding: '14px', justifyContent: 'center', borderRadius: 12, fontSize: 14 }}>
                                         Cancel
                                     </button>
-                                    <button type="submit" className="btn-primary" style={{ flex: 2, padding: '14px', justifyContent: 'center', borderRadius: 12 }}>
+                                    <button type="submit" className="btn-primary" style={{ flex: 2, padding: '14px', justifyContent: 'center', borderRadius: 12, fontSize: 14 }}>
                                         {editingIssue ? 'Update Signal' : 'Publish Signal'}
                                     </button>
                                 </div>

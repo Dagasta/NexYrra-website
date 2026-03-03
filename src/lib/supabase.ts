@@ -13,6 +13,7 @@ export interface NewsletterIssue {
     content: string;
     category: 'Market Intelligence' | 'Neural Research' | 'Strategic Alpha';
     image_url?: string;
+    image_urls?: string[];
     published_at: string;
     created_at?: string;
 }

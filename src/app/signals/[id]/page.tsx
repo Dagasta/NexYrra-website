@@ -91,7 +91,22 @@ export default function SignalDetailPage({ params }: { params: Promise<{ id: str
             {/* Signal Content Block */}
             <section style={{ paddingBottom: 120 }}>
                 <div className="container-nex" style={{ maxWidth: 1000 }}>
-                    {issue.image_url && (
+                    {/* Multi-Image Gallery */}
+                    {issue.image_urls && issue.image_urls.length > 0 ? (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 40, marginBottom: 60 }}>
+                            {issue.image_urls.map((url, idx) => (
+                                <motion.div
+                                    initial={{ opacity: 0, y: 30 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ duration: 0.8 }}
+                                    key={idx}
+                                    style={{ width: '100%', borderRadius: 24, overflow: 'hidden', border: '1px solid rgba(139,92,246,0.15)', background: '#0e0f1a', boxShadow: '0 20px 40px rgba(0,0,0,0.4)' }}>
+                                    <img src={url} alt={`${issue.title} visualization ${idx + 1}`} style={{ width: '100%', height: 'auto', display: 'block' }} />
+                                </motion.div>
+                            ))}
+                        </div>
+                    ) : issue.image_url && (
                         <div style={{ width: '100%', borderRadius: 24, overflow: 'hidden', marginBottom: 60, border: '1px solid rgba(139,92,246,0.2)', background: '#0e0f1a' }}>
                             <img src={issue.image_url} alt={issue.title} style={{ width: '100%', height: 'auto', display: 'block' }} />
                         </div>
