@@ -92,8 +92,7 @@ const Hero = () => {
                             <div style={{ position: 'absolute', inset: 80, border: '1px solid rgba(139,92,246,0.12)', borderRadius: '50%', animation: 'nex-spin 12s linear infinite' }} />
 
                             {/* Center Logo Group (Frameless) */}
-                            <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: 2 }}
-                                className="anim-glow">
+                            <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: 2 }}>
                                 <div style={{ marginBottom: 16 }}>
                                     <NexyrraLogo size={80} />
                                 </div>
