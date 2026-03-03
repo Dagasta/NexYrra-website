@@ -21,65 +21,84 @@ export async function POST(req: NextRequest) {
           <head>
             <meta charset="utf-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Welcome to Nexyrra</title>
           </head>
-          <body style="margin: 0; padding: 0; background-color: #05060b; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
-            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #05060b;">
+          <body style="margin: 0; padding: 0; background-color: #030408; font-family: 'Outfit', 'Helvetica Neue', Helvetica, Arial, sans-serif;">
+            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #030408; min-height: 100vh;">
               <tr>
-                <td align="center" style="padding: 40px 0;">
-                  <!-- Main Capsule -->
-                  <table border="0" cellpadding="0" cellspacing="0" width="600" style="background-color: #0d0e19; border: 1px solid #1e1f2e; border-radius: 24px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5);">
+                <td align="center" style="padding: 60px 20px;">
+                  
+                  <!-- Ultra Premium Container -->
+                  <table border="0" cellpadding="0" cellspacing="0" width="600" style="background-color: #08090f; border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 32px; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.8), 0 0 40px rgba(139, 92, 246, 0.1);">
                     
-                    <!-- Branded Banner -->
+                    <!-- Branded Video/Banner Area -->
                     <tr>
-                      <td style="padding: 0;">
+                      <td style="padding: 0; position: relative;">
                         <img src="https://www.nexyrra.com/assets/og-image.png" alt="Nexyrra Intelligence" width="600" style="display: block; width: 100%; height: auto;">
+                        <div style="background: linear-gradient(to bottom, transparent, #08090f); height: 100px; margin-top: -100px; position: relative; z-index: 1;"></div>
                       </td>
                     </tr>
 
-                    <!-- Content Body -->
+                    <!-- Main Intel -->
                     <tr>
-                      <td style="padding: 40px 50px;">
-                        <!-- Logo -->
-                        <div style="margin-bottom: 30px; text-align: left;">
-                          <img src="https://www.nexyrra.com/assets/logo.png" alt="Nexyrra Logo" width="50" style="filter: drop-shadow(0 0 10px rgba(139,92,246,0.6));">
-                        </div>
+                      <td style="padding: 20px 60px 50px 60px;">
+                        
+                        <!-- Mini Header Strip -->
+                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 40px;">
+                          <tr>
+                            <td>
+                              <img src="https://www.nexyrra.com/assets/logo.png" alt="Logo" width="48" style="filter: drop-shadow(0 0 15px rgba(139,92,246,0.8));">
+                            </td>
+                            <td align="right">
+                              <div style="display: inline-block; padding: 6px 14px; background: rgba(34, 211, 238, 0.1); border: 1px solid rgba(34, 211, 238, 0.3); border-radius: 999px; color: #22d3ee; font-size: 9px; font-weight: 900; letter-spacing: 0.2em; text-transform: uppercase; font-family: monospace;">CONNECTION SECURE</div>
+                            </td>
+                          </tr>
+                        </table>
 
-                        <h1 style="color: #ffffff; font-size: 28px; font-weight: 800; margin: 0 0 20px 0; letter-spacing: -0.02em; text-transform: uppercase;">
-                          Access <span style="color: #8B5CF6;">Synchronized</span>
+                        <h1 style="color: #ffffff; font-size: 34px; font-weight: 900; margin: 0 0 10px 0; letter-spacing: -0.04em; line-height: 1.1;">
+                          SYNC <span style="background: linear-gradient(90deg, #8B5CF6, #22D3EE); -webkit-background-clip: text; color: #8B5CF6;">COMPLETE</span>
                         </h1>
+                        <p style="color: #475569; font-size: 11px; font-weight: 800; letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 30px;">Access: Level Alpha (Secured)</p>
 
-                        <p style="color: #94a3b8; font-size: 16px; line-height: 1.8; margin-bottom: 30px;">
+                        <p style="color: #94A3B8; font-size: 17px; line-height: 1.8; margin-bottom: 40px;">
                           Hello ${name || 'Operator'},<br><br>
-                          You have successfully integrated with <strong>Nexyrra Signals</strong>. You are now part of an elite network receiving hyper-growth AI intelligence reports direct from Dubai.
+                          Your connection to the <strong>Nexyrra Neural Network</strong> is now active. You have been prioritized for high-fidelity intelligence direct from our Dubai HQ.
                         </p>
 
                         <!-- Box Feature -->
-                        <div style="background-color: rgba(139,92,246,0.05); border: 1px solid rgba(139,92,246,0.2); border-radius: 16px; padding: 25px; margin-bottom: 40px;">
-                          <p style="margin: 0 0 15px 0; font-weight: 800; color: #ffffff; font-size: 14px; text-transform: uppercase; letter-spacing: 0.1em;">Intel Pipeline:</p>
-                          <ul style="color: #94a3b8; margin: 0; padding-left: 20px; font-size: 15px; line-height: 2;">
-                            <li>Strategic Alpha (ROI & Growth)</li>
-                            <li>Neural Research Deep-dives</li>
-                            <li>Autonomous Workflow Patterns</li>
-                          </ul>
+                        <div style="background: linear-gradient(135deg, rgba(139,92,246,0.1), rgba(34,211,238,0.05)); border: 1px solid rgba(139,92,246,0.25); border-radius: 20px; padding: 30px; margin-bottom: 45px;">
+                          <p style="margin: 0 0 20px 0; font-weight: 900; color: #ffffff; font-size: 14px; letter-spacing: 0.1em; text-transform: uppercase; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px;">Intel Pipeline Status:</p>
+                          <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                            <tr>
+                              <td style="color: #cbd5e1; font-size: 15px; padding: 5px 0;">• Strategic Alpha Reports</td>
+                              <td align="right" style="color: #8B5CF6; font-size: 11px; font-weight: 800;">LIVE</td>
+                            </tr>
+                            <tr>
+                              <td style="color: #cbd5e1; font-size: 15px; padding: 5px 0;">• Neural Research Deep-dives</td>
+                              <td align="right" style="color: #8B5CF6; font-size: 11px; font-weight: 800;">LIVE</td>
+                            </tr>
+                            <tr>
+                              <td style="color: #cbd5e1; font-size: 15px; padding: 5px 0;">• UAE Business Automation</td>
+                              <td align="right" style="color: #22d3ee; font-size: 11px; font-weight: 800;">ENCRYPTED</td>
+                            </tr>
+                          </table>
                         </div>
 
                         <!-- CTA -->
                         <div style="text-align: center;">
-                          <a href="https://www.nexyrra.com/signals" style="display: inline-block; background-color: #8B5CF6; color: #ffffff; padding: 18px 35px; border-radius: 12px; font-weight: 800; text-decoration: none; font-size: 15px; box-shadow: 0 10px 20px rgba(139,92,246,0.2);">EXPLORE ARCHIVE</a>
+                          <a href="https://www.nexyrra.com/signals" style="display: inline-block; background: linear-gradient(135deg, #8B5CF6, #7C3AED); color: #ffffff; padding: 22px 45px; border-radius: 16px; font-weight: 900; text-decoration: none; font-size: 16px; letter-spacing: 0.1em; box-shadow: 0 15px 35px rgba(139, 92, 246, 0.4); text-transform: uppercase;">Launch Archives</a>
                         </div>
                       </td>
                     </tr>
 
                     <!-- Footer -->
                     <tr>
-                      <td style="padding: 30px 50px; background-color: #0a0b14; border-top: 1px solid #1e1f2e; text-align: center;">
-                        <p style="color: #475569; font-size: 11px; margin: 0; letter-spacing: 0.05em; text-transform: uppercase;">
+                      <td style="padding: 40px 60px; background-color: #05060b; border-top: 1px solid rgba(139, 92, 246, 0.15); text-align: center;">
+                        <p style="color: #64748b; font-size: 10px; font-weight: 800; margin: 0; letter-spacing: 0.3em; text-transform: uppercase;">
                           © 2026 NEXYRRA AI AGENCY | DUBAI, UAE
                         </p>
-                        <p style="color: #334155; font-size: 10px; margin-top: 10px;">
-                          You received this because you requested access to Nexyrra Signals. 
-                          <a href="#" style="color: #8B5CF6; text-decoration: none;">Unsubscribe</a>
+                        <p style="color: #334155; font-size: 10px; margin-top: 15px; line-height: 1.6;">
+                          You are receiving this encrypted signal because your profile was synchronized with Nexyrra.<br>
+                          <a href="#" style="color: #8B5CF6; text-decoration: none; font-weight: 800;">TERMINATE CONNECTION</a>
                         </p>
                       </td>
                     </tr>
