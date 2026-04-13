@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ArrowUpRight, Cpu, Network, Workflow, BarChart3, Fingerprint, Box, Layers, HardDrive } from 'lucide-react';
+import { ArrowUpRight, Cpu, Network, Workflow, BarChart3, Fingerprint, Box, Layers, HardDrive, Zap } from 'lucide-react';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import { services } from '../../lib/services-data';
@@ -22,29 +22,31 @@ export default function SystemsPage() {
     };
 
     return (
-        <main style={{ background: '#020203', minHeight: '100vh', color: 'white' }}>
+        <main style={{ background: '#0a0b14', minHeight: '100vh', color: 'white' }}>
             <Navbar />
-            <div className="matrix-grid" />
+            <div className="neural-overlay" />
 
             {/* Schematic Hero */}
             <section style={{ height: '70vh', display: 'flex', alignItems: 'center', position: 'relative' }}>
                 <div className="container-nex">
                     <motion.div initial={{ opacity: 0, x: -100 }} animate={{ opacity: 1, x: 0 }}>
-                        <div className="mono" style={{ color: 'var(--nex-accent)', marginBottom: 30 }}>// SYSTEM_INFRASTRUCTURE_SCHEMATIC_v4.0</div>
-                        <h1 style={{ fontSize: 'clamp(50px, 12vw, 160px)', fontWeight: 300, lineHeight: 0.85, letterSpacing: '-0.07em' }}>
-                            THE <br />
-                            <span className="text-shimmer" style={{ fontWeight: 800 }}>INFRASTRUCTURE.</span>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 15, marginBottom: 30 }}>
+                             <Zap size={16} style={{ color: '#22D3EE' }} />
+                             <span className="font-cyber" style={{ fontSize: 10, letterSpacing: '0.6em', color: '#22D3EE' }}>SYSTEM_DIRECTORY.SYS</span>
+                        </div>
+                        <h1 className="text-bionic" style={{ fontSize: 'clamp(50px, 12vw, 150px)', fontWeight: 800, lineHeight: 0.85, letterSpacing: '-0.07em' }}>
+                            THE <span className="shimmer-text">SYSTEMS.</span>
                         </h1>
                     </motion.div>
                 </div>
             </section>
 
-            {/* The Grid: Interlocking Functional Modules */}
+            {/* The Grid: Prismatic Schematic Nodes */}
             <section className="container-nex" style={{ paddingBottom: 240 }}>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: 1, background: 'rgba(255,255,255,0.05)' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: '2px', background: 'rgba(255,255,255,0.05)' }}>
                     {services.map((s, i) => {
                         const Icon = icons[s.slug] || Box;
-                        const spans = ['span 4', 'span 4', 'span 4', 'span 6', 'span 6', 'span 12'];
+                        const spans = ['span 4', 'span 4', 'span 4', 'span 8', 'span 4', 'span 4', 'span 8', 'span 6', 'span 6'];
                         return (
                             <motion.div 
                                 key={s.slug} 
@@ -55,31 +57,33 @@ export default function SystemsPage() {
                             >
                                 <Link href={`/services/${s.slug}`} style={{ textDecoration: 'none' }}>
                                     <div style={{ 
-                                        padding: '80px 60px', background: '#020203', height: '100%',
+                                        padding: '80px 60px', background: '#0a0b14', height: '100%',
                                         transition: 'all 0.6s ease', cursor: 'pointer',
                                         position: 'relative'
                                     }}
                                     onMouseEnter={e => {
-                                        (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.01)';
+                                        (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.02)';
                                     }}
                                     onMouseLeave={e => {
-                                        (e.currentTarget as HTMLElement).style.background = '#020203';
+                                        (e.currentTarget as HTMLElement).style.background = '#0a0b14';
                                     }}
                                     >
                                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 60 }}>
-                                            <Icon size={24} style={{ color: 'var(--nex-accent)' }} />
-                                            <span className="mono" style={{ fontSize: 9 }}>MOD_REF / 0X_{i+1}</span>
+                                            <div style={{ width: 44, height: 44, background: 'rgba(255,255,255,0.03)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                <Icon size={20} style={{ color: '#8B5CF6' }} />
+                                            </div>
+                                            <span className="font-cyber" style={{ fontSize: 9, color: '#1E293B' }}>SYS_REF: 0X_{i+1}</span>
                                         </div>
 
-                                        <h3 style={{ fontSize: 32, fontWeight: 700, color: 'white', marginBottom: 20 }}>{s.title}</h3>
-                                        <div className="mono" style={{ fontSize: 9, color: 'var(--nex-accent)', marginBottom: 30 }}>&gt; UNIT_STATUS: OPTIMAL</div>
+                                        <h3 className="font-title" style={{ fontSize: 26, fontWeight: 800, color: 'white', marginBottom: 20 }}>{s.title}</h3>
+                                        <div className="font-cyber" style={{ fontSize: 10, color: '#22D3EE', marginBottom: 30 }}>&gt; UNIT_SYNEC_v4_OK</div>
                                         
-                                        <p style={{ fontSize: 13, color: '#404040', lineHeight: 2, marginBottom: 60, minHeight: 80 }}>
+                                        <p style={{ fontSize: 14, color: '#94A3B8', lineHeight: 2, marginBottom: 60, minHeight: 80 }}>
                                             {s.description}
                                         </p>
 
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                             <div className="mono" style={{ fontSize: 10, color: 'var(--nex-accent)', display: 'flex', alignItems: 'center', gap: 10 }}>
+                                             <div className="font-cyber" style={{ fontSize: 10, color: '#22D3EE', display: 'flex', alignItems: 'center', gap: 10 }}>
                                                  VIEW_TECHNICAL_SPEC <ArrowUpRight size={14} />
                                              </div>
                                         </div>
