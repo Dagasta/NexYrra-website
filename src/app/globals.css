@@ -1,135 +1,167 @@
-/* ===== THE LUMINOUS BIONIC ENGINE (v4) ===== */
+/* ===== THE NEXYRRA AETHERIC NEXUS (v7.0) ===== */
 
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@100;300;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@100;300;500;700&display=swap');
 
 :root {
-  --font-main: 'Plus Jakarta Sans', sans-serif;
-  --font-title: 'Space Grotesk', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  /* Typography */
+  --font-luxury: 'Outfit', sans-serif;
+  --font-data: 'Space Grotesk', sans-serif;
+  --font-system: 'JetBrains Mono', monospace;
   
-  --nex-void: #05060f;
-  --nex-cyan: #22D3EE;
-  --nex-purple: #8B5CF6;
-  --nex-white: #FFFFFF;
-  --nex-slate: #94A3B8;
+  /* Palette - Aetheric Luxury */
+  --aether-bg: #FFFFFF;
+  --aether-void: #08090f;
+  --nexus-purple: #A855F7;
+  --nexus-purple-bright: #E0AAFF;
+  --nexus-cyan: #22D3EE;
+  --nexus-slate: #64748B;
   
-  --glass: rgba(255, 255, 255, 0.03);
-  --glass-border: rgba(255, 255, 255, 0.08);
+  /* Glassmorphism System */
+  --glass-refraction: rgba(255, 255, 255, 0.4);
+  --glass-border: rgba(168, 85, 247, 0.1);
+  --glass-glow: rgba(168, 85, 247, 0.05);
+
+  /* Animation Timings */
+  --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: var(--aether-bg);
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  background-color: var(--nex-void);
-  color: var(--nex-white);
-  font-family: var(--font-main);
+  color: var(--aether-void);
+  font-family: var(--font-luxury);
   overflow-x: hidden;
-  line-height: 1.6;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
 
-/* THE NEURAL OVERLAY */
-.neural-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  background-image: 
-    radial-gradient(circle at 50% 50%, rgba(34, 211, 238, 0.05) 0%, transparent 80%),
-    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-  background-size: 100% 100%, 60px 60px, 60px 60px;
+/* THE NEXUS CONTAINER */
+.container-nexus {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 5vw;
 }
 
-/* THE PRISMATIC GLASS */
-.glass-prismatic {
-  background: var(--glass);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--glass-border);
-  position: relative;
-  overflow: hidden;
-  transition: all 0.5s ease;
-}
-
-.glass-prismatic::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: conic-gradient(from 0deg at 50% 50%, transparent 0deg, rgba(34, 211, 238, 0.1) 180deg, transparent 360deg);
-  animation: prism-rotate 10s linear infinite;
-  opacity: 0.3;
-}
-
-@keyframes prism-rotate {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-/* TYPOGRAPHY */
-.text-bionic {
-  background: linear-gradient(135deg, #FFFFFF 0%, #22D3EE 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 10px rgba(34, 211, 238, 0.3));
-}
-
-.shimmer-text {
-  background: linear-gradient(90deg, #22D3EE, #8B5CF6, #22D3EE);
-  background-size: 200% auto;
-  animation: shimmer 4s linear infinite;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-@keyframes shimmer {
-  to { background-position: 200% center; }
-}
-
-.font-cyber {
-  font-family: var(--font-mono);
-  letter-spacing: 0.3em;
+/* TYPOGRAPHY COMPONENTS */
+h1, h2, h3 {
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
   text-transform: uppercase;
 }
 
-/* BUTTONS */
-.btn-beyond {
-  background: linear-gradient(90deg, var(--nex-cyan), var(--nex-purple));
-  color: #000;
-  padding: 16px 32px;
-  border-radius: 0;
-  font-family: var(--font-mono);
-  font-weight: 800;
-  font-size: 11px;
+.text-gradient {
+  background: linear-gradient(135deg, var(--aether-void) 0%, var(--nexus-purple) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+.mono-diag {
+  font-family: var(--font-system);
+  font-size: 10px;
+  letter-spacing: 0.4em;
+  opacity: 0.5;
+  text-transform: uppercase;
+}
+
+/* CINEMATIC EFFECTS */
+.glass-v7 {
+  background: var(--glass-refraction);
+  backdrop-filter: blur(25px) saturate(200%);
+  -webkit-backdrop-filter: blur(25px) saturate(200%);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px 0 var(--glass-glow);
+}
+
+.shimmer-luxe {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer-luxe::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 45%,
+    rgba(255, 255, 255, 0.5) 50%,
+    rgba(255, 255, 255, 0.1) 55%,
+    transparent 100%
+  );
+  transform: rotate(45deg);
+  animation: shimmer-effect 6s infinite;
+}
+
+@keyframes shimmer-effect {
+  0% { transform: translate(-100%, -100%) rotate(45deg); }
+  100% { transform: translate(100%, 100%) rotate(45deg); }
+}
+
+/* SYSTEM BUTTONS */
+.btn-nexus {
+  background: var(--nexus-purple);
+  color: white;
+  padding: 20px 48px;
+  border-radius: 4px;
+  font-family: var(--font-system);
+  font-weight: 700;
+  font-size: 12px;
   letter-spacing: 0.2em;
   border: none;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.5s var(--ease-cinematic);
+  box-shadow: 0 10px 30px rgba(168, 85, 247, 0.2);
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: 15px;
 }
 
-.btn-beyond:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 0 20px rgba(34, 211, 238, 0.4);
+.btn-nexus:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 50px rgba(168, 85, 247, 0.3);
+  background: #9333ea;
 }
 
-/* WOW CARDS */
-.wow-card {
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.wow-card:hover {
-  transform: translateY(-5px) scale(1.01);
-  border-color: var(--nex-cyan);
-  box-shadow: 0 10px 40px rgba(34, 211, 238, 0.1);
-}
-
-.container-nex {
-  max-width: 1440px;
-  margin: 0 auto;
-  padding: 0 40px;
+/* NEURAL GRID BACKGROUND */
+.neural-surface {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background-image: 
+    radial-gradient(circle at 2px 2px, rgba(168, 85, 247, 0.1) 1px, transparent 0);
+  background-size: 40px 40px;
+  opacity: 0.5;
 }
 
 @media (max-width: 768px) {
-  .container-nex { padding: 0 20px; }
+  .container-nexus { padding: 0 24px; }
+  h1 { font-size: 50px !important; }
+}
+
+/* CUSTOM CURSOR REACTION */
+.cursor-aura {
+  position: fixed;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.05) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 1;
+  transform: translate(-50%, -50%);
+  mix-blend-mode: soft-light;
 }
