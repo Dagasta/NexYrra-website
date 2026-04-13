@@ -1,14 +1,14 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Terminal, Cpu, Network, ShieldCheck, Box, Workflow, BarChart3, Fingerprint } from 'lucide-react';
-import { services, serviceGroups } from '../lib/services-data';
+import { Cpu, Box, Workflow, Network, BarChart3, Fingerprint, Activity } from 'lucide-react';
+import { services } from '../lib/services-data';
 
 const Services = () => {
-    const [hoveredId, setHoveredId] = useState<string | null>(null);
+    const [hovered, setHovered] = useState<string | null>(null);
 
-    const icons: Record<string, any> = {
+    const icons: any = {
         'custom-software': Box,
         'autonomous-systems': Cpu,
         'workflow-automation': Workflow,
@@ -18,107 +18,104 @@ const Services = () => {
     };
 
     return (
-        <section id="capabilities" style={{ padding: '160px 0', background: '#050608', position: 'relative', overflow: 'hidden' }}>
-            <div className="circuit-bg" style={{ opacity: 0.2 }} />
-            
-            <div className="container-nex" style={{ position: 'relative', zIndex: 10 }}>
-                
-                {/* Header - Bento Title */}
-                <div style={{ marginBottom: 100, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 40 }}>
-                    <div style={{ maxWidth: 600 }}>
-                        <div className="font-cyber" style={{ fontSize: 10, letterSpacing: '0.5em', color: '#8B5CF6', marginBottom: 20 }}>
-                            SYSTEMS_MATRIX.OVERVIEW
-                        </div>
-                        <h2 className="font-title" style={{ fontSize: 'clamp(44px, 8vw, 100px)', fontWeight: 900, lineHeight: 0.9, letterSpacing: '-0.06em' }}>
-                            THE <span className="shimmer-text">CORE.</span><br />
-                            INFRASTRUCTURE.
+        <section id="capabilities" style={{ padding: '240px 0', background: '#020203', position: 'relative' }}>
+            <div className="section-marker" style={{ left: 'auto', right: 50 }}>
+                <div className="marker-label">CAPABILITIES_SCHEMATIC</div>
+            </div>
+
+            <div className="container-nex">
+                {/* Schematic Header */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: 100, marginBottom: 120 }} className="grid-mobile-1">
+                    <div>
+                        <div className="mono" style={{ color: 'var(--nex-accent)', marginBottom: 20 }}>// MODULE_DIRECTORY_V3.1</div>
+                        <h2 style={{ fontSize: 'clamp(44px, 10vw, 120px)', fontWeight: 300, color: 'white', lineHeight: 0.9 }}>
+                            NODAL <br />
+                            <span className="text-shimmer" style={{ fontWeight: 800 }}>ARCHITECTURE.</span>
                         </h2>
                     </div>
-                    <p style={{ maxWidth: 400, fontSize: 13, color: '#4B5563', lineHeight: 1.8, marginBottom: 10 }}>
-                        We architect high-authoritative digital foundations. 
-                        A modular ecosystem designed for absolute operational dominance.
-                    </p>
+                    <div style={{ alignSelf: 'end' }}>
+                        <p style={{ fontSize: 16, color: '#64748B', lineHeight: 1.8, maxWidth: 320 }}>
+                            Each module is a high-authority node engineered for specific systemic dominance. Fully interlocking. Zero latency.
+                        </p>
+                    </div>
                 </div>
 
-                {/* THE BENTO GRID (Developer Dream Layout) */}
+                {/* THE SCHEMATIC GRID (Bento Extreme) */}
                 <div style={{ 
                     display: 'grid', 
                     gridTemplateColumns: 'repeat(12, 1fr)', 
-                    gridAutoRows: 'minmax(280px, auto)',
-                    gap: 20
-                }} className="grid-mobile-1">
+                    gridAutoRows: 'minmax(240px, auto)',
+                    gap: 1
+                }} className="grid-mobile-1 bg-white/5 border border-white/5">
                     
                     {services.map((s, i) => {
                         const Icon = icons[s.slug] || Box;
-                        // Define custom spans for Bento feel
-                        const gridSpans = [
-                            'span 7', 'span 5', 'span 4', 'span 8', 'span 6', 'span 6'
-                        ];
-                        const span = gridSpans[i % gridSpans.length];
+                        const spans = ['span 8', 'span 4', 'span 5', 'span 7', 'span 7', 'span 5'];
+                        const span = spans[i % spans.length];
 
                         return (
                             <motion.div
                                 key={s.slug}
-                                initial={{ opacity: 0, y: 30 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: i * 0.05 }}
-                                style={{
-                                    gridColumn: span,
-                                    position: 'relative',
-                                }}
-                                onMouseEnter={() => setHoveredId(s.slug)}
-                                onMouseLeave={() => setHoveredId(null)}
+                                onMouseEnter={() => setHovered(s.slug)}
+                                onMouseLeave={() => setHovered(null)}
+                                style={{ gridColumn: span, position: 'relative' }}
                             >
-                                <div className="bento-item glass-refractive h-full" style={{ borderRadius: 0, padding: 0 }}>
-                                    <div style={{ padding: '40px', height: '100%', display: 'flex', flexDirection: 'column' }}>
-                                        {/* Status Line */}
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 40 }}>
-                                            <div style={{ display: 'flex', gap: 5 }}>
-                                                <div style={{ width: 20, height: 2, background: hoveredId === s.slug ? '#8B5CF6' : '#1E293B', transition: 'all 0.3s' }} />
-                                                <div style={{ width: 40, height: 1, background: '#1E293B', marginTop: 0.5 }} />
-                                            </div>
-                                            <span className="font-cyber" style={{ fontSize: 8, color: '#334155' }}>MOD_{i+1}_0X</span>
-                                        </div>
+                                <div style={{ 
+                                    padding: '60px', background: '#020203', height: '100%', 
+                                    transition: 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+                                    display: 'flex', flexDirection: 'column', 
+                                    border: '1px solid rgba(255,255,255,0.02)'
+                                }}>
+                                    {/* Corner ID */}
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 60 }}>
+                                        <div className="mono" style={{ opacity: 0.2 }}>[ MOD_0{i+1}_REF ]</div>
+                                        <Icon size={24} style={{ 
+                                            color: hovered === s.slug ? 'var(--nex-accent)' : '#1E293B',
+                                            transition: 'color 0.4s'
+                                        }} />
+                                    </div>
 
-                                        <div style={{ flex: 1 }}>
-                                            <Icon size={32} style={{ color: hoveredId === s.slug ? '#8B5CF6' : '#4B5563', marginBottom: 30, transition: 'all 0.3s' }} />
-                                            <h3 className="font-title text-kinetic" style={{ fontSize: 28, fontWeight: 900, marginBottom: 15, color: 'white' }}>{s.title}</h3>
-                                            <p style={{ fontSize: 13, color: '#64748B', lineHeight: 1.7, maxWidth: 320 }}>
-                                                {s.tagline}
-                                            </p>
-                                        </div>
+                                    <div style={{ flex: 1 }}>
+                                        <h3 style={{ fontSize: 32, fontWeight: 700, marginBottom: 20, letterSpacing: '-0.03em' }}>{s.title}</h3>
+                                        <p style={{ fontSize: 14, color: '#404040', lineHeight: 1.8, maxWidth: 400 }}>
+                                            {s.description}
+                                        </p>
+                                    </div>
 
-                                        {/* Data Detail (Visual Wow) */}
-                                        <div style={{ marginTop: 40 }}>
-                                            <div className="font-cyber" style={{ fontSize: 7, color: '#1E293B', marginBottom: 15, letterSpacing: '0.2em' }}>SYSTEM_SPECS_ACTIVE</div>
-                                            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-                                                {s.features.slice(0, 3).map(f => (
-                                                    <span key={f} style={{ fontSize: 8, color: '#4B5563', padding: '4px 8px', border: '1px solid rgba(255,255,255,0.03)', background: 'rgba(255,255,255,0.01)' }}>
-                                                        {f}
-                                                    </span>
-                                                ))}
-                                            </div>
+                                    {/* System Data Viz (Wow Element) */}
+                                    <div style={{ marginTop: 60 }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 15 }}>
+                                            <span className="mono" style={{ fontSize: 8 }}>SYNC_THROUGHPUT</span>
+                                            <span className="mono" style={{ fontSize: 8, color: 'var(--nex-accent)' }}>{80 + i * 4}%</span>
+                                        </div>
+                                        <div style={{ height: 1, background: 'rgba(255,255,255,0.03)', position: 'relative' }}>
+                                            <motion.div 
+                                                animate={hovered === s.slug ? { width: '80%' } : { width: '10%' }}
+                                                style={{ position: 'absolute', top: 0, left: 0, bottom: 0, background: 'var(--nex-accent)' }} 
+                                            />
+                                        </div>
+                                        
+                                        <div style={{ display: 'flex', gap: 10, marginTop: 25, flexWrap: 'wrap' }}>
+                                             {s.features.slice(0, 3).map(f => (
+                                                 <span key={f} className="mono" style={{ fontSize: 7, border: '1px solid #0a0a0a', padding: '4px 8px' }}>{f}</span>
+                                             ))}
                                         </div>
                                     </div>
 
-                                    {/* Interactive Progress Line at bottom */}
-                                    <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 2, background: 'rgba(255,255,255,0.02)' }}>
-                                        <motion.div 
-                                            animate={hoveredId === s.slug ? { width: '100%' } : { width: '0%' }}
-                                            style={{ height: '100%', background: '#8B5CF6' }} 
-                                        />
-                                    </div>
+                                    {/* Interactive corner light */}
+                                    <AnimatePresence>
+                                        {hovered === s.slug && (
+                                            <motion.div 
+                                                initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                                                style={{ position: 'absolute', top: 10, right: 10, width: 4, height: 4, background: 'var(--nex-accent)', borderRadius: '50%', boxShadow: '0 0 10px var(--nex-accent)' }} 
+                                            />
+                                        )}
+                                    </AnimatePresence>
                                 </div>
                             </motion.div>
                         );
                     })}
                 </div>
-            </div>
-
-            {/* Side Static Background elements (Techy Detail) */}
-            <div style={{ position: 'absolute', left: -20, top: '50%', transform: 'rotate(-90deg)', opacity: 0.05 }} className="hide-mobile">
-                <span className="font-cyber" style={{ fontSize: 60, fontWeight: 900, letterSpacing: '1em' }}>CAPABILITIES</span>
             </div>
         </section>
     );

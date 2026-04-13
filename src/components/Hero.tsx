@@ -2,7 +2,6 @@
 
 import React, { useRef, useEffect, useState } from 'react';
 import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'framer-motion';
-import { ArrowRight, Activity, Terminal as TerminalIcon } from 'lucide-react';
 
 const Hero = () => {
     const containerRef = useRef<HTMLDivElement>(null);
@@ -11,167 +10,115 @@ const Hero = () => {
         offset: ["start start", "end start"]
     });
 
-    // Mouse Tracking for Interactive Geometry
-    const mouseX = useMotionValue(0);
-    const mouseY = useMotionValue(0);
-    const springX = useSpring(mouseX, { stiffness: 40, damping: 20 });
-    const springY = useSpring(mouseY, { stiffness: 40, damping: 20 });
+    // Mouse Tracking for the "System Aperture"
+    const mX = useMotionValue(0);
+    const mY = useMotionValue(0);
+    const sX = useSpring(mX, { stiffness: 30, damping: 20 });
+    const sY = useSpring(mY, { stiffness: 30, damping: 20 });
 
     useEffect(() => {
-        const handleMove = (e: MouseEvent) => {
-            const { clientX, clientY } = e;
-            const moveX = (clientX / window.innerWidth - 0.5) * 80;
-            const moveY = (clientY / window.innerHeight - 0.5) * 80;
-            mouseX.set(moveX);
-            mouseY.set(moveY);
+        const move = (e: MouseEvent) => {
+            mX.set((e.clientX / window.innerWidth - 0.5) * 60);
+            mY.set((e.clientY / window.innerHeight - 0.5) * 60);
         };
-        window.addEventListener('mousemove', handleMove);
-        return () => window.removeEventListener('mousemove', handleMove);
-    }, [mouseX, mouseY]);
+        window.addEventListener('mousemove', move);
+        return () => window.removeEventListener('mousemove', move);
+    }, [mX, mY]);
 
-    // Scroll-based 3D Morphing
-    const smoothProgress = useSpring(scrollYProgress, { stiffness: 80, damping: 25 });
-    const rotateX = useTransform(smoothProgress, [0, 1], [0, 40]);
-    const z = useTransform(smoothProgress, [0, 1], [0, -600]);
-    const opacity = useTransform(smoothProgress, [0, 0.7, 1], [1, 0.8, 0]);
-    const blur = useTransform(smoothProgress, [0, 1], ["blur(0px)", "blur(20px)"]);
+    // Scroll Transforms (The $60k Reveal)
+    const scale = useTransform(scrollYProgress, [0, 1], [1, 1.8]);
+    const opacity = useTransform(scrollYProgress, [0, 0.4, 0.6], [1, 1, 0]);
+    const rotate = useTransform(scrollYProgress, [0, 1], [0, 90]);
+    const blur = useTransform(scrollYProgress, [0, 1], ["blur(0px)", "blur(40px)"]);
 
     return (
-        <section ref={containerRef} style={{
-            position: 'relative', height: '180vh', 
-            background: '#040508', overflow: 'hidden'
-        }}>
-            <div style={{
-                position: 'sticky', top: 0, height: '100vh', width: '100%',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                perspective: '2000px'
-            }}>
+        <section ref={containerRef} style={{ height: '220vh', background: '#020203', position: 'relative' }}>
+            <div className="matrix-grid" />
+            <div className="caustic-glow" style={{ top: '20%', left: '30%' }} />
+
+            <div style={{ position: 'sticky', top: 0, height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
                 
-                {/* THE CORE: A Luminous 3D Structure */}
+                {/* THE APERTURE (System Eye) */}
                 <motion.div style={{
-                    position: 'absolute', width: 800, height: 800,
-                    borderRadius: '50%', border: '1px solid rgba(139,92,246,0.1)',
-                    x: springX, y: springY, rotateX, opacity,
+                    position: 'absolute', width: 'clamp(400px, 60vw, 1000px)', height: 'clamp(400px, 60vw, 1000px)',
+                    border: '1px solid rgba(255,255,255,0.05)', borderRadius: '50%',
+                    scale, rotate, filter: blur, x: sX, y: sY,
                     display: 'flex', alignItems: 'center', justifyContent: 'center'
                 }}>
-                     {/* Internal Pulse Ring */}
-                     <motion.div 
-                        animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3] }}
-                        transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-                        style={{
-                            position: 'absolute', width: 400, height: 400,
-                            borderRadius: '50%', background: 'radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 70%)',
-                            filter: 'blur(40px)'
-                        }} 
-                     />
-                     
-                     {/* Orbiting Particles (Developer's Dream Detail) */}
-                     {[...Array(12)].map((_, i) => (
-                         <motion.div
+                    {/* Inner Gears / Rings */}
+                    {[...Array(6)].map((_, i) => (
+                        <motion.div
                             key={i}
-                            animate={{ rotateZ: 360 }}
-                            transition={{ repeat: Infinity, duration: 10 + i * 2, ease: "linear" }}
-                            style={{ position: 'absolute', width: 500 + i * 20, height: 500 + i * 20, borderRadius: '50%', border: '1px solid rgba(255,255,255,0.02)', pointerEvents: 'none' }}
-                         >
-                            <div style={{ position: 'absolute', top: '50%', left: 0, width: 3, height: 3, background: i % 2 === 0 ? '#8B5CF6' : '#22D3EE', borderRadius: '50%', boxShadow: `0 0 10px ${i % 2 === 0 ? '#8B5CF6' : '#22D3EE'}` }} />
-                         </motion.div>
-                     ))}
+                            animate={{ rotate: 360 }}
+                            transition={{ repeat: Infinity, duration: 20 + i * 10, ease: "linear" }}
+                            style={{
+                                position: 'absolute', inset: i * 40,
+                                border: '1px solid rgba(255,255,255,0.03)', borderRadius: '50%',
+                                borderTopColor: i % 2 === 0 ? 'var(--nex-accent)' : 'var(--nex-cyan)',
+                                opacity: 0.2
+                            }}
+                        />
+                    ))}
+                    
+                    {/* Focal Point */}
+                    <motion.div 
+                        animate={{ scale: [1, 1.1, 1] }} 
+                        transition={{ repeat: Infinity, duration: 4 }}
+                        style={{ width: 4, height: 4, background: 'white', borderRadius: '50%', boxShadow: '0 0 20px white' }} 
+                    />
                 </motion.div>
 
-                {/* Horizontal Marquee Overlays (Fancy Aspect) */}
-                <div style={{ position: 'absolute', top: '15%', left: 0, right: 0, pointerEvents: 'none', opacity: 0.1 }}>
-                    <div className="font-cyber" style={{ fontSize: 10, letterSpacing: '1em', whiteSpace: 'nowrap', animation: 'marquee-rtl 100s linear infinite' }}>
-                        NEXYRRA_CORE_SYSTEM_ACTIVE_NODES_STABLE_LATENCY_0.002MS_ENCRYPTION_LAYER_V2.0.4
+                {/* Main Content (High Authority Minimalist) */}
+                <motion.div className="container-nex" style={{ position: 'relative', zIndex: 10, opacity, filter: blur }}>
+                    <div style={{ marginBottom: 40 }}>
+                        <span className="mono" style={{ color: 'var(--nex-accent)', fontWeight: 800 }}>[ ACCESS_PENDING ]</span>
                     </div>
-                </div>
 
-                {/* Main Content Card (Luminous & Refractive) */}
-                <div className="container-nex" style={{ position: 'relative', zIndex: 100 }}>
-                    <motion.div style={{ rotateX, z, filter: blur, opacity }}>
-                        
-                        <div style={{ display: 'flex', gap: 15, alignItems: 'center', marginBottom: 50 }}>
-                            <div className="shimmer-border" style={{ padding: '6px 16px', borderRadius: 4 }}>
-                                <span className="font-cyber" style={{ fontSize: 9, fontWeight: 900, color: 'white', letterSpacing: '0.3em' }}>
-                                    PROTOCOL: ARCHITECT
-                                </span>
-                            </div>
-                            <div style={{ height: 1, flex: 1, background: 'linear-gradient(90deg, rgba(139,92,246,0.3), transparent)' }} />
+                    <h1 style={{ fontSize: 'clamp(60px, 12vw, 180px)', fontWeight: 300, lineHeight: 0.8, color: 'white', marginBottom: 60 }}>
+                        DECONSTRUCT<br />
+                        <span className="text-shimmer" style={{ fontWeight: 800 }}>EVERYTHING.</span>
+                    </h1>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'minmax(200px, 1.5fr) 1fr', gap: 100 }} className="grid-mobile-1">
+                        <p style={{ fontSize: 22, color: '#64748B', lineHeight: 1.6, fontWeight: 300, maxWidth: 600 }}>
+                            We architecturalize digital constraints. 
+                            Bespoke systems engineering for the world's most authoritative infrastructures.
+                        </p>
+
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 30 }}>
+                             <div style={{ display: 'flex', gap: 15 }}>
+                                 <div style={{ width: 10, height: 10, border: '1px solid white' }} />
+                                 <div style={{ fontSize: 10, fontFamily: 'var(--font-mono)', opacity: 0.4 }}>SECURE_ENCRYPTION_v3.0</div>
+                             </div>
+                             <div style={{ height: 1, width: '100%', background: 'linear-gradient(90deg, white, transparent)' }} />
                         </div>
+                    </div>
 
-                        <h1 className="font-title" style={{
-                            fontSize: 'clamp(56px, 11vw, 160px)',
-                            fontWeight: 900, lineHeight: 0.88, 
-                            letterSpacing: '-0.07em', color: 'white',
-                            marginBottom: 40
-                        }}>
-                            <span style={{ display: 'block', opacity: 0.15 }}>SYSTEMS</span>
-                            <span style={{ display: 'block' }}>THAT THINK.</span>
-                            <span className="shimmer-text" style={{ display: 'block' }}>ARCHITECTED.</span>
-                        </h1>
+                    <div style={{ marginTop: 100 }}>
+                        <button className="btn-nex-v3">
+                            INITIALIZE_PROTOCOL_01
+                        </button>
+                    </div>
+                </motion.div>
 
-                        <div style={{ display: 'flex', gap: 40, alignItems: 'start' }} className="grid-mobile-1">
-                            <p className="font-main" style={{
-                                fontSize: 'clamp(16px, 1.8vw, 22px)', color: '#94A3B8',
-                                maxWidth: 500, lineHeight: 1.6, fontWeight: 300
-                            }}>
-                                We deconstruct the existing and engineer the improbable. 
-                                High-performance digital foundations for the world's most ambitious systems.
-                            </p>
-                            
-                            {/* Interactive Data Node (Wow factor) */}
-                            <motion.div 
-                                className="glass-refractive"
-                                style={{ padding: '30px', width: 280, borderRadius: 2 }}
-                                whileHover={{ scale: 1.05, rotateY: 10 }}
-                            >
-                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 20 }}>
-                                    <Activity size={16} style={{ color: '#8B5CF6' }} />
-                                    <span className="font-cyber" style={{ fontSize: 8, color: '#334155' }}>LIVE_TELEMETRY</span>
-                                </div>
-                                <div className="font-title" style={{ fontSize: 28, fontWeight: 900, color: 'white', marginBottom: 5 }}>99.9%</div>
-                                <div style={{ fontSize: 10, color: '#4B5563', letterSpacing: '0.1em' }}>THROUGHPUT_EFFICIENCY</div>
-                                <div style={{ marginTop: 20, height: 2, background: 'rgba(255,255,255,0.05)', position: 'relative' }}>
-                                    <motion.div 
-                                        animate={{ width: ["0%", "80%", "70%", "90%"] }}
-                                        transition={{ repeat: Infinity, duration: 4 }}
-                                        style={{ position: 'absolute', top: 0, left: 0, bottom: 0, background: '#8B5CF6' }} 
-                                    />
-                                </div>
-                            </motion.div>
-                        </div>
-
-                        <div style={{ marginTop: 80, display: 'flex', gap: 20, alignItems: 'center' }}>
-                            <motion.button 
-                                whileHover={{ scale: 1.02 }}
-                                whileTap={{ scale: 0.98 }}
-                                className="btn-primary" 
-                                style={{ 
-                                    padding: '24px 60px', borderRadius: 0, 
-                                    background: 'white', color: 'black', 
-                                    fontFamily: 'var(--font-cyber)', fontWeight: 900, fontSize: 14 
-                                }}
-                            >
-                                START_SESSION_01
-                            </motion.button>
-                            
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
-                                <div style={{ width: 100, height: 1, background: '#1E293B' }} />
-                                <div style={{ width: 140, height: 1, background: '#1E293B' }} />
-                                <div style={{ width: 80, height: 1, background: '#1E293B' }} />
-                            </div>
-                        </div>
-                    </motion.div>
+                {/* Corner Telemetry (The $60k Details) */}
+                <div style={{ position: 'absolute', bottom: 50, left: 50 }} className="hide-mobile">
+                    <div className="mono">COORD / 25.2048° N, 55.2708° E</div>
+                    <div className="mono">TIME_STAMP / {new Date().toLocaleTimeString()}</div>
                 </div>
 
-                {/* Vertical Decorative Metadata (Fancy Detail) */}
-                <div style={{ position: 'absolute', right: 40, bottom: 40, display: 'flex', gap: 15 }} className="hide-mobile">
-                     <div className="vertical-marquee">SYS_STATUS_OK_NODE_CHECK_PASSED_AUTH_009</div>
-                     <div className="vertical-marquee" style={{ opacity: 0.3 }}>UX_ARCH_V2.0.4.55.99.11</div>
+                <div style={{ position: 'absolute', top: 50, right: 50 }} className="hide-mobile">
+                     <div style={{ display: 'flex', gap: 20 }}>
+                         {[1, 0, 1, 1, 0, 1].map((b, i) => (
+                             <div key={i} className="mono" style={{ opacity: b === 1 ? 1 : 0.2 }}>{b}</div>
+                         ))}
+                     </div>
                 </div>
+            </div>
 
-                <div style={{ position: 'absolute', left: 40, top: '50%', transform: 'translateY(-50%)' }} className="hide-mobile">
-                    <TerminalIcon size={20} style={{ color: '#1E293B' }} />
-                </div>
+            {/* Scrolling Marker */}
+            <div className="section-marker">
+                <div className="marker-label">NX_SYSTEM_CORE</div>
             </div>
         </section>
     );
