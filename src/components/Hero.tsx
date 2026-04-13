@@ -1,179 +1,125 @@
 'use client';
 
-import React, { useEffect } from 'react';
-import Link from 'next/link';
-import { motion, useMotionValue, useSpring } from 'framer-motion';
-import { ArrowRight, ArrowUpRight } from 'lucide-react';
-
-const stagger = {
-    hidden: {},
-    show: { transition: { staggerChildren: 0.14, delayChildren: 0.1 } },
-};
-
-const revealer = {
-    hidden: { opacity: 0, y: 56, filter: 'blur(8px)' },
-    show: {
-        opacity: 1, y: 0, filter: 'blur(0px)',
-        transition: { duration: 1, ease: [0.16, 1, 0.3, 1] },
-    },
-};
+import React, { useRef } from 'react';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { ArrowRight } from 'lucide-react';
 
 const Hero = () => {
-    const mouseX = useMotionValue(0);
-    const mouseY = useMotionValue(0);
-    const springX = useSpring(mouseX, { stiffness: 28, damping: 16 });
-    const springY = useSpring(mouseY, { stiffness: 28, damping: 16 });
+    const containerRef = useRef<HTMLDivElement>(null);
+    const { scrollYProgress } = useScroll({
+        target: containerRef,
+        offset: ["start start", "end start"]
+    });
 
-    useEffect(() => {
-        const handler = (e: MouseEvent) => {
-            mouseX.set((e.clientX / window.innerWidth - 0.5) * 100);
-            mouseY.set((e.clientY / window.innerHeight - 0.5) * 70);
-        };
-        window.addEventListener('mousemove', handler, { passive: true });
-        return () => window.removeEventListener('mousemove', handler);
-    }, [mouseX, mouseY]);
+    // Smooth scroll transforms for 3D effect
+    const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
+    
+    // Perspective dive
+    const rotateX = useTransform(smoothProgress, [0, 1], [0, 45]);
+    const z = useTransform(smoothProgress, [0, 1], [0, -500]);
+    const opacity = useTransform(smoothProgress, [0, 0.8], [1, 0]);
+    const scale = useTransform(smoothProgress, [0, 1], [1, 0.8]);
+    
+    // Floating elements
+    const floatY1 = useTransform(smoothProgress, [0, 1], [0, -200]);
+    const floatY2 = useTransform(smoothProgress, [0, 1], [0, -400]);
 
     return (
-        <section style={{
-            position: 'relative', minHeight: '100vh',
-            display: 'flex', alignItems: 'center',
-            overflow: 'hidden', background: '#07080e',
+        <section ref={containerRef} style={{
+            position: 'relative', height: '200vh', // Extra height for scroll duration
+            background: '#07080e', overflow: 'clip'
         }}>
-            {/* Fine grid */}
             <div style={{
-                position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0,
-                backgroundImage:
-                    'linear-gradient(rgba(139,92,246,0.045) 1px, transparent 1px),' +
-                    'linear-gradient(to right, rgba(139,92,246,0.045) 1px, transparent 1px)',
-                backgroundSize: '90px 90px',
-                maskImage: 'radial-gradient(ellipse 80% 90% at 50% 40%, black, transparent)',
-                WebkitMaskImage: 'radial-gradient(ellipse 80% 90% at 50% 40%, black, transparent)',
-            }} />
+                position: 'sticky', top: 0, height: '100vh', width: '100%',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                perspective: '1500px', perspectiveOrigin: 'center center'
+            }}>
+                {/* Background Grid that "dives" */}
+                <motion.div style={{
+                    position: 'absolute', inset: -200, zIndex: 0,
+                    backgroundImage: 'linear-gradient(rgba(139,92,246,0.1) 1px, transparent 1px), linear-gradient(to right, rgba(139,92,246,0.1) 1px, transparent 1px)',
+                    backgroundSize: '100px 100px',
+                    maskImage: 'radial-gradient(circle at center, black, transparent 80%)',
+                    WebkitMaskImage: 'radial-gradient(circle at center, black, transparent 80%)',
+                    rotateX, z, scale, opacity
+                }} />
 
-            {/* Mouse parallax orb */}
-            <motion.div style={{
-                position: 'absolute', zIndex: 0, pointerEvents: 'none',
-                width: 1100, height: 1100, borderRadius: '50%',
-                background: 'radial-gradient(circle, rgba(139,92,246,0.14) 0%, rgba(139,92,246,0.03) 45%, transparent 70%)',
-                top: '50%', left: '50%', marginTop: -550, marginLeft: -550,
-                x: springX, y: springY,
-            }} />
+                {/* The "Core" engine pulse */}
+                <motion.div style={{
+                    position: 'absolute', width: 600, height: 600,
+                    background: 'radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 70%)',
+                    filter: 'blur(60px)', zIndex: 1,
+                    scale: useTransform(smoothProgress, [0, 1], [1, 2]),
+                    opacity: useTransform(smoothProgress, [0, 0.5, 1], [0.6, 1, 0])
+                }} className="blob-morph" />
 
-            {/* Cyan accent top-right */}
-            <div style={{
-                position: 'absolute', top: '-8%', right: '-8%', zIndex: 0, pointerEvents: 'none',
-                width: 550, height: 550, borderRadius: '50%',
-                background: 'radial-gradient(circle, rgba(34,211,238,0.07) 0%, transparent 70%)',
-            }} />
-
-            {/* violet accent bottom-left */}
-            <div style={{
-                position: 'absolute', bottom: '5%', left: '-5%', zIndex: 0, pointerEvents: 'none',
-                width: 400, height: 400, borderRadius: '50%',
-                background: 'radial-gradient(circle, rgba(139,92,246,0.06) 0%, transparent 70%)',
-            }} />
-
-            {/* Bottom fade */}
-            <div style={{
-                position: 'absolute', bottom: 0, left: 0, right: 0, height: 360, zIndex: 1,
-                background: 'linear-gradient(to top, #07080e 25%, transparent)',
-                pointerEvents: 'none',
-            }} />
-
-            <div className="container-nex" style={{ paddingTop: 160, paddingBottom: 120, position: 'relative', zIndex: 2 }}>
-                <motion.div variants={stagger} initial="hidden" animate="show">
-
-                    {/* Eyebrow */}
-                    <motion.div variants={revealer} style={{ marginBottom: 52 }}>
-                        <div style={{
-                            display: 'inline-flex', alignItems: 'center', gap: 10,
-                            padding: '8px 20px', borderRadius: 999,
-                            border: '1px solid rgba(139,92,246,0.2)',
-                            background: 'rgba(139,92,246,0.05)',
-                        }}>
-                            <span style={{
-                                width: 6, height: 6, borderRadius: '50%', background: '#8B5CF6',
-                                display: 'inline-block', animation: 'nex-pulse 2s infinite',
-                            }} />
-                            <span className="font-cyber" style={{
-                                fontSize: 10, fontWeight: 700, letterSpacing: '0.25em',
-                                color: '#A78BFA', textTransform: 'uppercase',
-                            }}>
-                                System Architects · Est. 2024 · Dubai, UAE
+                <div className="container-nex" style={{ position: 'relative', zIndex: 10 }}>
+                    <motion.div style={{ rotateX, z, scale, opacity }}>
+                        
+                        {/* Eyebrow - System Status */}
+                        <div style={{ marginBottom: 40, display: 'flex', gap: 20, alignItems: 'center' }}>
+                            <div className="scanline" style={{ height: 2, position: 'relative', width: 40, background: '#8B5CF6' }} />
+                            <span className="font-cyber" style={{ fontSize: 10, letterSpacing: '0.4em', color: '#8B5CF6' }}>
+                                COREINIT.SYS_099
                             </span>
                         </div>
-                    </motion.div>
 
-                    {/* Massive headline */}
-                    <motion.h1 variants={revealer} className="font-title" style={{
-                        fontSize: 'clamp(58px, 9.5vw, 144px)',
-                        fontWeight: 900, lineHeight: 0.94,
-                        letterSpacing: '-0.047em', marginBottom: 40,
-                    }}>
-                        <span style={{ display: 'block', color: 'white' }}>We Build</span>
-                        <span style={{ display: 'block', color: 'white' }}>What Others</span>
-                        <span style={{
-                            display: 'block',
-                            background: 'linear-gradient(135deg, #8B5CF6 10%, #A78BFA 50%, #22D3EE 90%)',
-                            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+                        {/* Title - The Statement */}
+                        <h1 className="font-title" style={{
+                            fontSize: 'clamp(60px, 12vw, 180px)',
+                            fontWeight: 900, lineHeight: 0.85, 
+                            letterSpacing: '-0.06em', color: 'white',
+                            marginBottom: 40
                         }}>
-                            Only Pitch.
-                        </span>
-                    </motion.h1>
+                            <span style={{ display: 'block', opacity: 0.2 }}>WE ARE THE</span>
+                            <span style={{ display: 'block' }}>ARCHITECTS</span>
+                            <span style={{ 
+                                display: 'block', 
+                                background: 'linear-gradient(90deg, #8B5CF6, #22D3EE)',
+                                WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text'
+                            }}>OF REALITY.</span>
+                        </h1>
 
-                    {/* Subline */}
-                    <motion.p variants={revealer} style={{
-                        fontSize: 'clamp(16px, 1.7vw, 21px)',
-                        color: '#64748B', lineHeight: 1.8,
-                        maxWidth: 540, marginBottom: 52, fontWeight: 400,
-                    }}>
-                        Full-stack technology execution — from product strategy to infrastructure.
-                        We design it, engineer it, ship it, and own the outcome.
-                    </motion.p>
-
-                    {/* CTAs */}
-                    <motion.div variants={revealer} style={{ display: 'flex', gap: 14, flexWrap: 'wrap', marginBottom: 96 }}>
-                        <Link href="https://wa.me/971503953988" className="btn-primary" style={{
-                            padding: '16px 44px', fontSize: 15, borderRadius: 12,
-                            boxShadow: '0 0 48px rgba(139,92,246,0.28)',
+                        <p className="font-main" style={{
+                            fontSize: 'clamp(18px, 2vw, 24px)', color: '#64748B',
+                            maxWidth: 600, lineHeight: 1.6, marginBottom: 60, fontWeight: 300
                         }}>
-                            Start a Project <ArrowRight size={16} />
-                        </Link>
-                        <Link href="#capabilities" className="btn-outline" style={{
-                            padding: '16px 36px', fontSize: 15, borderRadius: 12,
-                        }}>
-                            Our Capabilities <ArrowUpRight size={15} />
-                        </Link>
-                    </motion.div>
+                            Developing high-performance digital systems that defy standard architecture.
+                            We don't build websites. We engineer legacies.
+                        </p>
 
-                    {/* Stats strip */}
-                    <motion.div variants={revealer} style={{
-                        display: 'flex', maxWidth: 660,
-                        background: 'rgba(255,255,255,0.018)',
-                        border: '1px solid rgba(255,255,255,0.07)',
-                        borderRadius: 16, overflow: 'hidden',
-                        backdropFilter: 'blur(20px)',
-                    }}>
-                        {[
-                            { value: '12+', label: 'Tech Domains' },
-                            { value: '200+', label: 'Systems Shipped' },
-                            { value: '98%', label: 'Client Retention' },
-                            { value: '24/7', label: 'Always Running' },
-                        ].map((s, i) => (
-                            <div key={s.label} style={{
-                                flex: 1, padding: '22px 16px', textAlign: 'center',
-                                borderRight: i < 3 ? '1px solid rgba(255,255,255,0.05)' : 'none',
-                            }}>
-                                <div className="font-cyber" style={{
-                                    fontSize: 'clamp(18px, 2.2vw, 28px)', fontWeight: 900,
-                                    background: 'linear-gradient(135deg, #8B5CF6, #22D3EE)',
-                                    WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
-                                    marginBottom: 5, lineHeight: 1,
-                                }}>{s.value}</div>
-                                <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#334155' }}>{s.label}</div>
-                            </div>
-                        ))}
+                        <div style={{ display: 'flex', gap: 20 }}>
+                            <motion.button 
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className="btn-primary" style={{ padding: '20px 48px', borderRadius: 0, border: '1px solid #8B5CF6', background: 'transparent' }}>
+                                INITIALIZE SYSTEM <ArrowRight size={18} />
+                            </motion.button>
+                        </div>
                     </motion.div>
+                </div>
+
+                {/* Floating "Data" Particles */}
+                <motion.div style={{ 
+                    position: 'absolute', right: '10%', top: '20%', 
+                    y: floatY1, rotateZ: 15, zIndex: 5 
+                }}>
+                    <div className="system-module" style={{ padding: '20px', fontSize: 10, color: '#8B5CF6', fontFamily: 'monospace' }}>
+                        [ PROTOCOL: SCALE_ACTIVE ]<br />
+                        [ STATUS: 100%_STABLE ]<br />
+                        [ LOAD: OPTIMIZED ]
+                    </div>
+                </motion.div>
+
+                <motion.div style={{ 
+                    position: 'absolute', left: '5%', bottom: '15%', 
+                    y: floatY2, rotateZ: -10, zIndex: 5 
+                }}>
+                    <div className="system-module" style={{ padding: '20px', fontSize: 10, color: '#22D3EE', fontFamily: 'monospace' }}>
+                        &lt;NETWORK: NEXYRRA_CORE&gt;<br />
+                        &lt;UPLINK: ENCRYPTED&gt;<br />
+                        &lt;LATENCY: 0.002ms&gt;
+                    </div>
                 </motion.div>
             </div>
         </section>

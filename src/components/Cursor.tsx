@@ -1,27 +1,30 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
-import { motion, useMotionValue, useSpring } from 'framer-motion';
+import { motion, useMotionValue, useSpring, AnimatePresence } from 'framer-motion';
 
 export default function Cursor() {
     const [isPointer, setIsPointer] = useState(false);
     const [isClick, setIsClick] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
     const [isDesktop, setIsDesktop] = useState(false);
+    const [coords, setCoords] = useState({ x: 0, y: 0 });
 
     const mx = useMotionValue(-200);
     const my = useMotionValue(-200);
 
-    // Dot: fast (almost instant)
-    const dotX = useSpring(mx, { stiffness: 600, damping: 40, mass: 0.3 });
-    const dotY = useSpring(my, { stiffness: 600, damping: 40, mass: 0.3 });
+    // Dynamic lag based on state
+    const stiffness = isPointer ? 300 : 120;
+    const damping = isPointer ? 30 : 20;
 
-    // Ring: slow, lagging behind
-    const ringX = useSpring(mx, { stiffness: 120, damping: 20, mass: 0.5 });
-    const ringY = useSpring(my, { stiffness: 120, damping: 20, mass: 0.5 });
+    const ringX = useSpring(mx, { stiffness, damping, mass: 0.5 });
+    const ringY = useSpring(my, { stiffness, damping, mass: 0.5 });
+    
+    // Ghost trail (very high lag)
+    const ghostX = useSpring(mx, { stiffness: 20, damping: 20 });
+    const ghostY = useSpring(my, { stiffness: 20, damping: 20 });
 
     useEffect(() => {
-        // Only render on desktop (pointer: fine = mouse)
         const mq = window.matchMedia('(pointer: fine)');
         setIsDesktop(mq.matches);
         if (!mq.matches) return;
@@ -29,9 +32,9 @@ export default function Cursor() {
         const onMove = (e: MouseEvent) => {
             mx.set(e.clientX);
             my.set(e.clientY);
+            setCoords({ x: e.clientX, y: e.clientY });
             setIsVisible(true);
 
-            // Detect if hovered element is interactive
             const el = e.target as HTMLElement;
             const tag = el.tagName;
             const role = el.getAttribute('role');
@@ -39,7 +42,6 @@ export default function Cursor() {
             const parentBtn = el.closest('button');
             setIsPointer(
                 tag === 'A' || tag === 'BUTTON' || tag === 'INPUT' ||
-                tag === 'SELECT' || tag === 'TEXTAREA' ||
                 role === 'button' || role === 'link' ||
                 !!parentA || !!parentBtn
             );
@@ -67,52 +69,96 @@ export default function Cursor() {
 
     if (!isDesktop) return null;
 
-    const DOT = isClick ? 5 : isPointer ? 5 : 7;
-    const RING = isClick ? 28 : isPointer ? 48 : 36;
+    const RING_SIZE = isClick ? 26 : isPointer ? 60 : 36;
 
     return (
         <>
-            {/* Sharp dot */}
+            {/* The ghost trail (Digital Echo) */}
             <motion.div
                 style={{
                     position: 'fixed',
                     top: 0, left: 0,
-                    x: dotX,
-                    y: dotY,
-                    width: DOT,
-                    height: DOT,
+                    x: ghostX,
+                    y: ghostY,
+                    width: 100,
+                    height: 100,
                     borderRadius: '50%',
-                    background: isPointer ? '#22D3EE' : '#8B5CF6',
+                    background: 'radial-gradient(circle, rgba(139,92,246,0.05) 0%, transparent 60%)',
                     pointerEvents: 'none',
-                    zIndex: 99999,
-                    translateX: `-${DOT / 2}px`,
-                    translateY: `-${DOT / 2}px`,
-                    boxShadow: `0 0 ${DOT * 2}px ${isPointer ? 'rgba(34,211,238,0.9)' : 'rgba(139,92,246,0.9)'}`,
+                    zIndex: 99997,
+                    translateX: '-50%',
+                    translateY: '-50%',
                     opacity: isVisible ? 1 : 0,
-                    transition: 'width 0.15s, height 0.15s, background 0.2s, box-shadow 0.2s',
                 }}
             />
 
-            {/* Lagging ring */}
+            {/* The primary ring (System Reticle) */}
             <motion.div
                 style={{
                     position: 'fixed',
                     top: 0, left: 0,
                     x: ringX,
                     y: ringY,
-                    width: RING,
-                    height: RING,
-                    borderRadius: '50%',
-                    border: `1px solid ${isPointer ? 'rgba(34,211,238,0.5)' : 'rgba(139,92,246,0.4)'}`,
+                    width: RING_SIZE,
+                    height: RING_SIZE,
+                    borderRadius: isPointer ? '0%' : '50%',
+                    border: `1px solid ${isPointer ? '#22D3EE' : '#8B5CF6'}`,
                     pointerEvents: 'none',
                     zIndex: 99998,
-                    translateX: `-${RING / 2}px`,
-                    translateY: `-${RING / 2}px`,
+                    translateX: '-50%',
+                    translateY: '-50%',
                     opacity: isVisible ? 1 : 0,
-                    transition: 'width 0.25s cubic-bezier(0.16,1,0.3,1), height 0.25s cubic-bezier(0.16,1,0.3,1), border-color 0.2s',
-                    backdropFilter: isPointer ? 'invert(5%)' : 'none',
+                    rotate: isPointer ? 45 : 0,
+                    transition: 'width 0.4s cubic-bezier(0.16, 1, 0.3, 1), height 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-radius 0.4s, transform 0.4s, border-color 0.2s',
+                }}
+            >
+                {/* Crosshair lines on hover */}
+                {isPointer && (
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                        <div style={{ position: 'absolute', top: '50%', left: '-20px', right: '-20px', height: 1, background: 'rgba(34,211,238,0.3)' }} />
+                        <div style={{ position: 'absolute', left: '50%', top: '-20px', bottom: '-20px', width: 1, background: 'rgba(34,211,238,0.3)' }} />
+                    </motion.div>
+                )}
+            </motion.div>
+
+            {/* The sharp bit (Data Point) */}
+            <motion.div
+                style={{
+                    position: 'fixed',
+                    top: 0, left: 0,
+                    x: mx,
+                    y: my,
+                    width: 4,
+                    height: 4,
+                    borderRadius: '50%',
+                    background: isPointer ? '#22D3EE' : 'white',
+                    pointerEvents: 'none',
+                    zIndex: 99999,
+                    translateX: '-50%',
+                    translateY: '-50%',
+                    opacity: isVisible ? 1 : 0,
+                    boxShadow: isPointer ? '0 0 15px #22D3EE' : '0 0 10px #8B5CF6'
                 }}
             />
+
+            {/* Coordinate Data Overlay */}
+            {isVisible && (
+                <div style={{
+                    position: 'fixed',
+                    top: coords.y + 20,
+                    left: coords.x + 20,
+                    fontSize: 7,
+                    fontFamily: 'monospace',
+                    color: '#334155',
+                    pointerEvents: 'none',
+                    zIndex: 99999,
+                    textTransform: 'uppercase'
+                }}>
+                    X: {Math.round(coords.x)}<br />
+                    Y: {Math.round(coords.y)}<br />
+                    PTR: {isPointer ? 'ACTIVE' : 'IDLE'}
+                </div>
+            )}
         </>
     );
 }
