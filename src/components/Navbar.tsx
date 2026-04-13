@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, ArrowUpRight, Cpu } from 'lucide-react';
+import { Cpu, X, Menu } from 'lucide-react';
 import { NexyrraWordmark } from './Logo';
 
 const Navbar = () => {
@@ -13,7 +13,7 @@ const Navbar = () => {
     const pathname = usePathname();
 
     useEffect(() => {
-        const onScroll = () => setIsScrolled(window.scrollY > 20);
+        const onScroll = () => setIsScrolled(window.scrollY > 50);
         window.addEventListener('scroll', onScroll, { passive: true });
         return () => window.removeEventListener('scroll', onScroll);
     }, []);
@@ -27,36 +27,35 @@ const Navbar = () => {
 
     return (
         <nav style={{
-            position: 'fixed', top: 0, left: 0, right: 0, zIndex: 200,
+            position: 'fixed', top: 0, left: 0, right: 0, zIndex: 999,
             padding: '30px 40px',
             transition: 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
         }}>
-            <div style={{ 
-                maxWidth: 1400, margin: '0 auto', 
-                padding: isScrolled ? '12px 30px' : '20px 0',
-                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                background: isScrolled ? 'rgba(8,9,15,0.7)' : 'transparent',
-                backdropFilter: isScrolled ? 'blur(24px)' : 'none',
-                border: isScrolled ? '1px solid rgba(255,255,255,0.05)' : 'none',
-                borderRadius: isScrolled ? '0px' : '0',
-                transition: 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
-            }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+            <div 
+                className={isScrolled ? "glass-refractive" : ""}
+                style={{ 
+                    maxWidth: 1400, margin: '0 auto', 
+                    padding: isScrolled ? '15px 40px' : '20px 0',
+                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                    borderRadius: 0,
+                    transition: 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+                }}
+            >
+                <div style={{ display: 'flex', alignItems: 'center', gap: 30 }}>
                      <NexyrraWordmark size={32} />
                      <div style={{ 
                         width: 1, height: 20, 
                         background: 'rgba(255,255,255,0.1)', 
                         display: isScrolled ? 'block' : 'none' 
                      }} />
-                     <span className="font-cyber hide-mobile" style={{ 
-                        fontSize: 9, letterSpacing: '0.5em', 
-                        color: '#4B5563', display: isScrolled ? 'block' : 'none' 
+                     <div className="font-cyber hide-mobile" style={{ 
+                        fontSize: 8, letterSpacing: '0.4em', color: '#334155',
+                        display: isScrolled ? 'block' : 'none' 
                      }}>
-                        NX_OS_PROD
-                     </span>
+                        NX_OS_V2.0
+                     </div>
                 </div>
 
-                {/* Cyber Nav */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: 60 }}>
                     <ul className="hide-mobile" style={{ display: 'flex', gap: 40, listStyle: 'none', margin: 0 }}>
                         {links.map(l => {
@@ -64,16 +63,16 @@ const Navbar = () => {
                             return (
                                 <li key={l.label}>
                                     <Link href={l.href} style={{
-                                        color: active ? '#8B5CF6' : '#64748B',
-                                        fontWeight: 900, fontSize: 11, letterSpacing: '0.2em',
+                                        color: active ? 'white' : '#4B5563',
+                                        fontWeight: 900, fontSize: 10, letterSpacing: '0.25em',
                                         transition: 'all 0.3s', fontFamily: 'var(--font-cyber)',
                                         position: 'relative'
                                     }}
                                         onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = 'white'; }}
-                                        onMouseLeave={e => { if (!active) (e.currentTarget as HTMLElement).style.color = '#64748B'; }}>
+                                        onMouseLeave={e => { if (!active) (e.currentTarget as HTMLElement).style.color = '#4B5563'; }}>
                                         {l.label}
                                         {active && (
-                                            <motion.div layoutId="nav-dot" style={{ position: 'absolute', bottom: -10, left: '50%', x: '-50%', width: 4, height: 4, borderRadius: '50%', background: '#8B5CF6' }} />
+                                            <motion.div layoutId="nav-glow" style={{ position: 'absolute', top: -10, left: 0, right: 0, height: 1, background: '#8B5CF6' }} />
                                         )}
                                     </Link>
                                 </li>
@@ -82,45 +81,41 @@ const Navbar = () => {
                     </ul>
 
                     <div style={{ display: 'flex', gap: 15, alignItems: 'center' }}>
-                         <div className="hide-mobile" style={{ textAlign: 'right', display: isScrolled ? 'block' : 'none' }}>
-                            <div style={{ fontSize: 10, fontWeight: 900, color: '#334155' }}>DUBAI_UA_4:00</div>
-                            <div style={{ fontSize: 8, color: '#8B5CF6', letterSpacing: '0.1em' }}>0.002ms_LATENCY</div>
-                         </div>
-                         
-                        <Link href="/contact" className="hide-mobile" style={{ 
-                            background: 'white', color: 'black', 
-                            padding: '12px 24px', fontSize: 11, fontWeight: 900, 
-                            fontFamily: 'var(--font-cyber)', borderRadius: 0, textDecoration: 'none' 
+                        <Link href="/contact" className="hide-mobile shimmer-border" style={{ 
+                            padding: '12px 24px', fontSize: 10, fontWeight: 900, 
+                            fontFamily: 'var(--font-cyber)', color: 'white', textDecoration: 'none' 
                         }}>
-                             INIT_REQ
+                             INITIALIZE_SYNC
                         </Link>
 
-                        {/* Mobile Toggle */}
                         <button
                             onClick={() => setIsMobileOpen(!isMobileOpen)}
                             style={{
                                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                width: 44, height: 44, background: 'rgba(255,255,255,0.03)',
-                                border: '1px solid rgba(255,255,255,0.1)', borderRadius: 0,
+                                width: 44, height: 44, background: 'transparent',
+                                border: '1px solid rgba(255,255,255,0.05)', borderRadius: 0,
                                 color: 'white', cursor: 'pointer'
                             }}
                             className="show-mobile-flex"
                         >
-                            {isMobileOpen ? <X size={20} /> : <Cpu size={20} />}
+                            {isMobileOpen ? <X size={18} /> : <Cpu size={18} />}
                         </button>
                     </div>
                 </div>
             </div>
 
-            {/* Mobile Menu */}
+            {/* Mobile Nav */}
             <AnimatePresence>
                 {isMobileOpen && (
                     <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
-                        style={{ background: '#07080e', padding: '60px 40px', display: 'flex', flexDirection: 'column', gap: 30, position: 'absolute', top: 0, left: 0, right: 0, height: '100vh', zIndex: -1 }}>
-                        <div style={{ marginTop: 100 }}>
+                        style={{ 
+                            background: '#040508', padding: '100px 40px', 
+                            position: 'absolute', top: 0, left: 0, right: 0, height: '100vh', zIndex: -1 
+                        }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 40 }}>
                             {links.map(l => (
                                 <Link key={l.label} href={l.href} 
-                                    style={{ color: 'white', fontWeight: 900, fontSize: 32, display: 'block', marginBottom: 20, fontFamily: 'var(--font-title)' }} 
+                                    style={{ color: 'white', fontWeight: 900, fontSize: 40, fontFamily: 'var(--font-title)', letterSpacing: '-0.04em' }} 
                                     onClick={() => setIsMobileOpen(false)}>
                                     {l.label}
                                 </Link>

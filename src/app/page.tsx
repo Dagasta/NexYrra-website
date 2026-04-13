@@ -7,25 +7,23 @@ import Services from '../components/Services';
 import Footer from '../components/Footer';
 import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
-import { ArrowRight, ChevronRight, Activity, Cpu, Layers, Radio } from 'lucide-react';
+import { ArrowRight, Activity, Cpu, Layers, Radio, Terminal, Box, Database } from 'lucide-react';
 
-// ─── DATA ENGINE ─────────────────────────────────────────────────────────────
 const SYSTEM_LOGS = [
-    'BOOTING NEXYRRA_CORE_v2.0.4',
-    'UPLINK STABLE... LATENCY 0.002ms',
-    'REDUCING ENTROPY... 98.4%',
-    'SYNCING ARCHITECTURAL DATA...',
-    'OVERRIDING STANDARD PARADIGMS',
-    'ENCRYPTING COMMUNICATION CHANNELS',
-    'OPTIMIZING SYSTEM THROUGHPUT',
-    'DEPLOYING DIGITAL LEGACY...',
+    'BOOTING_LUMINOUS_CORE_v2.0.4',
+    'REFRACTIVE_GLASS_LEVEL: 100%',
+    'SYNCING_ARCHITECTURAL_DATA...',
+    'DATA_FLOW_STABLE: 1.2TB/S',
+    'ENCRYPTING_COMMUNICATION_CHANNELS',
+    'OPTIMIZING_SYSTEM_THROUGHPUT',
+    'DEVELOPER_DREAM_MODE_ACTIVE',
 ];
 
 const METHOD_PIPELINE = [
-    { id: '01', label: 'ANALYZE', sub: 'DECONSTRUCTING THE PROBLEM SPACE', icon: Activity },
-    { id: '02', label: 'ARCHITECT', sub: 'ENGINEERING THE SOLUTION ENGINE', icon: Layers },
-    { id: '03', label: 'EXECUTE', sub: 'PULSING DATA INTO REALITY', icon: Cpu },
-    { id: '04', label: 'EVOLVE', sub: 'PERPETUAL OPTIMIZATION CYCLE', icon: Radio },
+    { id: '01', label: 'DECONSTRUCT', sub: 'VOID_ENTRY_ANALYSIS', icon: Activity },
+    { id: '02', label: 'ARCHITECT', sub: 'LUMINOUS_NODE_DESIGN', icon: Layers },
+    { id: '03', label: 'EXECUTE', sub: 'PULSE_DATA_INJECTION', icon: Cpu },
+    { id: '04', label: 'EVOLVE', sub: 'PERPETUAL_SYNC_CYCLE', icon: Radio },
 ];
 
 export default function Home() {
@@ -33,64 +31,57 @@ export default function Home() {
     const { scrollYProgress } = useScroll();
     const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
 
-    // Global background color shift based on scroll
-    const bgColor = useTransform(smoothProgress, [0, 0.5, 1], ['#07080e', '#090a16', '#05060e']);
+    const bgColor = useTransform(smoothProgress, [0, 0.5, 1], ['#040508', '#07080e', '#030406']);
     
-    // Log ticker state
     const [logIndex, setLogIndex] = useState(0);
     useEffect(() => {
         const interval = setInterval(() => {
             setLogIndex(prev => (prev + 1) % SYSTEM_LOGS.length);
-        }, 3000);
+        }, 2000);
         return () => clearInterval(interval);
     }, []);
 
     return (
-        <motion.main 
-            ref={containerRef}
-            style={{ 
-                backgroundColor: bgColor, 
-                color: 'white', 
-                position: 'relative',
-                overflowX: 'hidden'
-            }}
-        >
+        <motion.main ref={containerRef} style={{ backgroundColor: bgColor, color: 'white', position: 'relative', overflowX: 'hidden' }}>
             <Navbar />
             
-            {/* System Status Overlay (Floating) */}
+            {/* Developer HUD Overlay (Wow factor) */}
             <div style={{
-                position: 'fixed', top: 120, left: 32, zIndex: 100,
-                pointerEvents: 'none', opacity: 0.4
+                position: 'fixed', top: 120, left: 40, zIndex: 100,
+                pointerEvents: 'none'
             }} className="hide-mobile">
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
-                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#8B5CF6', animation: 'nex-pulse 2s infinite' }} />
-                    <span className="font-cyber" style={{ fontSize: 9, letterSpacing: '0.2em', color: '#8B5CF6' }}>SYSTEM_LIVE</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 15 }}>
+                    <div style={{ width: 6, height: 6, background: '#8B5CF6', boxShadow: '0 0 10px #8B5CF6' }} />
+                    <span className="font-cyber" style={{ fontSize: 9, letterSpacing: '0.4em', color: 'white' }}>STATION_14</span>
                 </div>
-                <AnimatePresence mode="wait">
-                    <motion.div
-                        key={logIndex}
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: 10 }}
-                        style={{ fontSize: 8, fontFamily: 'monospace', color: '#4B5563' }}
-                    >
-                        &gt; {SYSTEM_LOGS[logIndex]}
-                    </motion.div>
-                </AnimatePresence>
+                <div className="glass-refractive" style={{ padding: '15px 20px', borderRadius: 0 }}>
+                    <AnimatePresence mode="wait">
+                        <motion.div
+                            key={logIndex}
+                            initial={{ opacity: 0, x: -5 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 5 }}
+                            style={{ fontSize: 8, fontFamily: 'monospace', color: '#8B5CF6' }}
+                        >
+                            &gt; {SYSTEM_LOGS[logIndex]}
+                        </motion.div>
+                    </AnimatePresence>
+                </div>
             </div>
 
             <Hero />
 
-            {/* ─── DATA STREAM SECTION ────────────────────────────────── */}
-            <section style={{ height: '30vh', display: 'flex', alignItems: 'center', borderTop: '1px solid rgba(139,92,246,0.1)', borderBottom: '1px solid rgba(139,92,246,0.1)', background: 'rgba(8,9,15,0.4)', overflow: 'hidden' }}>
-                <div style={{
-                    display: 'flex', whiteSpace: 'nowrap', gap: 100,
-                    animation: 'marquee-rtl 60s linear infinite'
-                }}>
+            {/* Scrolling Data Stream (Lighter contrast) */}
+            <section style={{ 
+                height: '40vh', display: 'flex', alignItems: 'center', 
+                borderTop: '1px solid rgba(255,255,255,0.05)', 
+                borderBottom: '1px solid rgba(255,255,255,0.05)', 
+                overflow: 'hidden', position: 'relative' 
+            }}>
+                <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 50% 50%, rgba(139,92,246,0.03) 0%, transparent 70%)' }} />
+                <div style={{ display: 'flex', whiteSpace: 'nowrap', gap: 100, animation: 'marquee-rtl 80s linear infinite' }}>
                     {[...Array(10)].map((_, i) => (
                         <div key={i} style={{ display: 'flex', gap: 100, alignItems: 'center' }}>
-                            <span className="text-velocity shimmer-text" style={{ fontSize: 'clamp(40px, 6vw, 100px)', opacity: 0.15 }}>ARCHITECTING THE FUTURE</span>
-                            <span className="text-velocity" style={{ fontSize: 'clamp(40px, 6vw, 100px)', color: '#1E293B' }}>NEXYRRA_CORE</span>
+                            <span className="font-title text-kinetic" style={{ fontSize: '100px', fontWeight: 900, color: 'white' }}>BEYOND_IMAGINATION</span>
+                            <span className="font-cyber" style={{ fontSize: '100px', color: '#1E293B', opacity: 0.3 }}>NEXYRRA</span>
                         </div>
                     ))}
                 </div>
@@ -98,106 +89,86 @@ export default function Home() {
 
             <Services />
 
-            {/* ─── THE PIPELINE (MORPHING SECTION) ────────────────────── */}
-            <section style={{ padding: '200px 0', position: 'relative' }}>
+            {/* Process Sections (Fancy Vertical Flow) */}
+            <section style={{ padding: '200px 0', background: '#000' }}>
                 <div className="container-nex">
-                    <div style={{ textAlign: 'center', marginBottom: 120 }}>
-                        <h2 className="font-title" style={{ fontSize: 'clamp(40px, 7vw, 120px)', fontWeight: 900, letterSpacing: '-0.04em' }}>
-                            THE <span style={{ color: '#8B5CF6' }}>PROCESS</span> IS<br />THE <span style={{ color: '#22D3EE' }}>PRODUCT.</span>
-                        </h2>
-                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'minmax(200px, 1fr) 3fr', gap: 100 }} className="grid-mobile-1">
+                        
+                        <div style={{ position: 'sticky', top: 200, height: 'fit-content' }} className="hide-mobile">
+                            <span className="font-cyber" style={{ fontSize: 10, letterSpacing: '1em', color: '#8B5CF6', display: 'block', marginBottom: 30 }}>METHODOLOGY</span>
+                            <h2 className="font-title" style={{ fontSize: 60, fontWeight: 900, lineHeight: 0.9 }}>THE<br />PIPELINE.</h2>
+                        </div>
 
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                        {METHOD_PIPELINE.map((step, i) => (
-                            <motion.div
-                                key={step.id}
-                                initial={{ opacity: 0, rotateX: -20, y: 50 }}
-                                whileInView={{ opacity: 1, rotateX: 0, y: 0 }}
-                                viewport={{ once: true, margin: "-100px" }}
-                                transition={{ duration: 0.8, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                                style={{
-                                    display: 'grid', gridTemplateColumns: '80px 1fr 1fr 60px',
-                                    alignItems: 'center', padding: '60px 40px',
-                                    background: 'rgba(255,255,255,0.01)',
-                                    border: '1px solid rgba(255,255,255,0.03)',
-                                    position: 'relative', overflow: 'hidden'
-                                }}
-                                whileHover={{ background: 'rgba(255,255,255,0.02)', borderColor: 'rgba(139,92,246,0.2)' }}
-                                className="grid-mobile-1"
-                            >
-                                <span className="font-cyber" style={{ fontSize: 14, color: '#334155', fontWeight: 900 }}>{step.id}</span>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-                                    <step.icon size={24} style={{ color: '#8B5CF6' }} />
-                                    <span className="font-title" style={{ fontSize: 24, fontWeight: 800 }}>{step.label}</span>
-                                </div>
-                                <span style={{ fontSize: 12, color: '#4B5563', letterSpacing: '0.1em' }} className="hide-mobile">{step.sub}</span>
-                                <div style={{ textAlign: 'right' }}>
-                                    <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#8B5CF6', marginLeft: 'auto', opacity: 0.4 }} />
-                                </div>
-                            </motion.div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                            {METHOD_PIPELINE.map((step, i) => (
+                                <motion.div
+                                    key={step.id}
+                                    initial={{ opacity: 0, x: 20 }}
+                                    whileInView={{ opacity: 1, x: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ delay: i * 0.1 }}
+                                    className="glass-refractive"
+                                    style={{ 
+                                        padding: '80px 60px', borderRadius: 0,
+                                        display: 'grid', gridTemplateColumns: '100px 1fr 1fr',
+                                        alignItems: 'center'
+                                    }}
+                                    whileHover={{ paddingLeft: '80px' }}
+                                >
+                                    <span className="font-cyber" style={{ fontSize: 12, fontWeight: 900, color: '#334155' }}>PROTOCOL_{step.id}</span>
+                                    <div>
+                                        <h3 className="font-title" style={{ fontSize: 40, fontWeight: 900, color: 'white', marginBottom: 10 }}>{step.label}</h3>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: 15 }}>
+                                            <div style={{ width: 10, height: 1, background: '#8B5CF6' }} />
+                                            <span style={{ fontSize: 10, color: '#8B5CF6', letterSpacing: '0.2em' }}>{step.sub}</span>
+                                        </div>
+                                    </div>
+                                    <div style={{ textAlign: 'right' }}>
+                                        <step.icon size={32} style={{ color: '#1E293B' }} />
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Call to Action: Full Luminous Void */}
+            <section style={{ 
+                height: '100vh', display: 'flex', alignItems: 'center', 
+                justifyContent: 'center', background: '#050608', position: 'relative' 
+            }}>
+                <div className="scanline" style={{ opacity: 0.05 }} />
+                <motion.div 
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    style={{ textAlign: 'center', zIndex: 10, position: 'relative' }}
+                >
+                    <div style={{ display: 'flex', justifyContent: 'center', gap: 15, marginBottom: 40 }}>
+                        {[...Array(5)].map((_, i) => (
+                            <div key={i} className="shimmer-border" style={{ width: 40, height: 2 }} />
                         ))}
                     </div>
-                </div>
-            </section>
-
-            {/* ─── THE MANIFESTO (SYSTEM OVERRIDE) ──────────────────── */}
-            <section style={{ padding: '240px 0', background: '#000', position: 'relative', overflow: 'hidden' }}>
-                <div className="scanline" />
-                <div className="container-nex">
-                    <motion.div 
-                        initial={{ opacity: 0 }}
-                        whileInView={{ opacity: 1 }}
-                        viewport={{ once: true }}
-                        style={{ maxWidth: 1000, margin: '0 auto', textAlign: 'center' }}
-                    >
-                        <p className="font-cyber" style={{ fontSize: 10, letterSpacing: '0.5em', color: '#8B5CF6', marginBottom: 60 }}>
-                            MANIFESTO_PROTOCOL_V1
-                        </p>
-                        <h2 className="font-title" style={{ fontSize: 'clamp(30px, 4.5vw, 64px)', fontWeight: 900, lineHeight: 1.4, color: 'white' }}>
-                            WE DO NOT BUILD FOR THE PRESENT.<br />
-                            <span style={{ opacity: 0.3 }}>THE PRESENT IS A CONSTRAINT.</span><br />
-                            WE ENGINEER THE SYSTEMS THAT<br />
-                            <span className="shimmer-text">REDEFINE WHAT IS POSSIBLE.</span>
-                        </h2>
-                        
-                        <div style={{ marginTop: 80, display: 'flex', justifyContent: 'center', gap: 40 }} className="stack-mobile">
-                            <div style={{ textAlign: 'left', maxWidth: 300 }}>
-                                <div style={{ fontSize: 32, fontWeight: 900, marginBottom: 10 }}>UNREAL.</div>
-                                <div style={{ fontSize: 12, color: '#4B5563', lineHeight: 1.6 }}>Our output should feel like it shouldn't exist in this timeline.</div>
-                            </div>
-                            <div style={{ textAlign: 'left', maxWidth: 300 }}>
-                                <div style={{ fontSize: 32, fontWeight: 900, marginBottom: 10 }}>ALIVE.</div>
-                                <div style={{ fontSize: 12, color: '#4B5563', lineHeight: 1.6 }}>Systems that breathe, learn, and expand with your vision.</div>
-                            </div>
-                        </div>
-                    </motion.div>
-                </div>
-            </section>
-
-            {/* ─── FINAL CTA (SYSTEM REBIRTH) ────────────────────────── */}
-            <section style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', background: '#07080e' }}>
-                <motion.div 
-                    initial={{ scale: 0.8, opacity: 0 }}
-                    whileInView={{ scale: 1, opacity: 1 }}
-                    transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-                    style={{ textAlign: 'center', zIndex: 10 }}
-                >
-                    <span className="font-cyber" style={{ fontSize: 12, letterSpacing: '0.8em', color: '#8B5CF6', display: 'block', marginBottom: 40 }}>
-                        READY_FOR_UPGRADE
-                    </span>
-                    <h2 className="font-title" style={{ fontSize: 'clamp(60px, 12vw, 180px)', fontWeight: 900, letterSpacing: '-0.06em', marginBottom: 60 }}>
-                        INITIATE.
+                    <h2 className="font-title" style={{ fontSize: 'clamp(60px, 15vw, 240px)', fontWeight: 900, letterSpacing: '-0.08em', lineHeight: 0.8, color: 'white' }}>
+                        INITIATE <br />
+                        <span className="shimmer-text">UPLINK_</span>
                     </h2>
-                    <Link href="https://wa.me/971503953988" className="btn-primary" style={{ padding: '30px 80px', fontSize: 20, borderRadius: 0, background: '#8B5CF6', color: 'black', fontWeight: 900 }}>
-                         CONNECT TO CORE <ArrowRight size={24} />
-                    </Link>
+                    <div style={{ marginTop: 100 }}>
+                        <Link href="/contact" className="btn-primary glass-refractive" style={{ padding: '30px 100px', fontSize: 14, fontWeight: 900, color: 'white', border: '1px solid white' }}>
+                            ENTER_THE_CORE <ArrowRight size={20} style={{ marginLeft: 20 }} />
+                        </Link>
+                    </div>
                 </motion.div>
                 
-                {/* Visual "Engine" behind CTA */}
-                <div style={{ position: 'absolute', width: 800, height: 800, background: 'radial-gradient(circle, rgba(139,92,246,0.1) 0%, transparent 70%)', filter: 'blur(100px)', zIndex: 1 }} className="blob-morph" />
+                {/* Background Core pulsing */}
+                <div style={{ 
+                    position: 'absolute', width: 1000, height: 1000, 
+                    background: 'radial-gradient(circle, rgba(139,92,246,0.1) 0%, transparent 70%)', 
+                    filter: 'blur(100px)', zIndex: 1 
+                }} />
             </section>
 
             <Footer />
-        </motion.main>
+        </main>
     );
 }

@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useRef } from 'react';
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
+import React, { useRef, useEffect, useState } from 'react';
+import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'framer-motion';
+import { ArrowRight, Activity, Terminal as TerminalIcon } from 'lucide-react';
 
 const Hero = () => {
     const containerRef = useRef<HTMLDivElement>(null);
@@ -11,116 +11,167 @@ const Hero = () => {
         offset: ["start start", "end start"]
     });
 
-    // Smooth scroll transforms for 3D effect
-    const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
-    
-    // Perspective dive
-    const rotateX = useTransform(smoothProgress, [0, 1], [0, 45]);
-    const z = useTransform(smoothProgress, [0, 1], [0, -500]);
-    const opacity = useTransform(smoothProgress, [0, 0.8], [1, 0]);
-    const scale = useTransform(smoothProgress, [0, 1], [1, 0.8]);
-    
-    // Floating elements
-    const floatY1 = useTransform(smoothProgress, [0, 1], [0, -200]);
-    const floatY2 = useTransform(smoothProgress, [0, 1], [0, -400]);
+    // Mouse Tracking for Interactive Geometry
+    const mouseX = useMotionValue(0);
+    const mouseY = useMotionValue(0);
+    const springX = useSpring(mouseX, { stiffness: 40, damping: 20 });
+    const springY = useSpring(mouseY, { stiffness: 40, damping: 20 });
+
+    useEffect(() => {
+        const handleMove = (e: MouseEvent) => {
+            const { clientX, clientY } = e;
+            const moveX = (clientX / window.innerWidth - 0.5) * 80;
+            const moveY = (clientY / window.innerHeight - 0.5) * 80;
+            mouseX.set(moveX);
+            mouseY.set(moveY);
+        };
+        window.addEventListener('mousemove', handleMove);
+        return () => window.removeEventListener('mousemove', handleMove);
+    }, [mouseX, mouseY]);
+
+    // Scroll-based 3D Morphing
+    const smoothProgress = useSpring(scrollYProgress, { stiffness: 80, damping: 25 });
+    const rotateX = useTransform(smoothProgress, [0, 1], [0, 40]);
+    const z = useTransform(smoothProgress, [0, 1], [0, -600]);
+    const opacity = useTransform(smoothProgress, [0, 0.7, 1], [1, 0.8, 0]);
+    const blur = useTransform(smoothProgress, [0, 1], ["blur(0px)", "blur(20px)"]);
 
     return (
         <section ref={containerRef} style={{
-            position: 'relative', height: '200vh', // Extra height for scroll duration
-            background: '#07080e', overflow: 'clip'
+            position: 'relative', height: '180vh', 
+            background: '#040508', overflow: 'hidden'
         }}>
             <div style={{
                 position: 'sticky', top: 0, height: '100vh', width: '100%',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                perspective: '1500px', perspectiveOrigin: 'center center'
+                perspective: '2000px'
             }}>
-                {/* Background Grid that "dives" */}
+                
+                {/* THE CORE: A Luminous 3D Structure */}
                 <motion.div style={{
-                    position: 'absolute', inset: -200, zIndex: 0,
-                    backgroundImage: 'linear-gradient(rgba(139,92,246,0.1) 1px, transparent 1px), linear-gradient(to right, rgba(139,92,246,0.1) 1px, transparent 1px)',
-                    backgroundSize: '100px 100px',
-                    maskImage: 'radial-gradient(circle at center, black, transparent 80%)',
-                    WebkitMaskImage: 'radial-gradient(circle at center, black, transparent 80%)',
-                    rotateX, z, scale, opacity
-                }} />
+                    position: 'absolute', width: 800, height: 800,
+                    borderRadius: '50%', border: '1px solid rgba(139,92,246,0.1)',
+                    x: springX, y: springY, rotateX, opacity,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center'
+                }}>
+                     {/* Internal Pulse Ring */}
+                     <motion.div 
+                        animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3] }}
+                        transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+                        style={{
+                            position: 'absolute', width: 400, height: 400,
+                            borderRadius: '50%', background: 'radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 70%)',
+                            filter: 'blur(40px)'
+                        }} 
+                     />
+                     
+                     {/* Orbiting Particles (Developer's Dream Detail) */}
+                     {[...Array(12)].map((_, i) => (
+                         <motion.div
+                            key={i}
+                            animate={{ rotateZ: 360 }}
+                            transition={{ repeat: Infinity, duration: 10 + i * 2, ease: "linear" }}
+                            style={{ position: 'absolute', width: 500 + i * 20, height: 500 + i * 20, borderRadius: '50%', border: '1px solid rgba(255,255,255,0.02)', pointerEvents: 'none' }}
+                         >
+                            <div style={{ position: 'absolute', top: '50%', left: 0, width: 3, height: 3, background: i % 2 === 0 ? '#8B5CF6' : '#22D3EE', borderRadius: '50%', boxShadow: `0 0 10px ${i % 2 === 0 ? '#8B5CF6' : '#22D3EE'}` }} />
+                         </motion.div>
+                     ))}
+                </motion.div>
 
-                {/* The "Core" engine pulse */}
-                <motion.div style={{
-                    position: 'absolute', width: 600, height: 600,
-                    background: 'radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 70%)',
-                    filter: 'blur(60px)', zIndex: 1,
-                    scale: useTransform(smoothProgress, [0, 1], [1, 2]),
-                    opacity: useTransform(smoothProgress, [0, 0.5, 1], [0.6, 1, 0])
-                }} className="blob-morph" />
+                {/* Horizontal Marquee Overlays (Fancy Aspect) */}
+                <div style={{ position: 'absolute', top: '15%', left: 0, right: 0, pointerEvents: 'none', opacity: 0.1 }}>
+                    <div className="font-cyber" style={{ fontSize: 10, letterSpacing: '1em', whiteSpace: 'nowrap', animation: 'marquee-rtl 100s linear infinite' }}>
+                        NEXYRRA_CORE_SYSTEM_ACTIVE_NODES_STABLE_LATENCY_0.002MS_ENCRYPTION_LAYER_V2.0.4
+                    </div>
+                </div>
 
-                <div className="container-nex" style={{ position: 'relative', zIndex: 10 }}>
-                    <motion.div style={{ rotateX, z, scale, opacity }}>
+                {/* Main Content Card (Luminous & Refractive) */}
+                <div className="container-nex" style={{ position: 'relative', zIndex: 100 }}>
+                    <motion.div style={{ rotateX, z, filter: blur, opacity }}>
                         
-                        {/* Eyebrow - System Status */}
-                        <div style={{ marginBottom: 40, display: 'flex', gap: 20, alignItems: 'center' }}>
-                            <div className="scanline" style={{ height: 2, position: 'relative', width: 40, background: '#8B5CF6' }} />
-                            <span className="font-cyber" style={{ fontSize: 10, letterSpacing: '0.4em', color: '#8B5CF6' }}>
-                                COREINIT.SYS_099
-                            </span>
+                        <div style={{ display: 'flex', gap: 15, alignItems: 'center', marginBottom: 50 }}>
+                            <div className="shimmer-border" style={{ padding: '6px 16px', borderRadius: 4 }}>
+                                <span className="font-cyber" style={{ fontSize: 9, fontWeight: 900, color: 'white', letterSpacing: '0.3em' }}>
+                                    PROTOCOL: ARCHITECT
+                                </span>
+                            </div>
+                            <div style={{ height: 1, flex: 1, background: 'linear-gradient(90deg, rgba(139,92,246,0.3), transparent)' }} />
                         </div>
 
-                        {/* Title - The Statement */}
                         <h1 className="font-title" style={{
-                            fontSize: 'clamp(60px, 12vw, 180px)',
-                            fontWeight: 900, lineHeight: 0.85, 
-                            letterSpacing: '-0.06em', color: 'white',
+                            fontSize: 'clamp(56px, 11vw, 160px)',
+                            fontWeight: 900, lineHeight: 0.88, 
+                            letterSpacing: '-0.07em', color: 'white',
                             marginBottom: 40
                         }}>
-                            <span style={{ display: 'block', opacity: 0.2 }}>WE ARE THE</span>
-                            <span style={{ display: 'block' }}>ARCHITECTS</span>
-                            <span style={{ 
-                                display: 'block', 
-                                background: 'linear-gradient(90deg, #8B5CF6, #22D3EE)',
-                                WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text'
-                            }}>OF REALITY.</span>
+                            <span style={{ display: 'block', opacity: 0.15 }}>SYSTEMS</span>
+                            <span style={{ display: 'block' }}>THAT THINK.</span>
+                            <span className="shimmer-text" style={{ display: 'block' }}>ARCHITECTED.</span>
                         </h1>
 
-                        <p className="font-main" style={{
-                            fontSize: 'clamp(18px, 2vw, 24px)', color: '#64748B',
-                            maxWidth: 600, lineHeight: 1.6, marginBottom: 60, fontWeight: 300
-                        }}>
-                            Developing high-performance digital systems that defy standard architecture.
-                            We don't build websites. We engineer legacies.
-                        </p>
+                        <div style={{ display: 'flex', gap: 40, alignItems: 'start' }} className="grid-mobile-1">
+                            <p className="font-main" style={{
+                                fontSize: 'clamp(16px, 1.8vw, 22px)', color: '#94A3B8',
+                                maxWidth: 500, lineHeight: 1.6, fontWeight: 300
+                            }}>
+                                We deconstruct the existing and engineer the improbable. 
+                                High-performance digital foundations for the world's most ambitious systems.
+                            </p>
+                            
+                            {/* Interactive Data Node (Wow factor) */}
+                            <motion.div 
+                                className="glass-refractive"
+                                style={{ padding: '30px', width: 280, borderRadius: 2 }}
+                                whileHover={{ scale: 1.05, rotateY: 10 }}
+                            >
+                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 20 }}>
+                                    <Activity size={16} style={{ color: '#8B5CF6' }} />
+                                    <span className="font-cyber" style={{ fontSize: 8, color: '#334155' }}>LIVE_TELEMETRY</span>
+                                </div>
+                                <div className="font-title" style={{ fontSize: 28, fontWeight: 900, color: 'white', marginBottom: 5 }}>99.9%</div>
+                                <div style={{ fontSize: 10, color: '#4B5563', letterSpacing: '0.1em' }}>THROUGHPUT_EFFICIENCY</div>
+                                <div style={{ marginTop: 20, height: 2, background: 'rgba(255,255,255,0.05)', position: 'relative' }}>
+                                    <motion.div 
+                                        animate={{ width: ["0%", "80%", "70%", "90%"] }}
+                                        transition={{ repeat: Infinity, duration: 4 }}
+                                        style={{ position: 'absolute', top: 0, left: 0, bottom: 0, background: '#8B5CF6' }} 
+                                    />
+                                </div>
+                            </motion.div>
+                        </div>
 
-                        <div style={{ display: 'flex', gap: 20 }}>
+                        <div style={{ marginTop: 80, display: 'flex', gap: 20, alignItems: 'center' }}>
                             <motion.button 
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                                className="btn-primary" style={{ padding: '20px 48px', borderRadius: 0, border: '1px solid #8B5CF6', background: 'transparent' }}>
-                                INITIALIZE SYSTEM <ArrowRight size={18} />
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
+                                className="btn-primary" 
+                                style={{ 
+                                    padding: '24px 60px', borderRadius: 0, 
+                                    background: 'white', color: 'black', 
+                                    fontFamily: 'var(--font-cyber)', fontWeight: 900, fontSize: 14 
+                                }}
+                            >
+                                START_SESSION_01
                             </motion.button>
+                            
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+                                <div style={{ width: 100, height: 1, background: '#1E293B' }} />
+                                <div style={{ width: 140, height: 1, background: '#1E293B' }} />
+                                <div style={{ width: 80, height: 1, background: '#1E293B' }} />
+                            </div>
                         </div>
                     </motion.div>
                 </div>
 
-                {/* Floating "Data" Particles */}
-                <motion.div style={{ 
-                    position: 'absolute', right: '10%', top: '20%', 
-                    y: floatY1, rotateZ: 15, zIndex: 5 
-                }}>
-                    <div className="system-module" style={{ padding: '20px', fontSize: 10, color: '#8B5CF6', fontFamily: 'monospace' }}>
-                        [ PROTOCOL: SCALE_ACTIVE ]<br />
-                        [ STATUS: 100%_STABLE ]<br />
-                        [ LOAD: OPTIMIZED ]
-                    </div>
-                </motion.div>
+                {/* Vertical Decorative Metadata (Fancy Detail) */}
+                <div style={{ position: 'absolute', right: 40, bottom: 40, display: 'flex', gap: 15 }} className="hide-mobile">
+                     <div className="vertical-marquee">SYS_STATUS_OK_NODE_CHECK_PASSED_AUTH_009</div>
+                     <div className="vertical-marquee" style={{ opacity: 0.3 }}>UX_ARCH_V2.0.4.55.99.11</div>
+                </div>
 
-                <motion.div style={{ 
-                    position: 'absolute', left: '5%', bottom: '15%', 
-                    y: floatY2, rotateZ: -10, zIndex: 5 
-                }}>
-                    <div className="system-module" style={{ padding: '20px', fontSize: 10, color: '#22D3EE', fontFamily: 'monospace' }}>
-                        &lt;NETWORK: NEXYRRA_CORE&gt;<br />
-                        &lt;UPLINK: ENCRYPTED&gt;<br />
-                        &lt;LATENCY: 0.002ms&gt;
-                    </div>
-                </motion.div>
+                <div style={{ position: 'absolute', left: 40, top: '50%', transform: 'translateY(-50%)' }} className="hide-mobile">
+                    <TerminalIcon size={20} style={{ color: '#1E293B' }} />
+                </div>
             </div>
         </section>
     );

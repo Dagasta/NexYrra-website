@@ -556,7 +556,120 @@ body::before {
 .snap-scroll {
   scroll-snap-type: y mandatory;
 }
-.snap-section {
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
+/* ===== THE LUMINOUS ENGINE (DEVELOPER DREAM) ===== */
+
+:root {
+  --nex-glow-white: rgba(255, 255, 255, 0.8);
+  --nex-glass-bg: rgba(255, 255, 255, 0.03);
+  --nex-border-glow: rgba(139, 92, 246, 0.4);
 }
+
+/* Base contrast improvement */
+body {
+  background: #050608; /* Slightly deeper than before for better glow contrast */
+}
+
+/* Refractive Glass Effect */
+.glass-refractive {
+  background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 100%);
+  backdrop-filter: blur(25px) saturate(180%);
+  -webkit-backdrop-filter: blur(25px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-refractive::after {
+  content: "";
+  position: absolute;
+  top: -50%; left: -50%; width: 200%; height: 200%;
+  background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.05) 50%, transparent 60%);
+  animation: light-sweep 6s infinite linear;
+  pointer-events: none;
+}
+
+@keyframes light-sweep {
+  0% { transform: translateX(-100%) translateY(-100%); }
+  100% { transform: translateX(100%) translateY(100%); }
+}
+
+/* Kinetic Font Weight */
+.text-kinetic {
+  transition: font-weight 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.text-kinetic:hover {
+  font-weight: 200 !important; /* Thin out on hover for tech feel */
+}
+
+/* Bento Grid System */
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 300px);
+  gap: 1.5rem;
+}
+
+.bento-item {
+  border-radius: 2px; /* Brutalist tech feel */
+  background: #08090f;
+  border: 1px solid rgba(255,255,255,0.04);
+  padding: 2rem;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+.bento-item:hover {
+  border-color: #8B5CF6;
+  box-shadow: 0 0 40px rgba(139, 92, 246, 0.15);
+  transform: translateY(-5px);
+}
+
+/* Data Circuit Background */
+.circuit-bg {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at 1px 1px, rgba(139, 92, 246, 0.1) 1px, transparent 0);
+  background-size: 30px 30px;
+}
+
+/* Chrome/Safari specific fixes for blur */
+@supports not (backdrop-filter: blur(1px)) {
+  .glass-refractive {
+    background: rgba(8, 9, 15, 0.95);
+  }
+}
+
+/* Shimmer Border */
+.shimmer-border {
+  position: relative;
+  overflow: hidden;
+}
+.shimmer-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid transparent;
+  background: linear-gradient(90deg, #8B5CF6, transparent, #22D3EE, transparent, #8B5CF6) border-box;
+  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  animation: border-shimmer 4s infinite linear;
+}
+
+@keyframes border-shimmer {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+/* Vertical Scrolling Text Overlay */
+.vertical-marquee {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  white-space: nowrap;
+  font-size: 10px;
+  letter-spacing: 0.5em;
+  color: #1E293B;
+  user-select: none;
+}
