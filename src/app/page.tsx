@@ -6,82 +6,76 @@ import Hero from '../components/Hero';
 import Services from '../components/Services';
 import NeuralPlayground from '../components/NeuralPlayground';
 import Footer from '../components/Footer';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import Link from 'next/link';
-import { ArrowRight, BrainCircuit } from 'lucide-react';
 
 export default function Home() {
+    const { scrollYProgress } = useScroll();
+    // Subtly scale the whole application environment down as user scrolls deep, creating deep OS depth
+    const scale = useTransform(scrollYProgress, [0, 1], [1, 0.98]);
+
     return (
-        <main style={{ backgroundColor: 'var(--aether-bg)' }}>
+        <main style={{ backgroundColor: 'transparent' }}>
             <Navbar />
             
-            <Hero />
+            <motion.div style={{ scale, transformOrigin: 'top center', perspective: '3000px' }}>
+                <Hero />
 
-            {/* Cinematic Transition Marquee */}
-            <section style={{ 
-                height: '25vh', display: 'flex', alignItems: 'center', 
-                borderTop: '1px solid rgba(168,85,247,0.1)',
-                borderBottom: '1px solid rgba(168,85,247,0.1)',
-                position: 'relative', overflow: 'hidden',
-                background: 'rgba(255,255,255,0.8)',
-                backdropFilter: 'blur(10px)'
-            }}>
-                <div style={{ display: 'flex', whiteSpace: 'nowrap', gap: 100, animation: 'marquee-rtl 100s linear infinite' }}>
-                    {[...Array(6)].map((_, i) => (
-                        <div key={i} style={{ display: 'flex', gap: 100, alignItems: 'center' }}>
-                            <h2 className="text-gradient" style={{ fontSize: '80px', fontWeight: 900 }}>BEYOND_COMPUTATION_</h2>
-                            <h2 style={{ fontSize: '80px', color: 'transparent', WebkitTextStroke: '1px rgba(168,85,247,0.3)' }}>AETHERIC_NEXUS_</h2>
-                        </div>
-                    ))}
-                </div>
-            </section>
+                {/* System Marquee / Divider */}
+                <section style={{ 
+                    height: '15vh', display: 'flex', alignItems: 'center', 
+                    borderTop: '1px solid rgba(6,182,212,0.2)',
+                    borderBottom: '1px solid rgba(6,182,212,0.2)',
+                    position: 'relative', overflow: 'hidden',
+                    background: 'rgba(3,0,8,0.5)',
+                    backdropFilter: 'blur(10px)',
+                    zIndex: 20
+                }}>
+                    <div className="scanline" style={{ position: 'absolute', inset: 0, opacity: 0.5, pointerEvents: 'none' }} />
+                    <div style={{ display: 'flex', whiteSpace: 'nowrap', gap: 100, animation: 'marquee-rtl 100s linear infinite' }}>
+                        {[...Array(8)].map((_, i) => (
+                            <div key={i} style={{ display: 'flex', gap: 100, alignItems: 'center' }}>
+                                <h2 className="mono-sys" style={{ fontSize: '40px', color: 'var(--sys-neon-blue)', opacity: 0.8 }}>// DEPLOY_INFRASTRUCTURE</h2>
+                                <h2 className="mono-sys" style={{ fontSize: '40px', color: 'transparent', WebkitTextStroke: '1px var(--sys-neon-purple)' }}>AWAITING_INPUT_</h2>
+                            </div>
+                        ))}
+                    </div>
+                </section>
 
-            <NeuralPlayground />
+                <NeuralPlayground />
 
-            <Services />
+                <Services />
 
-            {/* Aetheric Core Directive */}
-            <section style={{ padding: '240px 0', position: 'relative', overflow: 'hidden' }}>
-                <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '80vw', height: '80vw', background: 'radial-gradient(circle, rgba(34,211,238,0.1) 0%, transparent 60%)', filter: 'blur(100px)', zIndex: 0 }} />
-                
-                <div className="container-nexus" style={{ position: 'relative', zIndex: 10 }}>
-                    <motion.div 
-                        initial={{ opacity: 0, y: 50 }} 
-                        whileInView={{ opacity: 1, y: 0 }} 
-                        viewport={{ once: true }}
-                        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-                        style={{ textAlign: 'center' }}
-                    >
-                        <div style={{ 
-                            width: 120, height: 120, margin: '0 auto 60px', 
-                            background: 'rgba(255,255,255,0.5)', border: '1px solid rgba(168,85,247,0.2)', 
-                            borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            boxShadow: '0 0 50px rgba(168,85,247,0.1)'
-                        }}>
-                             <BrainCircuit size={50} style={{ color: '#A855F7' }} />
-                        </div>
-                        
-                        <span className="mono-diag" style={{ color: '#22D3EE', marginBottom: 40, display: 'block' }}>CORE_DIRECTIVE_v7.0</span>
-                        
-                        <h2 style={{ fontSize: 'clamp(40px, 6vw, 90px)', fontWeight: 900, lineHeight: 1.1 }}>
-                            WE ARE NOT BUILDING TOOLS.<br />
-                            <span style={{ color: '#E0AAFF' }}>WE ARE BUILDING INTELLIGENCE.</span><br />
-                            THE ARCHITECTURE OF THE <br />
-                            <span className="text-gradient shimmer-luxe">NEXT CIVILIZATION.</span>
-                        </h2>
-                        
-                        <div style={{ marginTop: 80 }}>
+                {/* OS Data Footer Area */}
+                <section style={{ padding: '200px 0 100px 0', position: 'relative', zIndex: 10 }}>
+                    <div className="container-os">
+                        <motion.div 
+                            initial={{ opacity: 0, scale: 0.95 }} 
+                            whileInView={{ opacity: 1, scale: 1 }} 
+                            viewport={{ once: true }}
+                            transition={{ duration: 1, ease: [0.19, 1, 0.22, 1] }}
+                            className="hud-panel"
+                            style={{ padding: '80px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+                        >
+                            <div className="mono-sys" style={{ marginBottom: 20, color: 'var(--sys-neon-blue)' }}>CORE_DIRECTIVES // EXECUTE</div>
+                            
+                            <h2 style={{ fontSize: 'clamp(40px, 6vw, 80px)', lineHeight: 1.1, marginBottom: 60 }}>
+                                WE BUILD <br />
+                                <span className="glow-text text-gradient" style={{ color: 'var(--sys-neon-purple)' }}>INTELLIGENCE.</span>
+                            </h2>
+                            
                             <Link href="/contact" style={{ textDecoration: 'none' }}>
-                                <button className="btn-nexus">
-                                   INITIATE_SYNEC_LINK <ArrowRight size={20} />
+                                <button className="btn-command" style={{ fontSize: 16, padding: '20px 60px' }}>
+                                    INITIATE_SYSTEM_LINK
                                 </button>
                             </Link>
-                        </div>
-                    </motion.div>
-                </div>
-            </section>
 
-            <Footer />
+                        </motion.div>
+                    </div>
+                </section>
+                
+                <Footer />
+            </motion.div>
         </main>
     );
 }

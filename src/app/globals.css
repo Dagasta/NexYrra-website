@@ -1,167 +1,165 @@
-/* ===== THE NEXYRRA AETHERIC NEXUS (v7.0) ===== */
+/* ===== THE NEXYRRA SYSTEM OS (v8.0) ===== */
 
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@100;300;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@100;300;500;700;800&display=swap');
 
 :root {
-  /* Typography */
-  --font-luxury: 'Outfit', sans-serif;
+  /* System Typography */
+  --font-os: 'Orbitron', sans-serif;
   --font-data: 'Space Grotesk', sans-serif;
-  --font-system: 'JetBrains Mono', monospace;
+  --font-sys: 'JetBrains Mono', monospace;
   
-  /* Palette - Aetheric Luxury */
-  --aether-bg: #FFFFFF;
-  --aether-void: #08090f;
-  --nexus-purple: #A855F7;
-  --nexus-purple-bright: #E0AAFF;
-  --nexus-cyan: #22D3EE;
-  --nexus-slate: #64748B;
+  /* System Palette - Deep Void & Neon */
+  --sys-void: #030008;
+  --sys-void-light: #0d061a;
+  --sys-neon-purple: #C026D3;
+  --sys-neon-blue: #06B6D4;
+  --sys-white: #F8FAFC;
+  --sys-slate: #94A3B8;
   
-  /* Glassmorphism System */
-  --glass-refraction: rgba(255, 255, 255, 0.4);
-  --glass-border: rgba(168, 85, 247, 0.1);
-  --glass-glow: rgba(168, 85, 247, 0.05);
-
-  /* Animation Timings */
-  --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+  /* Holographic UI Elements */
+  --hud-bg: rgba(13, 6, 26, 0.7);
+  --hud-border: rgba(192, 38, 211, 0.3);
+  --hud-glow: rgba(192, 38, 211, 0.15);
+  
+  /* Animations */
+  --ease-os: cubic-bezier(0.19, 1, 0.22, 1);
 }
 
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-}
-
-html {
-  scroll-behavior: smooth;
-  background-color: var(--aether-bg);
+  cursor: crosshair; /* Hacker OS vibe */
 }
 
 body {
-  color: var(--aether-void);
-  font-family: var(--font-luxury);
+  background-color: var(--sys-void);
+  color: var(--sys-white);
+  font-family: var(--font-data);
   overflow-x: hidden;
-  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
 
-/* THE NEXUS CONTAINER */
-.container-nexus {
-  max-width: 1600px;
-  margin: 0 auto;
-  padding: 0 5vw;
+/* CUSTOM SCROLLBAR */
+::-webkit-scrollbar {
+  width: 6px;
+  background: var(--sys-void);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--sys-neon-purple);
+  border-radius: 10px;
 }
 
-/* TYPOGRAPHY COMPONENTS */
-h1, h2, h3 {
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  line-height: 0.95;
+h1, h2, h3, h4 {
+  font-family: var(--font-os);
   text-transform: uppercase;
+  letter-spacing: 0.05em;
+  line-height: 1;
 }
 
-.text-gradient {
-  background: linear-gradient(135deg, var(--aether-void) 0%, var(--nexus-purple) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  display: inline-block;
-}
-
-.mono-diag {
-  font-family: var(--font-system);
+.mono-sys {
+  font-family: var(--font-sys);
   font-size: 10px;
-  letter-spacing: 0.4em;
-  opacity: 0.5;
+  letter-spacing: 0.3em;
   text-transform: uppercase;
+  color: var(--sys-neon-blue);
 }
 
-/* CINEMATIC EFFECTS */
-.glass-v7 {
-  background: var(--glass-refraction);
-  backdrop-filter: blur(25px) saturate(200%);
-  -webkit-backdrop-filter: blur(25px) saturate(200%);
-  border: 1px solid var(--glass-border);
-  box-shadow: 0 8px 32px 0 var(--glass-glow);
-}
-
-.shimmer-luxe {
+/* THE HUD PANEL (System Windows) */
+.hud-panel {
+  background: var(--hud-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--hud-border);
+  box-shadow: 0 0 20px var(--hud-glow), inset 0 0 10px var(--hud-glow);
   position: relative;
   overflow: hidden;
 }
 
-.shimmer-luxe::after {
+.hud-panel::before {
   content: "";
   position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(
-    45deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.1) 45%,
-    rgba(255, 255, 255, 0.5) 50%,
-    rgba(255, 255, 255, 0.1) 55%,
-    transparent 100%
-  );
-  transform: rotate(45deg);
-  animation: shimmer-effect 6s infinite;
+  top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--sys-neon-purple), transparent);
+  box-shadow: 0 0 10px var(--sys-neon-purple);
 }
 
-@keyframes shimmer-effect {
-  0% { transform: translate(-100%, -100%) rotate(45deg); }
-  100% { transform: translate(100%, 100%) rotate(45deg); }
+/* INTERACTIVE GLARE / SCANLINE */
+.scanline {
+  position: relative;
+}
+.scanline::after {
+  content: "";
+  position: absolute;
+  top: -100%; left: 0; right: 0; height: 10px;
+  background: linear-gradient(to bottom, transparent, rgba(6, 182, 212, 0.5), transparent);
+  animation: scan 4s linear infinite;
+  pointer-events: none;
 }
 
-/* SYSTEM BUTTONS */
-.btn-nexus {
-  background: var(--nexus-purple);
-  color: white;
-  padding: 20px 48px;
-  border-radius: 4px;
-  font-family: var(--font-system);
+@keyframes scan {
+  0% { top: -10% }
+  100% { top: 110% }
+}
+
+/* BUTTON: HUD COMMAND */
+.btn-command {
+  background: transparent;
+  color: var(--sys-white);
+  border: 1px solid var(--sys-neon-purple);
+  padding: 15px 30px;
+  font-family: var(--font-sys);
   font-weight: 700;
   font-size: 12px;
   letter-spacing: 0.2em;
-  border: none;
-  cursor: pointer;
-  transition: all 0.5s var(--ease-cinematic);
-  box-shadow: 0 10px 30px rgba(168, 85, 247, 0.2);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s var(--ease-os);
   display: inline-flex;
   align-items: center;
-  gap: 15px;
+  gap: 12px;
+  text-transform: uppercase;
+  box-shadow: inset 0 0 0 var(--sys-neon-purple);
 }
 
-.btn-nexus:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 20px 50px rgba(168, 85, 247, 0.3);
-  background: #9333ea;
+.btn-command:hover {
+  background: rgba(192, 38, 211, 0.1);
+  box-shadow: inset 0 0 10px var(--sys-neon-purple), 0 0 20px rgba(192, 38, 211, 0.4);
+  text-shadow: 0 0 8px var(--sys-neon-purple);
 }
 
-/* NEURAL GRID BACKGROUND */
-.neural-surface {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: -1;
-  background-image: 
-    radial-gradient(circle at 2px 2px, rgba(168, 85, 247, 0.1) 1px, transparent 0);
-  background-size: 40px 40px;
-  opacity: 0.5;
+.btn-command::before {
+  content: "";
+  position: absolute;
+  left: -20px;
+  top: 0; bottom: 0; width: 4px;
+  background: var(--sys-neon-blue);
+  transition: all 0.3s var(--ease-os);
 }
 
+.btn-command:hover::before {
+  left: 0;
+}
+
+/* TEXT EFFECTS */
+.glitch-text {
+  position: relative;
+  display: inline-block;
+  color: var(--sys-white);
+}
+
+.glow-text {
+  text-shadow: 0 0 20px rgba(192, 38, 211, 0.6), 0 0 40px rgba(6, 182, 212, 0.4);
+}
+
+.container-os {
+  width: min(90%, 1400px);
+  margin: 0 auto;
+}
+
+/* UTILITY LAYOUTS */
+.stack-mobile { display: flex; }
 @media (max-width: 768px) {
-  .container-nexus { padding: 0 24px; }
-  h1 { font-size: 50px !important; }
-}
-
-/* CUSTOM CURSOR REACTION */
-.cursor-aura {
-  position: fixed;
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(168, 85, 247, 0.05) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 1;
-  transform: translate(-50%, -50%);
-  mix-blend-mode: soft-light;
+  .stack-mobile { flex-direction: column; }
+  .hide-mobile { display: none !important; }
 }
