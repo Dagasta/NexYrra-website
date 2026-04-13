@@ -9,112 +9,100 @@ import Footer from '../../components/Footer';
 
 const projects = [
     {
-        id: 'LOG_NX01',
-        title: 'HEALTHCARE_SYSTEM_REBIRTH',
-        result: '80% GAIN',
-        client: 'GCC_MEDICAL_NODES',
-        desc: 'Deconstructed administrative friction and architected a persistent patient management engine. Zero-latency scheduling protocols.',
+        id: 'NX_LOG_001',
+        title: 'HEALTHCARE_NODE_OPTIMIZATION',
+        result: '80% LOAD_REDUCTION',
+        client: 'GCC_MULTI_NODE_CLINIC',
+        desc: 'Deployed high-performance neural nodes to deconstruct and architect whole lifecycle management.',
         tags: ['AUTO_FLOW', 'NODE_SYNC'],
         icon: Activity,
     },
     {
-        id: 'LOG_NX02',
-        title: 'RETAIL_INTELLIGENCE_MATRIX',
-        result: '3.4X YIELD',
-        client: 'UAE_LUXURY_GRID',
-        desc: 'Engineered a high-throughput predictive commerce engine for absolute system dominance. Real-time conversion optimization.',
+        id: 'NX_LOG_002',
+        title: 'RETAIL_INTELLIGENCE_LAYERING',
+        result: '3.4X CAMPAIGN_YIELD',
+        client: 'UAE_LUXURY_ARCHITECT',
+        desc: 'Engineered a prismatic predictive commerce layer for absolute system dominance.',
         tags: ['DATA_INTEL', 'PIPELINE_OPTI'],
         icon: Target,
     },
     {
-        id: 'LOG_NX03',
-        title: 'REAL_ESTATE_PIPELINE_ENGINE',
-        result: '500+ LEADS/MO',
-        client: 'DUBAI_PROP_ARCHITECT',
-        desc: 'Architected a persistent lead qualification node. Orchestrated autonomous nurturing sequences for high-net-worth prospect flows.',
-        tags: ['FLOW_ARCH', 'INFRA_SYNC'],
+        id: 'NX_LOG_003',
+        title: 'REAL_ESTATE_LEAD_CONSTRUCTION',
+        result: '500+ Q_LEADS / MONTH',
+        client: 'DUBAI_INFRA_ENGINEERING',
+        desc: 'Architected a persistent qualification node that manages high-volume prospect flows through neural sequences.',
+        tags: ['LEAD_SYNC', 'RE_AUTO'],
         icon: Database,
     },
     {
-        id: 'LOG_NX04',
-        title: 'LOGISTICS_INFRASTRUCTURE_SYNC',
-        result: '60% VELOCITY',
+        id: 'NX_LOG_004',
+        title: 'LOGISTICS_PIPELINE_CONSOLIDATION',
+        result: '60% VELOCITY_SURGE',
         client: 'GCC_FEDERAL_LOGISTICS',
-        desc: 'Unified fractured ERP ecosystems into a singular, high-performance automated pipeline. Complete elimination of manual data handling.',
-        tags: ['PIPELINE_ENG', 'ERP_HARDEN'],
+        desc: 'Unified fractured ERP ecosystems into a single consolidated high-throughput automated pipeline.',
+        tags: ['ERP_HARDEN', 'AUTO_CORE'],
         icon: Layers,
     },
 ];
 
 export default function ArchivePage() {
     return (
-        <main style={{ background: '#040508', minHeight: '100vh', color: 'white' }}>
+        <main style={{ background: '#05060f', minHeight: '100vh', color: 'white' }}>
             <Navbar />
-            <div className="data-layer" />
+            <div className="neural-overlay" />
             
-            {/* Archive Header (Cinematic Scale) */}
-            <section style={{ height: '70vh', display: 'flex', alignItems: 'center', position: 'relative' }}>
+            <section style={{ height: '60vh', display: 'flex', alignItems: 'center', position: 'relative' }}>
                 <div className="container-nex">
-                    <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}>
+                    <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 15, marginBottom: 30 }}>
-                             <Zap size={16} style={{ color: '#A855F7' }} />
-                             <span className="mono" style={{ color: '#A855F7' }}>// TRANSACTION_ARCHIVE.v6</span>
+                             <Zap size={14} style={{ color: '#8B5CF6' }} />
+                             <span className="font-cyber" style={{ fontSize: 10, letterSpacing: '0.6em', color: '#8B5CF6' }}>TRANSACTION_LOGS.EXE</span>
                         </div>
-                        <h1 style={{ color: 'white' }}>
-                            PROJECT <br />
-                            <span style={{ color: '#A855F7' }}>REGISTRY.</span>
+                        <h1 className="text-bionic" style={{ fontSize: '100px', fontWeight: 800, lineHeight: 0.85 }}>
+                            THE <span className="shimmer-text">ARCHIVE.</span>
                         </h1>
                     </motion.div>
                 </div>
             </section>
 
-            {/* List Engine: High-Authority Flow */}
             <section className="container-nex" style={{ paddingBottom: 240 }}>
-                <div style={{ display: 'flex', flexDirection: 'column', borderTop: '1px solid rgba(168, 85, 247, 0.05)' }}>
-                    {projects.map((p, i) => (
-                        <motion.div
-                            key={p.id}
-                            initial={{ opacity: 0, x: -20 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: i * 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                        >
-                            <Link href="#" style={{ textDecoration: 'none', color: 'inherit' }}>
-                                <div style={{ 
-                                    padding: 'clamp(60px, 8vw, 120px) clamp(20px, 4vw, 40px)', 
-                                    display: 'grid', gridTemplateColumns: '1fr 2fr 1fr 1fr',
-                                    alignItems: 'center', gap: 60,
-                                    borderBottom: '1px solid rgba(255,255,255,0.02)',
-                                    transition: 'all 0.5s'
-                                }}
-                                onMouseEnter={e => (e.currentTarget.style.background = 'rgba(168, 85, 247, 0.01)')}
-                                onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
-                                className="grid-mobile-1"
-                                >
-                                    <div>
-                                        <div className="mono" style={{ fontSize: 9, opacity: 0.2, marginBottom: 10 }}>{p.id}</div>
-                                        <div className="mono" style={{ color: 'white', fontWeight: 800 }}>{p.client}</div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: 30 }} className="grid-mobile-1">
+                    {projects.map((p, i) => {
+                        const gridSpans = ['span 7', 'span 5', 'span 5', 'span 7'];
+                        return (
+                            <motion.div
+                                key={p.id}
+                                initial={{ opacity: 0, y: 30 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: i * 0.1 }}
+                                style={{ gridColumn: gridSpans[i % 4] }}
+                            >
+                                <div className="glass-prismatic wow-card h-full" style={{ padding: '60px' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 50 }}>
+                                        <div className="font-cyber" style={{ fontSize: 9, opacity: 0.3 }}>LOG_REF: {p.id}</div>
+                                        <p.icon size={20} style={{ color: '#22D3EE' }} />
                                     </div>
 
-                                    <div>
-                                        <h3 style={{ fontSize: 'clamp(20px, 4vw, 32px)', fontWeight: 800, marginBottom: 15, color: 'white' }}>{p.title}</h3>
-                                        <p style={{ fontSize: 13, color: '#64748B', lineHeight: 1.8, maxWidth: 500 }}>{p.desc}</p>
-                                    </div>
+                                    <h3 style={{ fontSize: 32, fontWeight: 700, marginBottom: 15 }}>{p.title}</h3>
+                                    <div className="font-cyber" style={{ fontSize: 13, color: '#8B5CF6', marginBottom: 25 }}>{p.result}</div>
+                                    <p style={{ fontSize: 14, color: '#94A3B8', lineHeight: 2 }}>{p.desc}</p>
 
-                                    <div style={{ textAlign: 'center' }}>
-                                        <div className="mono" style={{ fontSize: 8, color: '#A855F7', marginBottom: 5 }}>GAIN_METRIC</div>
-                                        <div style={{ fontSize: 'clamp(18px, 3vw, 24px)', fontWeight: 800, color: 'white' }}>{p.result}</div>
-                                    </div>
-
-                                    <div style={{ textAlign: 'right' }}>
-                                         <div className="mono" style={{ fontSize: 9, color: '#A855F7', display: 'flex', alignItems: 'center', gap: 10, justifyContent: 'flex-end' }}>
-                                             VIEW_NODE <ArrowUpRight size={14} />
-                                         </div>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: 60 }}>
+                                        <div style={{ display: 'flex', gap: 10 }}>
+                                            {p.tags.map(t => (
+                                                <span key={t} className="font-cyber" style={{ fontSize: 8, opacity: 0.4, border: '1px solid rgba(255,255,255,0.05)', padding: '5px 10px' }}>{t}</span>
+                                            ))}
+                                        </div>
+                                        <Link href="#" className="font-cyber" style={{ fontSize: 10, color: '#22D3EE', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 8 }}>
+                                             OPEN_LOG <ArrowUpRight size={14} />
+                                        </Link>
                                     </div>
                                 </div>
-                            </Link>
-                        </motion.div>
-                    ))}
+                            </motion.div>
+                        );
+                    })}
                 </div>
             </section>
 

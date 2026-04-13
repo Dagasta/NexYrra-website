@@ -1,131 +1,101 @@
 'use client';
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'framer-motion';
-import { ArrowRight, ChevronDown, Activity, Database, Zap } from 'lucide-react';
+import { Sparkles, ArrowRight, Zap, Target } from 'lucide-react';
 
 const Hero = () => {
     const containerRef = useRef<HTMLDivElement>(null);
-    const { scrollYProgress } = useScroll({
-        target: containerRef,
-        offset: ["start start", "end start"]
-    });
+    const { scrollYProgress } = useScroll({ target: containerRef });
 
-    // Mouse Tracking for Interactive Depth
-    const mX = useMotionValue(0);
-    const mY = useMotionValue(0);
-    const sX = useSpring(mX, { stiffness: 40, damping: 20 });
-    const sY = useSpring(mY, { stiffness: 40, damping: 20 });
+    // Interactive Floating Artifact logic
+    const mouseX = useMotionValue(0);
+    const mouseY = useMotionValue(0);
+    const springX = useSpring(mouseX, { stiffness: 40, damping: 20 });
+    const springY = useSpring(mouseY, { stiffness: 40, damping: 20 });
 
     useEffect(() => {
-        const move = (e: MouseEvent) => {
-            mX.set((e.clientX / window.innerWidth - 0.5) * 50);
-            mY.set((e.clientY / window.innerHeight - 0.5) * 50);
+        const handleMove = (e: MouseEvent) => {
+            const { clientX, clientY } = e;
+            const x = (clientX / window.innerWidth - 0.5) * 50;
+            const y = (clientY / window.innerHeight - 0.5) * 50;
+            mouseX.set(x);
+            mouseY.set(y);
         };
-        window.addEventListener('mousemove', move);
-        return () => window.removeEventListener('mousemove', move);
-    }, [mX, mY]);
+        window.addEventListener('mousemove', handleMove);
+        return () => window.removeEventListener('mousemove', handleMove);
+    }, [mouseX, mouseY]);
 
-    // Scroll Transforms
-    const scale = useTransform(scrollYProgress, [0, 1], [1, 1.8]);
+    // Scroll Depth effects
+    const scale = useTransform(scrollYProgress, [0, 1], [1, 1.4]);
+    const z = useTransform(scrollYProgress, [0, 1], [0, -400]);
     const opacity = useTransform(scrollYProgress, [0, 0.4, 0.6], [1, 1, 0]);
-    const blur = useTransform(scrollYProgress, [0, 0.8], ["blur(0px)", "blur(20px)"]);
 
     return (
-        <section ref={containerRef} style={{ height: '220vh', position: 'relative', overflow: 'hidden' }}>
-            <div className="data-layer" />
+        <section ref={containerRef} style={{ height: '200vh', position: 'relative', perspective: '1200px' }}>
+            <div className="neural-overlay" />
             
-            <div style={{ position: 'sticky', top: 0, height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ position: 'sticky', top: 0, height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
                 
-                {/* THE DIGITAL NEXUS (Parallax Depth) */}
+                {/* THE HOLOGRAPHIC CORE */}
                 <motion.div style={{
-                    position: 'absolute', width: 'clamp(500px, 80vw, 1200px)', height: 'clamp(500px, 80vw, 1200px)',
-                    border: '1px solid rgba(168, 85, 247, 0.05)', borderRadius: '50%',
-                    scale, opacity, x: sX, y: sY, filter: blur,
+                    position: 'absolute', width: 'clamp(500px, 40vw, 800px)', height: 'clamp(500px, 40vw, 800px)',
+                    x: springX, y: springY, scale, opacity, z,
                     display: 'flex', alignItems: 'center', justifyContent: 'center'
                 }}>
-                    {/* Perspective Racks (Visual Detail from User Image) */}
-                    {[...Array(12)].map((_, i) => (
-                        <motion.div
-                            key={i}
-                            animate={{ rotate: 360 }}
-                            transition={{ repeat: Infinity, duration: 20 + i * 5, ease: "linear" }}
-                            style={{
-                                position: 'absolute', inset: i * 30,
-                                border: '1px solid rgba(168, 85, 247, 0.03)', borderRadius: '50%'
-                            }}
-                        >
-                             <div style={{ position: 'absolute', top: '50%', left: -5, width: 10, height: 2, background: i % 2 === 0 ? '#A855F7' : '#22D3EE' }} />
-                        </motion.div>
-                    ))}
-
-                    {/* Central Core */}
                     <motion.div 
-                        animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.5, 0.2] }}
-                        transition={{ repeat: Infinity, duration: 4 }}
-                        style={{ width: '20%', height: '20%', borderRadius: '50%', background: 'radial-gradient(circle, #A855F7 0%, transparent 70%)', filter: 'blur(40px)' }}
+                        animate={{ 
+                            borderRadius: ["40% 60% 60% 40% / 60% 30% 70% 40%", "60% 40% 30% 70% / 40% 70% 30% 60%", "40% 60% 60% 40% / 60% 30% 70% 40%"],
+                            rotate: [0, 180, 360],
+                            boxShadow: ["0 0 50px rgba(139,92,246,0.3)", "0 0 100px rgba(34,211,238,0.3)", "0 0 50px rgba(139,92,246,0.3)"]
+                        }}
+                        transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
+                        style={{
+                            position: 'absolute', inset: 0,
+                            border: '1px solid rgba(255,255,255,0.1)',
+                            background: 'rgba(255,255,255,0.01)',
+                            backdropFilter: 'blur(5px)'
+                        }}
                     />
+
+                    <div style={{ position: 'relative', zIndex: 10, textAlign: 'center' }}>
+                         <Sparkles size={48} style={{ color: '#8B5CF6', marginBottom: 20 }} />
+                         <div className="font-cyber" style={{ fontSize: 9, letterSpacing: '0.8em', color: '#22D3EE' }}>BIONIC_CORE_v4.0</div>
+                    </div>
                 </motion.div>
 
-                {/* Main Content (Responsive Layout) */}
+                {/* Main Content */}
                 <div className="container-nex" style={{ position: 'relative', zIndex: 100 }}>
-                    <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}>
+                    <motion.div style={{ opacity, y: z }}>
                         
-                        <div style={{ display: 'flex', items: 'center', gap: 20, marginBottom: 40 }} className="stack-mobile">
-                            <div className="mono" style={{ color: '#A855F7' }}>// NEXYRRA_CORE_v6.0</div>
-                            <div style={{ height: 1, flex: 1, background: 'linear-gradient(90deg, #A855F7, transparent)' }} className="hide-mobile" />
-                            <div style={{ display: 'flex', gap: 10 }} className="hide-mobile">
-                                <Activity size={14} style={{ color: '#22D3EE' }} />
-                                <Database size={14} style={{ color: '#22D3EE' }} />
-                                <Zap size={14} style={{ color: '#22D3EE' }} />
-                            </div>
+                        <div style={{ display: 'flex', gap: 20, alignItems: 'center', marginBottom: 40 }}>
+                            <div style={{ width: 80, height: 1, background: 'linear-gradient(90deg, #8B5CF6, transparent)' }} />
+                            <span className="font-cyber" style={{ fontSize: 11, fontWeight: 800 }}>ARCHITECTING INTELLIGENCE</span>
                         </div>
 
-                        <h1 style={{ marginBottom: 40 }}>
-                            DECONSTRUCT<br />
-                            <span style={{ color: '#A855F7' }}>EVERYTHING.</span>
+                        <h1 className="text-bionic" style={{
+                            fontSize: 'clamp(50px, 10vw, 150px)',
+                            fontWeight: 800, lineHeight: 0.9, letterSpacing: '-0.06em',
+                            marginBottom: 40
+                        }}>
+                            BEYOND THE <br />
+                            <span className="shimmer-text">KNOWN.</span>
                         </h1>
 
-                        <div className="grid-mobile-1" style={{ display: 'grid', gridTemplateColumns: 'minmax(200px, 1.5fr) 1fr', gap: 100 }}>
-                            <p style={{ fontSize: 'clamp(18px, 2.5vw, 24px)', color: '#94A3B8', lineHeight: 1.6, fontWeight: 300 }}>
-                                We deconstruct the existing and engineer the improbable. 
-                                High-performance digital foundations for the next era of architecture.
+                        <div style={{ gridTemplateColumns: 'minmax(200px, 1.5fr) 1fr', display: 'grid', gap: 100 }} className="grid-mobile-1">
+                            <p style={{ fontSize: '20px', color: '#CBD5E1', lineHeight: 1.7, fontWeight: 300, maxWidth: 500 }}>
+                                We deconstruct reality to architect the impossible. 
+                                High-performance systems engineering at the intersection of AI and human legacy.
                             </p>
-                            
-                            <div className="hide-mobile" style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-                                <div className="glass-v6" style={{ padding: 25 }}>
-                                    <div className="mono" style={{ fontSize: 9, marginBottom: 10 }}>THROUGHPUT_SYNC</div>
-                                    <div style={{ height: 2, background: 'rgba(255,255,255,0.05)', position: 'relative' }}>
-                                        <motion.div animate={{ width: ['0%', '80%', '40%', '90%'] }} transition={{ repeat: Infinity, duration: 4 }} style={{ position: 'absolute', inset: 0, background: '#A855F7' }} />
-                                    </div>
-                                </div>
-                            </div>
                         </div>
 
-                        <div style={{ marginTop: 80, display: 'flex', gap: 30, alignItems: 'center' }} className="stack-mobile">
-                            <Link href="/contact" style={{ textDecoration: 'none' }}>
-                                <button className="btn-cinema">
-                                    INITIATE_UPGRADE <ArrowRight size={20} />
-                                </button>
-                            </Link>
-                            
-                            <div style={{ display: 'flex', gap: 10 }}>
-                                {[...Array(3)].map((_, i) => (
-                                    <div key={i} style={{ width: 40, height: 1, background: '#1E293B' }} />
-                                ))}
-                            </div>
+                        <div style={{ marginTop: 80, display: 'flex', gap: 30, alignItems: 'center' }}>
+                            <button className="btn-beyond">
+                                INITIALIZE_EXPERIENCE <ArrowRight size={18} />
+                            </button>
                         </div>
                     </motion.div>
                 </div>
-
-                {/* Bottom Reveal */}
-                <motion.div 
-                    animate={{ y: [0, 10, 0] }}
-                    transition={{ repeat: Infinity, duration: 2 }}
-                    style={{ position: 'absolute', bottom: 40, left: '50%', transform: 'translateX(-50%)' }}
-                >
-                    <ChevronDown size={24} style={{ color: '#A855F7', opacity: 0.3 }} />
-                </motion.div>
             </div>
         </section>
     );

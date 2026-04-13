@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import { ArrowUpRight, Target, Zap, Shield, Eye, BrainCircuit } from 'lucide-react';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
@@ -14,53 +15,49 @@ const directives = [
 
 export default function AboutPage() {
     return (
-        <main style={{ background: '#040508', minHeight: '100vh', color: 'white' }}>
+        <main style={{ background: '#05060f', minHeight: '100vh', color: 'white' }}>
             <Navbar />
-            <div className="data-layer" />
+            <div className="neural-overlay" />
             
-            {/* Manifesto Hero (Cinematic Perspective) */}
             <section style={{ height: '80vh', display: 'flex', alignItems: 'center', position: 'relative' }}>
                 <div className="container-nex">
-                    <div style={{ display: 'grid', gridTemplateColumns: 'minmax(200px, 1.2fr) 1fr', gap: 120 }} className="grid-mobile-1">
-                        <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1 }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: 120 }} className="grid-mobile-1">
+                        <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 15, marginBottom: 40 }}>
-                                 <BrainCircuit size={20} style={{ color: '#A855F7' }} />
-                                 <span className="mono" style={{ color: '#A855F7' }}>// ARCHITECT_CORE_v6.0</span>
+                                 <BrainCircuit size={20} style={{ color: '#8B5CF6' }} />
+                                 <span className="font-cyber" style={{ fontSize: 10, letterSpacing: '0.6em', color: '#8B5CF6' }}>CORE_MANIFESTO_v4.0</span>
                             </div>
-                            <h1 style={{ color: 'white' }}>
-                                BEYOND <br />
-                                <span style={{ color: '#A855F7' }}>THE VOID.</span>
+                            <h1 className="text-bionic" style={{ fontSize: '100px', fontWeight: 800, lineHeight: 0.85 }}>
+                                BIONIC <br />
+                                <span className="shimmer-text">LEGACY.</span>
                             </h1>
-                            <p style={{ fontSize: 'clamp(18px, 1.5vw, 22px)', color: '#94A3B8', lineHeight: 1.8, maxWidth: 520, fontWeight: 300 }}>
-                                We are system architects. We exist at the intersection of complex systems engineering and future-logic neural architecture.
+                            <p style={{ fontSize: 20, color: '#CBD5E1', lineHeight: 1.8, maxWidth: 520, fontWeight: 300 }}>
+                                Nexyrra exists at the intersection of complex systems engineering and neural-logic architecture. We build the intelligence of the future.
                             </p>
                         </motion.div>
 
-                        <div style={{ alignSelf: 'center' }}>
-                            <div className="glass-v6" style={{ padding: 'clamp(40px, 6vw, 80px)', borderRadius: 0 }}>
-                                <div className="mono" style={{ marginBottom: 40, opacity: 0.3 }}>[ CORE_METRICS ]</div>
-                                {[
-                                    { l: 'ESTABLISHED', v: 'DUBAI_UAE_2024' },
-                                    { l: 'ENGINEERING', v: 'NEURAL_HPI_v6' },
-                                    { l: 'SCALE_MODELS', v: '200_STABLE' }
-                                ].map((m, i) => (
-                                    <div key={i} style={{ marginBottom: 30, borderBottom: '1px solid rgba(255,255,255,0.02)', paddingBottom: 15 }}>
-                                        <div className="mono" style={{ fontSize: 8, opacity: 0.4 }}>{m.l}</div>
-                                        <div style={{ fontSize: 'clamp(20px, 3vw, 26px)', fontWeight: 800, color: 'white' }}>{m.v}</div>
-                                    </div>
-                                ))}
-                            </div>
+                        <div className="glass-prismatic" style={{ padding: '60px' }}>
+                            <div className="font-cyber" style={{ fontSize: 10, color: '#22D3EE', marginBottom: 40 }}>[ STATION_METRICS ]</div>
+                            {[
+                                { l: 'CORE_ESTABLISHED', v: 'DUBAI_UAE_2024' },
+                                { l: 'ARCHITECTURE_SYNEC', v: 'BIONIC_HPI_v4' },
+                                { l: 'NODES_DEPLOYED', v: 'STABLE_200+' }
+                            ].map((m, i) => (
+                                <div key={i} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: 15, marginBottom: 20 }}>
+                                    <div className="font-cyber" style={{ fontSize: 8, opacity: 0.2 }}>{m.l}</div>
+                                    <div style={{ fontSize: 22, fontWeight: 800, color: 'white' }}>{m.v}</div>
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* Directives Section */}
-            <section style={{ padding: '240px 0', background: '#040508' }}>
+            <section style={{ padding: '240px 0', background: '#000' }}>
                 <div className="container-nex">
                     <div style={{ textAlign: 'center', marginBottom: 120 }}>
-                        <div className="mono" style={{ letterSpacing: '1em', color: '#A855F7', marginBottom: 20 }}>SYSTEM_LAWS</div>
-                        <h2 style={{ color: 'white' }}>THE CODE.</h2>
+                        <div className="font-cyber" style={{ letterSpacing: '1em', color: '#22D3EE', marginBottom: 20 }}>NEURAL_DIRECTIVES</div>
+                        <h2 className="text-bionic" style={{ fontSize: 80, fontWeight: 800 }}>THE CODE.</h2>
                     </div>
 
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 30 }} className="grid-mobile-1">
@@ -70,13 +67,13 @@ export default function AboutPage() {
                                 initial={{ opacity: 0, y: 30 }} 
                                 whileInView={{ opacity: 1, y: 0 }} 
                                 transition={{ delay: i * 0.1 }}
-                                className="glass-v6"
-                                style={{ padding: '80px 40px', borderRadius: 0 }}
+                                className="glass-prismatic wow-card"
+                                style={{ padding: '80px 40px' }}
                             >
-                                <div className="mono" style={{ fontSize: 9, opacity: 0.2, marginBottom: 30 }}>LAW_0{d.id}</div>
-                                <d.icon size={26} style={{ color: '#A855F7', marginBottom: 30 }} />
-                                <h3 style={{ fontSize: 24, fontWeight: 800, color: 'white', marginBottom: 20 }}>{d.title}</h3>
-                                <p style={{ fontSize: 13, color: '#64748B', lineHeight: 2 }}>{d.desc}</p>
+                                <div className="font-cyber" style={{ fontSize: 9, opacity: 0.1, marginBottom: 30 }}>PHASE_0{d.id}</div>
+                                <d.icon size={26} style={{ color: '#8B5CF6', marginBottom: 30 }} />
+                                <h3 style={{ fontSize: 22, fontWeight: 800, color: 'white', marginBottom: 20 }}>{d.title}</h3>
+                                <p style={{ fontSize: 14, color: '#94A3B8', lineHeight: 2 }}>{d.desc}</p>
                             </motion.div>
                         ))}
                     </div>
