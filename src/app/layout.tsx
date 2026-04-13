@@ -1,16 +1,15 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
-import Navbar from '../components/Navbar';
 
 export const metadata: Metadata = {
-  title: 'Nexyrra | Matrix Architecture',
-  description: 'High-performance systems engineering at the intersection of AI and human legacy.',
+  title: 'Nexyrra | OS Singularity',
+  description: 'An intelligent digital operations center.',
 };
 
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#06080F',
+  themeColor: '#020005',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -19,9 +18,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <link rel="icon" href="/assets/logo.png" />
       </head>
-      {/* Restored standard scrolling. Background grid is handled via CSS in globals. */}
+      {/* 
+        NO NAVBAR. NO FOOTER.
+        The entire application is mounted inside the children wrapper as a full-screen Dashboard.
+      */}
       <body suppressHydrationWarning>
-        <Navbar />
         {children}
       </body>
     </html>
