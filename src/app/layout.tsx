@@ -4,9 +4,9 @@ import WhatsAppButton from '../components/WhatsAppButton';
 import Cursor from '../components/Cursor';
 
 export const metadata: Metadata = {
-  title: 'Nexyrra | Full-Spectrum Technology Company — Build. Automate. Scale.',
-  description: 'Nexyrra is a premier technology company that designs, builds, automates, and scales everything in the digital world. Custom software, AI systems, SaaS platforms, cloud infrastructure, cybersecurity, and more.',
-  generator: 'Nexyrra AI Agency',
+  title: 'Nexyrra | High-Performance Technology & Systems Company',
+  description: 'Nexyrra is a premier technology firm that architects, engineers, and scales digital infrastructure at the highest levels of performance.',
+  generator: 'Nexyrra Systems Architecture',
   applicationName: 'Nexyrra',
   robots: 'index, follow',
   openGraph: {
@@ -14,14 +14,14 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: 'https://nexyrra.com/',
     siteName: 'Nexyrra',
-    title: 'Nexyrra | Full-Spectrum Technology Company',
-    description: 'Build. Automate. Scale. — Premium technology company, Dubai UAE',
+    title: 'Nexyrra | Digital Infrastructure & Systems Architecture',
+    description: 'Deconstruct. Engineer. Scale. — High-authority technology firm, Dubai UAE',
     images: [{ url: '/assets/og-image.png', width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Nexyrra: AI Agency',
-    description: 'Autonomous AI Agents, Automation & More — Dubai, UAE',
+    title: 'Nexyrra | Systems Architecture',
+    description: 'Bespoke Software Engineering & Autonomous Systems — Dubai, UAE',
     images: ['/assets/og-image.png'],
   },
   icons: {

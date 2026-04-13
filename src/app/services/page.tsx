@@ -3,59 +3,97 @@
 import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ArrowRight, CheckCircle } from 'lucide-react';
+import { ArrowUpRight, Cpu, Layers, HardDrive, Share2 } from 'lucide-react';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import { services } from '../../lib/services-data';
 
-export default function ServicesPage() {
+export default function SystemsPage() {
     return (
-        <main style={{ background: '#08090f', minHeight: '100vh', color: 'white' }}>
+        <main style={{ background: '#05060e', minHeight: '100vh', color: 'white', position: 'relative' }}>
             <Navbar />
 
-            {/* Page Hero */}
-            <section style={{ paddingTop: 160, paddingBottom: 80, position: 'relative', overflow: 'hidden', textAlign: 'center' }}>
-                <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: 900, height: 500, background: 'radial-gradient(ellipse, rgba(139,92,246,0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
-                <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(139,92,246,0.03) 1px,transparent 1px),linear-gradient(to right,rgba(139,92,246,0.03) 1px,transparent 1px)', backgroundSize: '60px 60px', pointerEvents: 'none' }} />
-                <div style={{ maxWidth: 800, margin: '0 auto', padding: '0 32px', position: 'relative' }}>
-                    <span className="font-cyber" style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.3em', textTransform: 'uppercase', color: '#8B5CF6', display: 'block', marginBottom: 20 }}>What We Do</span>
-                    <h1 className="font-title" style={{ fontSize: 'clamp(48px, 7vw, 96px)', fontWeight: 900, lineHeight: 0.95, letterSpacing: '-0.04em', marginBottom: 24 }}>
-                        Our AI <br />
-                        <span style={{ background: 'linear-gradient(90deg, #8B5CF6 0%, #22D3EE 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Services</span>
-                    </h1>
-                    <p style={{ fontSize: 18, color: '#64748B', lineHeight: 1.8, maxWidth: 540, margin: '0 auto' }}>
-                        Six core capabilities engineered to give enterprise leaders an unfair competitive advantage through artificial intelligence.
-                    </p>
+            {/* Blueprint Grid Overlay */}
+            <div style={{
+                position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0,
+                backgroundImage: 'linear-gradient(rgba(34,211,238,0.03) 1px, transparent 1px), linear-gradient(to right, rgba(34,211,238,0.03) 1px, transparent 1px)',
+                backgroundSize: '40px 40px',
+            }} />
+
+            {/* Page Hero: System Architecture */}
+            <section style={{ paddingTop: 180, paddingBottom: 100, position: 'relative', overflow: 'hidden', textAlign: 'center' }}>
+                <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: 1200, height: 600, background: 'radial-gradient(ellipse, rgba(34,211,238,0.05) 0%, transparent 70%)', pointerEvents: 'none' }} />
+                
+                <div className="container-nex" style={{ position: 'relative', zIndex: 1 }}>
+                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
+                        <div style={{ display: 'flex', justifyContent: 'center', gap: 15, marginBottom: 30 }}>
+                             {[Cpu, Layers, HardDrive].map((Icon, i) => (
+                                 <div key={i} style={{ padding: 10, background: 'rgba(34,211,238,0.03)', border: '1px solid rgba(34,211,238,0.1)' }}>
+                                     <Icon size={16} style={{ color: '#22D3EE' }} />
+                                 </div>
+                             ))}
+                        </div>
+                        <span className="font-cyber" style={{ fontSize: 10, fontWeight: 900, letterSpacing: '0.5em', color: '#22D3EE', display: 'block', marginBottom: 20 }}>ENGINEERING_BLUEPRINT_v4</span>
+                        <h1 className="font-title" style={{ fontSize: 'clamp(50px, 9vw, 120px)', fontWeight: 900, lineHeight: 0.85, letterSpacing: '-0.06em', marginBottom: 40 }}>
+                            THE <span className="shimmer-text">SYSTEMS.</span>
+                        </h1>
+                        <p style={{ fontSize: 16, color: '#4B5563', lineHeight: 1.8, maxWidth: 580, margin: '0 auto', fontWeight: 400 }}>
+                            We don't provide features. We engineer interconnected digital infrastructure that eliminates operational entropy at scale.
+                        </p>
+                    </motion.div>
                 </div>
             </section>
 
-            {/* Services Grid */}
-            <section className="container-nex" style={{ paddingBottom: 160 }}>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 360px), 1fr))', gap: 24 }}>
-                    {services.map((service, i) => (
-                        <motion.div key={service.slug} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}>
-                            <Link href={`/services/${service.slug}`} style={{ textDecoration: 'none', display: 'block', height: '100%' }}>
-                                <div className="card-nex" style={{ padding: 36, height: '100%', display: 'flex', flexDirection: 'column', cursor: 'pointer' }}>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 28 }}>
-                                        <div style={{ width: 64, height: 64, borderRadius: 20, background: 'linear-gradient(135deg, rgba(139,92,246,0.2), rgba(34,211,238,0.1))', border: '1px solid rgba(139,92,246,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32 }}>
-                                            {service.icon}
-                                        </div>
-                                        <ArrowRight size={18} style={{ color: '#475569', marginTop: 8 }} />
+            {/* Systems Matrix */}
+            <section className="container-nex" style={{ paddingBottom: 200, position: 'relative', zIndex: 1 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 420px), 1fr))', gap: '2px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.05)' }}>
+                    {services.map((s, i) => (
+                        <motion.div 
+                            key={s.slug} 
+                            initial={{ opacity: 0 }} 
+                            whileInView={{ opacity: 1 }} 
+                            viewport={{ once: true }}
+                            transition={{ delay: i * 0.05 }}
+                        >
+                            <Link href={`/services/${s.slug}`} style={{ textDecoration: 'none', display: 'block' }}>
+                                <div style={{ 
+                                    padding: '50px 40px', background: '#05060e', height: '100%',
+                                    transition: 'all 0.3s ease', cursor: 'pointer',
+                                    position: 'relative', overflow: 'hidden'
+                                }}
+                                onMouseEnter={e => (e.currentTarget.style.background = 'rgba(34,211,238,0.02)')}
+                                onMouseLeave={e => (e.currentTarget.style.background = '#05060e')}
+                                >
+                                    {/* Component ID */}
+                                    <div className="font-cyber" style={{ fontSize: 8, color: '#1E293B', marginBottom: 20, display: 'flex', justifyContent: 'space-between' }}>
+                                        <span>MODULE_REF: {s.slug.toUpperCase()}</span>
+                                        <Share2 size={10} />
                                     </div>
 
-                                    <h3 className="font-title" style={{ fontSize: 22, fontWeight: 900, color: 'white', marginBottom: 6 }}>{service.title}</h3>
-                                    <span style={{ fontSize: 13, color: '#8B5CF6', fontFamily: 'var(--font-cyber)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 16 }}>
-                                        {service.tagline}
-                                    </span>
-                                    <p style={{ fontSize: 15, color: '#64748B', lineHeight: 1.8, marginBottom: 28, flex: 1 }}>{service.description}</p>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 20, marginBottom: 20 }}>
+                                        <div style={{ fontSize: 24 }}>{s.icon}</div>
+                                        <h3 className="font-title" style={{ fontSize: 22, fontWeight: 900, color: 'white' }}>{s.title}</h3>
+                                    </div>
 
-                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-                                        {service.features.map(f => (
-                                            <span key={f} style={{ padding: '4px 12px', borderRadius: 999, background: 'rgba(139,92,246,0.08)', border: '1px solid rgba(139,92,246,0.15)', fontSize: 11, fontWeight: 700, color: '#A78BFA', fontFamily: 'var(--font-cyber)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                                    <p style={{ fontSize: 13, color: '#64748B', lineHeight: 1.7, marginBottom: 30, minHeight: 60 }}>
+                                        {s.description}
+                                    </p>
+
+                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginBottom: 40 }}>
+                                        {s.features.slice(0, 3).map(f => (
+                                            <span key={f} style={{ fontSize: 9, color: '#334155', border: '1px solid rgba(255,255,255,0.05)', padding: '5px 10px', fontFamily: 'monospace' }}>
                                                 {f}
                                             </span>
                                         ))}
                                     </div>
+
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(255,255,255,0.03)', paddingTop: 20 }}>
+                                        <span className="font-cyber" style={{ fontSize: 9, color: '#22D3EE', fontWeight: 700 }}>SPEC_VIEW_ACTIVE</span>
+                                        <ArrowUpRight size={14} style={{ color: '#22D3EE' }} />
+                                    </div>
+                                    
+                                    {/* Decoration line */}
+                                    <div style={{ position: 'absolute', top: 0, left: 0, width: '10%', height: 1, background: '#22D3EE' }} />
                                 </div>
                             </Link>
                         </motion.div>

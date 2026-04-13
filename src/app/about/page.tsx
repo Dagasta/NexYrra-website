@@ -3,123 +3,130 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { ArrowRight, Zap, Globe, ShieldCheck, TrendingUp, Users, Star } from 'lucide-react';
+import { ArrowUpRight, Target, Zap, Shield, Eye } from 'lucide-react';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 
-const values = [
-    { icon: Zap, title: 'Speed to Value', desc: 'We deploy fast. You see results in weeks, not months. Our frameworks are proven and execution is relentless.' },
-    { icon: ShieldCheck, title: 'Enterprise Grade', desc: 'Security-first architecture. GDPR-aware. UAE data residency options. Your data never leaves your control.' },
-    { icon: TrendingUp, title: 'ROI-Obsessed', desc: "We don't build AI for AI's sake. Every solution targets clear, measurable business outcomes." },
-    { icon: Users, title: 'True Partnership', desc: "We're not consultants. We're co-builders. We integrate with your team and solve problems alongside you." },
+const directives = [
+    { id: 'DIR_001', icon: Zap, title: 'LATENCY_ZERO', desc: 'Speed to deployment is our primary metric. We engineer systems that achieve operational velocity in days, not months.' },
+    { id: 'DIR_002', icon: Shield, title: 'ENCRYPTION_BY_DESIGN', desc: 'Security is not a feature; it is the foundation. Every node we architect is hardened against systemic entropy.' },
+    { id: 'DIR_003', icon: Target, title: 'OUTCOME_OWNERSHIP', desc: 'We do not build for consultants. We build for founders. We own the codebase, the integration, and the outcome.' },
+    { id: 'DIR_004', icon: Eye, title: 'FUTURE_PROOF_ARCH', desc: 'Scalability is engineered into the first line of code. Our systems are built to thrive in the 2030 landscape.' },
 ];
 
-const team = [
-    { name: 'Ahmad Al Rashid', role: 'Founder & AI Architect', bio: 'Ex-Google AI researcher. Built ML infrastructure serving 50M+ users.' },
-    { name: 'Sarah Mitchell', role: 'Head of Engineering', bio: '15+ years building enterprise software. Led teams at Amazon and Microsoft.' },
-    { name: 'Omar Khalil', role: 'Head of Client Strategy', bio: 'Former McKinsey. Specialized in AI transformation for GCC enterprises.' },
-];
-
-export default function AboutPage() {
+export default function ManifestoPage() {
     return (
-        <main style={{ background: '#08090f', minHeight: '100vh', color: 'white' }}>
+        <main style={{ background: '#05060e', minHeight: '100vh', color: 'white', position: 'relative', overflowX: 'hidden' }}>
             <Navbar />
+            
+            {/* Background Narrative Grid */}
+            <div style={{
+                position: 'fixed', inset: 0, opacity: 0.05, pointerEvents: 'none', zIndex: 0,
+                backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(139,92,246,0.1) 40px, rgba(139,92,246,0.1) 41px)',
+            }} />
 
-            {/* Hero */}
-            <section style={{ paddingTop: 160, paddingBottom: 100, position: 'relative', overflow: 'hidden' }}>
-                <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: 900, height: 600, background: 'radial-gradient(ellipse, rgba(139,92,246,0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
-                <div className="container-nex grid-mobile-1" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'center' }}>
-                    <motion.div className="text-center-mobile" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9 }}>
-                        <span className="font-cyber" style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.3em', textTransform: 'uppercase', color: '#8B5CF6', display: 'block', marginBottom: 20 }}>About Nexyrra</span>
-                        <h1 className="font-title" style={{ fontSize: 'clamp(48px, 6vw, 84px)', fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.04em', marginBottom: 28 }}>
-                            We Build AI That{' '}
-                            <span style={{ background: 'linear-gradient(90deg, #8B5CF6, #22D3EE)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-                                Actually Works
-                            </span>
-                        </h1>
-                        <p style={{ fontSize: 18, color: '#94A3B8', lineHeight: 1.9, marginBottom: 40, maxWidth: 520 }}>
-                            Nexyrra is a UAE-licensed AI agency headquartered in Dubai. We specialize in turning complex AI technology into practical business advantages — for ambitious companies across the GCC and beyond.
-                        </p>
-                        <div className="center-mobile" style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-                            <Link href="/contact" className="btn-primary" style={{ padding: '16px 36px', borderRadius: 12 }}>
-                                Work With Us <ArrowRight size={16} />
-                            </Link>
-                            <Link href="/services" className="btn-outline" style={{ padding: '16px 36px', borderRadius: 12 }}>
-                                Our Services
-                            </Link>
-                        </div>
-                    </motion.div>
-
-                    {/* Stats side */}
-                    <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2, duration: 0.9 }}>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-                            {[
-                                { val: '2022', label: 'Founded in Dubai' },
-                                { val: '500+', label: 'Projects Delivered' },
-                                { val: '40+', label: 'Enterprise Clients' },
-                                { val: '🇦🇪', label: 'UAE Licensed Agency' },
-                            ].map((s, i) => (
-                                <div key={i} style={{ background: '#0e0f1a', border: '1px solid rgba(139,92,246,0.15)', borderRadius: 20, padding: '28px 24px' }}>
-                                    <div className="font-cyber" style={{ fontSize: 36, fontWeight: 900, background: 'linear-gradient(135deg, #8B5CF6, #22D3EE)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', marginBottom: 8 }}>{s.val}</div>
-                                    <div style={{ fontSize: 13, color: '#475569', fontWeight: 600 }}>{s.label}</div>
-                                </div>
-                            ))}
-                        </div>
-                    </motion.div>
-                </div>
-            </section>
-
-            {/* Mission */}
-            <section style={{ padding: '100px 0', borderTop: '1px solid rgba(139,92,246,0.08)', borderBottom: '1px solid rgba(139,92,246,0.08)', background: 'rgba(14,15,26,0.3)', textAlign: 'center' }}>
-                <div className="container-nex" style={{ maxWidth: 900 }}>
-                    <span className="font-cyber" style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.3em', textTransform: 'uppercase', color: '#8B5CF6', display: 'block', marginBottom: 24 }}>Our Mission</span>
-                    <blockquote className="font-title" style={{ fontSize: 'clamp(24px, 3.5vw, 44px)', fontWeight: 900, lineHeight: 1.4, fontStyle: 'italic', marginBottom: 32, letterSpacing: '-0.02em' }}>
-                        "To make enterprise-grade AI accessible to every ambitious business in the GCC — turning what was once a{' '}
-                        <span style={{ color: '#8B5CF6' }}>$10M capability into a $10K reality</span>."
-                    </blockquote>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, justifyContent: 'center' }}>
-                        <Globe size={16} style={{ color: '#8B5CF6' }} />
-                        <span style={{ color: '#475569', fontWeight: 600, fontSize: 14 }}>Serving clients across UAE, KSA, Qatar, Egypt, and the UK</span>
-                    </div>
-                </div>
-            </section>
-
-            {/* Values */}
-            <section style={{ padding: '100px 0' }}>
+            {/* Hero Section: The Narrative */}
+            <section style={{ paddingTop: 200, paddingBottom: 160, position: 'relative', zIndex: 1 }}>
                 <div className="container-nex">
-                    <div style={{ textAlign: 'center', marginBottom: 64 }}>
-                        <span className="font-cyber" style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.3em', textTransform: 'uppercase', color: '#8B5CF6', display: 'block', marginBottom: 16 }}>Why Nexyrra</span>
-                        <h2 className="font-title" style={{ fontSize: 'clamp(36px, 4vw, 56px)', fontWeight: 900, letterSpacing: '-0.03em' }}>Built Different</h2>
-                    </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))', gap: 20 }}>
-                        {values.map((v, i) => (
-                            <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
-                                <div className="card-nex" style={{ padding: 32, height: '100%' }}>
-                                    <div style={{ width: 48, height: 48, borderRadius: 14, background: 'rgba(139,92,246,0.12)', border: '1px solid rgba(139,92,246,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 24 }}>
-                                        <v.icon size={22} style={{ color: '#8B5CF6' }} />
-                                    </div>
-                                    <h3 className="font-title" style={{ fontSize: 18, fontWeight: 800, marginBottom: 12 }}>{v.title}</h3>
-                                    <p style={{ fontSize: 14, color: '#64748B', lineHeight: 1.8 }}>{v.desc}</p>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: 100 }} className="grid-mobile-1">
+                        
+                        <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1 }}>
+                            <span className="font-cyber" style={{ fontSize: 10, letterSpacing: '0.6em', color: '#8B5CF6', display: 'block', marginBottom: 30 }}>
+                                SYSTEM_INTENT.SYS
+                            </span>
+                            <h1 className="font-title" style={{ fontSize: 'clamp(50px, 10vw, 120px)', fontWeight: 900, letterSpacing: '-0.06em', lineHeight: 0.9, marginBottom: 60 }}>
+                                WE ARE THE <br />
+                                <span className="shimmer-text">ARCHITECTS.</span>
+                            </h1>
+                            <div style={{ maxWidth: 520, display: 'flex', flexDirection: 'column', gap: 30 }}>
+                                <p style={{ fontSize: 18, color: '#64748B', lineHeight: 1.8, fontWeight: 300 }}>
+                                    Nexyrra is a high-performance technology company based in Dubai. We exist at the intersection of complex system design and rapid digital execution.
+                                </p>
+                                <p style={{ fontSize: 14, color: '#4B5563', lineHeight: 1.8 }}>
+                                    Traditional agencies build for the handover. We build for the legacy. Our mission is to engineer the digital infrastructure that carries the leaders of the next century.
+                                </p>
+                            </div>
+                        </motion.div>
+
+                        {/* Visual Metadata Panel */}
+                        <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1, delay: 0.2 }}>
+                            <div className="system-module shadow-2xl" style={{ padding: '40px', background: 'rgba(255,255,255,0.01)' }}>
+                                <div style={{ fontSize: 9, color: '#8B5CF6', letterSpacing: '0.2em', marginBottom: 30, fontFamily: 'monospace' }}>[ OPERATIONAL_STATISTICS ]</div>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: 30 }}>
+                                    {[
+                                        { l: 'HEADQUARTERS', v: 'DUBAI_UAE' },
+                                        { l: 'CORE_VERSION', v: '2.0.4_STABLE' },
+                                        { l: 'SYSTEMS_DEPLOYED', v: '200+' },
+                                        { l: 'ENGINEERING_FLOW', v: '24/7_SYNC' },
+                                    ].map((s, i) => (
+                                        <div key={i} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: 15 }}>
+                                            <span style={{ fontSize: 9, color: '#1E293B', fontWeight: 900 }}>{s.l}</span>
+                                            <span className="font-cyber" style={{ fontSize: 11, color: 'white' }}>{s.v}</span>
+                                        </div>
+                                    ))}
                                 </div>
+                            </div>
+                        </motion.div>
+                    </div>
+                </div>
+            </section>
+
+            {/* The Directives: Core Laws */}
+            <section style={{ padding: '160px 0', background: '#000', position: 'relative' }}>
+                <div className="container-nex">
+                    <div style={{ marginBottom: 100 }}>
+                        <h2 className="font-title" style={{ fontSize: 'clamp(40px, 6vw, 80px)', fontWeight: 900, letterSpacing: '-0.04em' }}>
+                            CORE DIRECTIVES.
+                        </h2>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2px', background: 'rgba(255,255,255,0.05)' }}>
+                        {directives.map((d, i) => (
+                            <motion.div 
+                                key={d.id} 
+                                initial={{ opacity: 0, y: 20 }} 
+                                whileInView={{ opacity: 1, y: 0 }} 
+                                transition={{ delay: i * 0.1 }}
+                                style={{ padding: '60px 40px', background: '#000', position: 'relative' }}
+                            >
+                                <div className="font-cyber" style={{ fontSize: 8, color: '#334155', marginBottom: 20 }}>LAW_{d.id}</div>
+                                <d.icon size={24} style={{ color: '#8B5CF6', marginBottom: 25 }} />
+                                <h3 className="font-title" style={{ fontSize: 18, fontWeight: 900, color: 'white', marginBottom: 15 }}>{d.title}</h3>
+                                <p style={{ fontSize: 13, color: '#64748B', lineHeight: 1.8 }}>{d.desc}</p>
                             </motion.div>
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* CTA */}
-            <section className="container-nex" style={{ padding: '80px 0 120px', textAlign: 'center' }}>
-                <div style={{ maxWidth: 600, margin: '0 auto' }}>
-                    <h2 className="font-title" style={{ fontSize: 48, fontWeight: 900, marginBottom: 20, letterSpacing: '-0.03em' }}>
-                        Ready to Start?
-                    </h2>
-                    <p style={{ color: '#64748B', fontSize: 18, lineHeight: 1.8, marginBottom: 40 }}>
-                        Book a free 30-minute strategy session. We'll assess your business and show you exactly how AI can transform it.
-                    </p>
-                    <Link href="/contact" className="btn-primary" style={{ padding: '20px 56px', fontSize: 17, borderRadius: 14 }}>
-                        Book Free Session <ArrowRight size={18} />
-                    </Link>
+            {/* Architecture Leads */}
+            <section style={{ padding: '160px 0', position: 'relative' }}>
+                <div className="container-nex">
+                    <div style={{ textAlign: 'center', marginBottom: 100 }}>
+                        <span className="font-cyber" style={{ fontSize: 10, letterSpacing: '0.4em', color: '#8B5CF6', display: 'block', marginBottom: 20 }}>SYSTEM_LEADERSHIP</span>
+                        <h2 className="font-title" style={{ fontSize: 'clamp(40px, 6vw, 80px)', fontWeight: 900, letterSpacing: '-0.04em' }}>CHIEF ARCHITECTS.</h2>
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'center', gap: 40, flexWrap: 'wrap' }}>
+                        {[
+                            { name: 'AHMAD AL RASHID', role: 'CHIEF_SYSTEMS_ARCHITECT', bio: 'EX-FAANG ARCHITECTURE LEAD' },
+                            { name: 'SARAH MITCHELL', role: 'HEAD_OF_ENGINEERING', bio: 'DISTRIBUTED SYSTEMS SPECIALIST' },
+                        ].map((m, i) => (
+                            <div key={i} className="mask-gradient-border" style={{ minWidth: 320, padding: '40px', background: 'rgba(255,255,255,0.01)' }}>
+                                <div className="font-cyber" style={{ fontSize: 11, color: '#8B5CF6', marginBottom: 8 }}>{m.role}</div>
+                                <div className="font-title" style={{ fontSize: 24, fontWeight: 900, marginBottom: 15 }}>{m.name}</div>
+                                <p style={{ fontSize: 11, color: '#4B5563', letterSpacing: '0.1em' }}>{m.bio}</p>
+                            </div>
+                        ))}
+                    </div>
                 </div>
+            </section>
+
+            {/* Final Uplink Link */}
+            <section style={{ padding: '0 0 160px', textAlign: 'center' }}>
+                <Link href="/contact" className="font-cyber" style={{ fontSize: 12, color: '#8B5CF6', textDecoration: 'none', border: '1px solid #8B5CF6', padding: '15px 40px', display: 'inline-flex', alignItems: 'center', gap: 15 }}>
+                     INITIALIZE_UPLINK_PROTOCOL <ArrowUpRight size={16} />
+                </Link>
             </section>
 
             <Footer />

@@ -1,146 +1,139 @@
 'use client';
 
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import Link from 'next/link';
-import { ArrowRight, TrendingUp } from 'lucide-react';
+import { ArrowUpRight, Database, FastForward, Activity } from 'lucide-react';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 
-const cases = [
+const projects = [
     {
-        industry: 'Healthcare / Clinics',
-        client: 'Multi-branch UAE Clinic',
-        result: '80% reduction in appointment no-shows',
-        metric: '80%',
-        metricLabel: 'No-show Reduction',
-        description: 'Deployed an AI-powered WhatsApp system for automated appointment reminders, rebooking, and post-visit follow-ups across 7 clinic branches.',
-        tags: ['WhatsApp AI', 'Automation', 'Healthcare'],
-        color: '#8B5CF6',
+        id: 'NX_PRO_H01',
+        title: 'Healthcare Ecosystem Optimization',
+        result: '80% NO-SHOW REDUCTION',
+        client: 'Multi-branch GCC Clinic',
+        desc: 'Deployed high-performance communication nodes across 7 branches, automating entire patient lifecycle management with zero human latency.',
+        tags: ['SYSTEM_AUTO', 'GCC_DEPLOY', 'HEALTH_CORE'],
     },
     {
-        industry: 'Retail & E-commerce',
-        client: 'UAE Fashion Retailer',
-        result: '340% increase in WhatsApp campaign ROI',
-        metric: '3.4x',
-        metricLabel: 'Campaign ROI',
-        description: 'Built a personalized bulk WhatsApp marketing system that segments customers by purchase history and sends AI-crafted product recommendations.',
-        tags: ['Bulk WhatsApp', 'Personalization', 'Retail'],
-        color: '#22D3EE',
+        id: 'NX_PRO_R02',
+        title: 'Retail Intelligence Layer',
+        result: '3.4X CAMPAIGN YIELD',
+        client: 'Luxury UAE Fashion',
+        desc: 'Built a predictive segmentation engine that architected personalized outreach pipelines, significantly increasing conversion density.',
+        tags: ['DATA_INTEL', 'RETAIL_ENGINE', 'UPLINK_SYNC'],
     },
     {
-        industry: 'Real Estate',
-        client: 'Dubai Property Group',
-        result: '500+ qualified leads per month on autopilot',
-        metric: '500+',
-        metricLabel: 'Monthly Leads',
-        description: 'Created an autonomous AI agent that qualifies inbound leads, schedules viewings, and nurtures prospects through a 14-day automated sequence.',
-        tags: ['AI Agents', 'Lead Gen', 'Real Estate'],
-        color: '#F472B6',
+        id: 'NX_PRO_P03',
+        title: 'Real Estate Lead Pipeline',
+        result: '500+ Q_LEADS / MONTH',
+        client: 'Dubai Property Architect',
+        desc: 'Engineered an autonomous lead qualification node that manages high-volume prospect flows through a 14-day persistent sequence.',
+        tags: ['LEAD_SYNC', 'RE_AUTO', 'NODE_INFRA'],
     },
     {
-        industry: 'Logistics & Supply Chain',
-        client: 'GCC Logistics Company',
-        result: '60% faster processing with zero manual entry',
-        metric: '60%',
-        metricLabel: 'Faster Processing',
-        description: 'Automated their entire order processing and invoice workflow — connecting their ERP, email, and supplier portals into a single automated pipeline.',
-        tags: ['Workflow Automation', 'ERP Integration', 'Logistics'],
-        color: '#FB923C',
-    },
-    {
-        industry: 'Financial Services',
-        client: 'UAE Fintech Startup',
-        result: '95% faster financial reporting cycles',
-        metric: '95%',
-        metricLabel: 'Reporting Speed',
-        description: 'Built a custom data intelligence dashboard that consolidates 12 data sources in real-time, with automated anomaly detection and board-ready reports.',
-        tags: ['Data Intelligence', 'Analytics', 'Finance'],
-        color: '#34D399',
-    },
-    {
-        industry: 'Professional Services',
-        client: 'Regional Law Firm',
-        result: '$200K saved annually in admin costs',
-        metric: '$200K',
-        metricLabel: 'Annual Savings',
-        description: 'Deployed a custom AI assistant trained on legal document templates, case history, and firm procedures — handling 70% of routine document drafting.',
-        tags: ['Custom AI', 'Document Intelligence', 'Legal'],
-        color: '#A78BFA',
+        id: 'NX_PRO_L04',
+        title: 'Logistics Engine Integration',
+        result: '60% VELOCITY INCREASE',
+        client: 'Federal Logistics GCC',
+        desc: 'Unified fractured ERP and portal ecosystems into a single, high-throughput automated pipeline, eliminating manual data handling.',
+        tags: ['PIPELINE_SYNC', 'ERP_HARDEN', 'LOGS_LOGIC'],
     },
 ];
 
-export default function CasesPage() {
-    return (
-        <main style={{ background: '#08090f', minHeight: '100vh', color: 'white' }}>
-            <Navbar />
+export default function ArchivePage() {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const { scrollYProgress } = useScroll({ target: containerRef });
+    const y = useTransform(scrollYProgress, [0, 1], [0, -300]);
 
-            {/* Header */}
-            <section style={{ paddingTop: 160, paddingBottom: 80, textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
-                <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: 900, height: 500, background: 'radial-gradient(ellipse, rgba(139,92,246,0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
-                <div className="container-nex" style={{ maxWidth: 700, position: 'relative' }}>
-                    <span className="font-cyber" style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.3em', textTransform: 'uppercase', color: '#8B5CF6', display: 'block', marginBottom: 20 }}>Proven Results</span>
-                    <h1 className="font-title" style={{ fontSize: 'clamp(48px, 7vw, 88px)', fontWeight: 900, lineHeight: 0.95, letterSpacing: '-0.04em', marginBottom: 24 }}>
-                        Case{' '}
-                        <span style={{ background: 'linear-gradient(90deg, #8B5CF6, #22D3EE)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Studies</span>
-                    </h1>
-                    <p style={{ fontSize: 18, color: '#64748B', lineHeight: 1.8 }}>
-                        Real results from real businesses across the UAE and GCC. No generic case studies — specific numbers, specific outcomes.
-                    </p>
+    return (
+        <main ref={containerRef} style={{ background: '#05060e', minHeight: '100vh', color: 'white', overflowX: 'hidden' }}>
+            <Navbar />
+            
+            {/* Header: The Archive Vault */}
+            <section style={{ height: '70vh', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+                <div className="scanline" />
+                <div className="container-nex" style={{ textAlign: 'center' }}>
+                    <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1 }}>
+                        <span className="font-cyber" style={{ fontSize: 10, letterSpacing: '0.6em', color: '#8B5CF6', display: 'block', marginBottom: 30 }}>
+                            TRANSACTION_LOGS.EXE
+                        </span>
+                        <h1 className="font-title" style={{ fontSize: 'clamp(50px, 10vw, 140px)', fontWeight: 900, letterSpacing: '-0.06em', lineHeight: 0.9 }}>
+                            THE <span className="shimmer-text">ARCHIVE.</span>
+                        </h1>
+                        <p style={{ maxWidth: 500, margin: '40px auto 0', color: '#4B5563', fontSize: 13, lineHeight: 1.8, fontFamily: 'monospace' }}>
+                            [ SECURITY LEVEL: ACCESS_GRANTED ]<br />
+                            A repository of high-performance architectural deployments and systems engineering outcomes across the Middle East.
+                        </p>
+                    </motion.div>
                 </div>
+                
+                {/* Visual Grid Deco */}
+                <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 1, background: 'linear-gradient(90deg, transparent, #8B5CF6, transparent)' }} />
             </section>
 
-            {/* Cases Grid */}
+            {/* List Engine */}
             <section className="container-nex" style={{ paddingBottom: 160 }}>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 400px), 1fr))', gap: 24 }}>
-                    {cases.map((c, i) => (
-                        <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}>
-                            <div className="card-nex" style={{ padding: 36, height: '100%', display: 'flex', flexDirection: 'column' }}>
-                                {/* Metric hero */}
-                                <div style={{ marginBottom: 28 }}>
-                                    <div className="font-cyber" style={{ fontSize: 52, fontWeight: 900, color: c.color, lineHeight: 1, marginBottom: 4 }}>
-                                        {c.metric}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                    {projects.map((p, i) => (
+                        <motion.div
+                            key={p.id}
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: i * 0.1, duration: 0.8 }}
+                        >
+                            <div className="mask-gradient-border" style={{ marginBottom: 4 }}>
+                                <div style={{ 
+                                    padding: '60px 40px', display: 'grid', 
+                                    gridTemplateColumns: 'minmax(120px, 1fr) 2fr 1.5fr minmax(140px, auto)',
+                                    alignItems: 'center', gap: 40,
+                                    background: 'rgba(255,255,255,0.01)',
+                                }} className="grid-mobile-1">
+                                    
+                                    {/* Project Meta */}
+                                    <div>
+                                        <div className="font-cyber" style={{ fontSize: 10, color: '#334155', fontWeight: 900, marginBottom: 8 }}>{p.id}</div>
+                                        <div style={{ fontSize: 12, color: '#64748B', fontWeight: 600 }}>{p.client}</div>
                                     </div>
-                                    <div style={{ fontSize: 13, color: '#475569', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em' }}>{c.metricLabel}</div>
-                                </div>
 
-                                <div style={{ display: 'flex', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
-                                    <span style={{ padding: '3px 10px', borderRadius: 999, background: `${c.color}15`, border: `1px solid ${c.color}33`, fontSize: 10, fontWeight: 700, color: c.color, fontFamily: 'var(--font-cyber)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-                                        {c.industry}
-                                    </span>
-                                </div>
+                                    {/* Title & Desc */}
+                                    <div>
+                                        <h3 className="font-title" style={{ fontSize: 24, fontWeight: 800, marginBottom: 15 }}>{p.title}</h3>
+                                        <p style={{ fontSize: 14, color: '#4B5563', lineHeight: 1.6, maxWidth: 440 }}>{p.desc}</p>
+                                    </div>
 
-                                <h3 className="font-title" style={{ fontSize: 20, fontWeight: 900, marginBottom: 12, color: 'white' }}>{c.result}</h3>
-                                <p style={{ fontSize: 14, color: '#64748B', lineHeight: 1.8, marginBottom: 24, flex: 1 }}>{c.description}</p>
+                                    {/* Stats */}
+                                    <div style={{ padding: '20px', borderLeft: '1px solid rgba(139,92,246,0.1)', background: 'rgba(139,92,246,0.02)' }}>
+                                        <div className="font-cyber" style={{ fontSize: 11, color: '#8B5CF6', marginBottom: 5 }}>RESULT_METRIC</div>
+                                        <div className="font-title" style={{ fontSize: 28, fontWeight: 900, letterSpacing: '-0.02em', color: 'white' }}>{p.result}</div>
+                                    </div>
 
-                                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', paddingTop: 20, borderTop: '1px solid rgba(139,92,246,0.08)' }}>
-                                    {c.tags.map(t => (
-                                        <span key={t} style={{ padding: '3px 10px', borderRadius: 999, background: 'rgba(139,92,246,0.06)', border: '1px solid rgba(139,92,246,0.12)', fontSize: 11, fontWeight: 600, color: '#64748B' }}>
-                                            {t}
-                                        </span>
-                                    ))}
+                                    {/* Actions */}
+                                    <div style={{ textAlign: 'right' }}>
+                                        <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end', marginBottom: 20 }}>
+                                            {p.tags.map(t => (
+                                                <span key={t} style={{ fontSize: 8, color: '#1E293B', border: '1px solid #1E293B', padding: '3px 8px', borderRadius: 0 }}>{t}</span>
+                                            ))}
+                                        </div>
+                                        <Link href="#" className="font-cyber" style={{ fontSize: 10, color: '#8B5CF6', display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'flex-end', textDecoration: 'none' }}>
+                                            OPEN_REPORT <ArrowUpRight size={14} />
+                                        </Link>
+                                    </div>
                                 </div>
                             </div>
                         </motion.div>
                     ))}
                 </div>
-
-                {/* CTA */}
-                <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-                    style={{ marginTop: 80, textAlign: 'center' }}>
-                    <div style={{ display: 'inline-block', padding: 'clamp(32px, 8vw, 80px)', background: 'linear-gradient(135deg, rgba(139,92,246,0.1), rgba(34,211,238,0.05))', border: '1px solid rgba(139,92,246,0.2)', borderRadius: 32, width: '100%' }}>
-                        <TrendingUp size={48} style={{ color: '#8B5CF6', margin: '0 auto 24px', display: 'block' }} />
-                        <h2 className="font-title" style={{ fontSize: 40, fontWeight: 900, marginBottom: 16, letterSpacing: '-0.02em' }}>
-                            Your Results Could Be Next
-                        </h2>
-                        <p style={{ color: '#64748B', fontSize: 17, lineHeight: 1.8, marginBottom: 36, maxWidth: 460, margin: '0 auto 36px' }}>
-                            Every business in this list started with a free 30-minute strategy session. Book yours today.
-                        </p>
-                        <Link href="/contact" className="btn-primary" style={{ padding: '18px 52px', fontSize: 16, borderRadius: 14 }}>
-                            Book Free Session <ArrowRight size={18} />
-                        </Link>
-                    </div>
-                </motion.div>
+                
+                {/* Infinite Bottom Scroll Deco */}
+                <div style={{ marginTop: 160, textAlign: 'center' }}>
+                    <motion.div animate={{ rotateY: 360 }} transition={{ repeat: Infinity, duration: 4, ease: 'linear' }} style={{ display: 'inline-block' }}>
+                         <Database size={60} style={{ color: 'rgba(139,92,246,0.2)' }} />
+                    </motion.div>
+                    <div className="font-cyber" style={{ marginTop: 20, fontSize: 10, color: '#1E293B', letterSpacing: '1em' }}>ENDOFLOGS</div>
+                </div>
             </section>
 
             <Footer />
