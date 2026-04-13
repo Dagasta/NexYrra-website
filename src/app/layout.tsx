@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import WhatsAppButton from '../components/WhatsAppButton';
+import Cursor from '../components/Cursor';
 
 export const metadata: Metadata = {
   title: 'Nexyrra | Full-Spectrum Technology Company — Build. Automate. Scale.',
@@ -50,6 +51,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="apple-touch-icon" href="/assets/logo.png" />
       </head>
       <body suppressHydrationWarning>
+        <Cursor />
         {children}
         <WhatsAppButton />
       </body>

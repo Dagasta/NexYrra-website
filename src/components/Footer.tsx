@@ -20,7 +20,7 @@ const Footer = () => {
                         <div>
                             <div style={{ marginBottom: 24 }}><NexyrraWordmark size={36} /></div>
                             <p style={{ color: '#475569', lineHeight: 1.8, marginBottom: 24, maxWidth: 300, fontSize: 14, fontWeight: 400 }}>
-                                Nexyrra is a full-spectrum technology company. We build, automate, and scale everything in the digital world — for businesses serious about growth.
+                                Nexyrra is a high-performance technology and systems company. We architect, engineer, and scale the digital infrastructure that drives global growth.
                             </p>
                             {/* Contact */}
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 32 }}>
@@ -62,14 +62,14 @@ const Footer = () => {
                         {/* Links */}
                         {[
                              {
-                                title: 'Services',
+                                title: 'Capabilities',
                                 links: [
-                                    { name: 'Custom Software', href: '/services/custom-software' },
-                                    { name: 'AI Systems & Agents', href: '/services/ai-agents' },
-                                    { name: 'SaaS Platforms', href: '/services/saas-platforms' },
-                                    { name: 'Workflow Automation', href: '/services/workflow-automation' },
-                                    { name: 'Cloud & DevOps', href: '/services/cloud-devops' },
-                                    { name: 'Data Analytics', href: '/services/data-intelligence' },
+                                    { name: 'Bespoke Software', href: '/services/custom-software' },
+                                    { name: 'Autonomous Systems', href: '/services/autonomous-systems' },
+                                    { name: 'SaaS Infrastructure', href: '/services/saas-platforms' },
+                                    { name: 'Workflow Engineering', href: '/services/workflow-automation' },
+                                    { name: 'Cloud & Reliability', href: '/services/cloud-devops' },
+                                    { name: 'Data Intelligence', href: '/services/data-intelligence' },
                                 ],
                             },
                             {

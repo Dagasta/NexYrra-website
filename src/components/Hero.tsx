@@ -1,203 +1,179 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { motion, useMotionValue, useSpring } from 'framer-motion';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
 
-const WORDS = ['Software', 'AI Systems', 'Automation', 'SaaS Platforms', 'Infrastructure', 'Data Systems'];
+const stagger = {
+    hidden: {},
+    show: { transition: { staggerChildren: 0.14, delayChildren: 0.1 } },
+};
+
+const revealer = {
+    hidden: { opacity: 0, y: 56, filter: 'blur(8px)' },
+    show: {
+        opacity: 1, y: 0, filter: 'blur(0px)',
+        transition: { duration: 1, ease: [0.16, 1, 0.3, 1] },
+    },
+};
 
 const Hero = () => {
-    const [wordIndex, setWordIndex] = useState(0);
-    const [displayed, setDisplayed] = useState('');
-    const [deleting, setDeleting] = useState(false);
-    const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const mouseX = useMotionValue(0);
+    const mouseY = useMotionValue(0);
+    const springX = useSpring(mouseX, { stiffness: 28, damping: 16 });
+    const springY = useSpring(mouseY, { stiffness: 28, damping: 16 });
 
-    // Typewriter effect
     useEffect(() => {
-        const word = WORDS[wordIndex];
-        if (!deleting && displayed.length < word.length) {
-            timeoutRef.current = setTimeout(() => setDisplayed(word.slice(0, displayed.length + 1)), 60);
-        } else if (!deleting && displayed.length === word.length) {
-            timeoutRef.current = setTimeout(() => setDeleting(true), 1800);
-        } else if (deleting && displayed.length > 0) {
-            timeoutRef.current = setTimeout(() => setDisplayed(displayed.slice(0, -1)), 35);
-        } else if (deleting && displayed.length === 0) {
-            setDeleting(false);
-            setWordIndex(i => (i + 1) % WORDS.length);
-        }
-        return () => { if (timeoutRef.current) clearTimeout(timeoutRef.current); };
-    }, [displayed, deleting, wordIndex]);
+        const handler = (e: MouseEvent) => {
+            mouseX.set((e.clientX / window.innerWidth - 0.5) * 100);
+            mouseY.set((e.clientY / window.innerHeight - 0.5) * 70);
+        };
+        window.addEventListener('mousemove', handler, { passive: true });
+        return () => window.removeEventListener('mousemove', handler);
+    }, [mouseX, mouseY]);
 
     return (
-        <section style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', overflow: 'hidden', background: '#08090f' }}>
-
-            {/* Noise texture overlay */}
+        <section style={{
+            position: 'relative', minHeight: '100vh',
+            display: 'flex', alignItems: 'center',
+            overflow: 'hidden', background: '#07080e',
+        }}>
+            {/* Fine grid */}
             <div style={{
-                position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1,
-                backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E")`,
-                opacity: 0.4,
-            }} />
-
-            {/* Grid background */}
-            <div style={{
-                position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1,
+                position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0,
                 backgroundImage:
-                    'linear-gradient(rgba(139,92,246,0.05) 1px, transparent 1px),' +
-                    'linear-gradient(to right, rgba(139,92,246,0.05) 1px, transparent 1px)',
-                backgroundSize: '80px 80px',
-                maskImage: 'radial-gradient(ellipse 80% 70% at 50% 40%, black 30%, transparent 100%)',
-                WebkitMaskImage: 'radial-gradient(ellipse 80% 70% at 50% 40%, black 30%, transparent 100%)',
+                    'linear-gradient(rgba(139,92,246,0.045) 1px, transparent 1px),' +
+                    'linear-gradient(to right, rgba(139,92,246,0.045) 1px, transparent 1px)',
+                backgroundSize: '90px 90px',
+                maskImage: 'radial-gradient(ellipse 80% 90% at 50% 40%, black, transparent)',
+                WebkitMaskImage: 'radial-gradient(ellipse 80% 90% at 50% 40%, black, transparent)',
             }} />
 
-            {/* Violet orb top-center */}
+            {/* Mouse parallax orb */}
+            <motion.div style={{
+                position: 'absolute', zIndex: 0, pointerEvents: 'none',
+                width: 1100, height: 1100, borderRadius: '50%',
+                background: 'radial-gradient(circle, rgba(139,92,246,0.14) 0%, rgba(139,92,246,0.03) 45%, transparent 70%)',
+                top: '50%', left: '50%', marginTop: -550, marginLeft: -550,
+                x: springX, y: springY,
+            }} />
+
+            {/* Cyan accent top-right */}
             <div style={{
-                position: 'absolute', top: '-10%', left: '50%', transform: 'translateX(-50%)',
-                width: 1000, height: 700,
-                background: 'radial-gradient(ellipse at center, rgba(139,92,246,0.18) 0%, rgba(139,92,246,0.04) 40%, transparent 70%)',
-                pointerEvents: 'none', zIndex: 1,
+                position: 'absolute', top: '-8%', right: '-8%', zIndex: 0, pointerEvents: 'none',
+                width: 550, height: 550, borderRadius: '50%',
+                background: 'radial-gradient(circle, rgba(34,211,238,0.07) 0%, transparent 70%)',
             }} />
 
-            {/* Cyan orb bottom right */}
+            {/* violet accent bottom-left */}
             <div style={{
-                position: 'absolute', bottom: '0%', right: '-5%',
-                width: 600, height: 600,
-                background: 'radial-gradient(ellipse, rgba(34,211,238,0.07) 0%, transparent 70%)',
-                pointerEvents: 'none', zIndex: 1,
+                position: 'absolute', bottom: '5%', left: '-5%', zIndex: 0, pointerEvents: 'none',
+                width: 400, height: 400, borderRadius: '50%',
+                background: 'radial-gradient(circle, rgba(139,92,246,0.06) 0%, transparent 70%)',
             }} />
 
-            {/* Gradient fade bottom */}
-            <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 280, background: 'linear-gradient(to top, #08090f 30%, transparent)', pointerEvents: 'none', zIndex: 2 }} />
+            {/* Bottom fade */}
+            <div style={{
+                position: 'absolute', bottom: 0, left: 0, right: 0, height: 360, zIndex: 1,
+                background: 'linear-gradient(to top, #07080e 25%, transparent)',
+                pointerEvents: 'none',
+            }} />
 
-            <div className="container-nex" style={{ paddingTop: 140, paddingBottom: 100, position: 'relative', zIndex: 3, width: '100%' }}>
+            <div className="container-nex" style={{ paddingTop: 160, paddingBottom: 120, position: 'relative', zIndex: 2 }}>
+                <motion.div variants={stagger} initial="hidden" animate="show">
 
-                {/* Eyebrow badge */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6 }}
-                    style={{ display: 'flex', justifyContent: 'center', marginBottom: 40 }}
-                >
-                    <div style={{
-                        display: 'inline-flex', alignItems: 'center', gap: 8,
-                        padding: '8px 20px', borderRadius: 999,
-                        border: '1px solid rgba(139,92,246,0.25)',
-                        background: 'rgba(139,92,246,0.06)',
-                        backdropFilter: 'blur(8px)',
-                    }}>
-                        <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#8B5CF6', animation: 'nex-pulse 2s infinite', display: 'inline-block' }} />
-                        <span className="font-cyber" style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.2em', color: '#A78BFA', textTransform: 'uppercase' }}>
-                            Full-Spectrum Technology Company
-                        </span>
-                    </div>
-                </motion.div>
-
-                {/* Main headline */}
-                <motion.div
-                    initial={{ opacity: 0, y: 40 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.1 }}
-                    style={{ textAlign: 'center', marginBottom: 32 }}
-                >
-                    <h1 className="font-title" style={{
-                        fontSize: 'clamp(48px, 7.5vw, 110px)',
-                        fontWeight: 900,
-                        lineHeight: 1.0,
-                        letterSpacing: '-0.04em',
-                        color: 'white',
-                        marginBottom: 0,
-                    }}>
-                        We Build &<br />
-                        <span style={{
-                            background: 'linear-gradient(135deg, #8B5CF6 0%, #A78BFA 40%, #22D3EE 100%)',
-                            WebkitBackgroundClip: 'text',
-                            WebkitTextFillColor: 'transparent',
-                            backgroundClip: 'text',
+                    {/* Eyebrow */}
+                    <motion.div variants={revealer} style={{ marginBottom: 52 }}>
+                        <div style={{
+                            display: 'inline-flex', alignItems: 'center', gap: 10,
+                            padding: '8px 20px', borderRadius: 999,
+                            border: '1px solid rgba(139,92,246,0.2)',
+                            background: 'rgba(139,92,246,0.05)',
                         }}>
-                            Scale
-                        </span>{' '}
-                        <span style={{ position: 'relative', display: 'inline-block' }}>
-                            <span style={{ color: 'white' }}>{displayed}</span>
                             <span style={{
-                                display: 'inline-block', width: 3, height: '0.85em',
-                                background: '#8B5CF6', marginLeft: 4, verticalAlign: 'middle',
-                                animation: 'nex-pulse 0.8s steps(1) infinite',
+                                width: 6, height: 6, borderRadius: '50%', background: '#8B5CF6',
+                                display: 'inline-block', animation: 'nex-pulse 2s infinite',
                             }} />
-                        </span>
-                    </h1>
-                </motion.div>
-
-                {/* Sub-headline */}
-                <motion.p
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.7, delay: 0.25 }}
-                    style={{
-                        fontSize: 'clamp(16px, 2vw, 21px)',
-                        color: '#94A3B8',
-                        lineHeight: 1.75,
-                        maxWidth: 640,
-                        margin: '0 auto 48px',
-                        textAlign: 'center',
-                        fontWeight: 400,
-                    }}
-                >
-                    If it exists in tech — we design it, build it, automate it, and scale it.
-                    One team. End-to-end execution. Elite results.
-                </motion.p>
-
-                {/* CTAs */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.35 }}
-                    style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 80 }}
-                >
-                    <Link href="https://wa.me/971503953988" className="btn-primary" style={{
-                        padding: '16px 40px', fontSize: 16, borderRadius: 14,
-                        background: 'linear-gradient(135deg, #8B5CF6, #7C3AED)',
-                        boxShadow: '0 0 40px rgba(139,92,246,0.3)',
-                    }}>
-                        Start a Project <ArrowRight size={18} />
-                    </Link>
-                    <Link href="/services" className="btn-outline" style={{ padding: '16px 40px', fontSize: 16, borderRadius: 14 }}>
-                        Explore Services <ArrowUpRight size={16} />
-                    </Link>
-                </motion.div>
-
-                {/* Stats strip */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.7, delay: 0.5 }}
-                    style={{
-                        display: 'flex', justifyContent: 'center', gap: 0,
-                        maxWidth: 720, margin: '0 auto',
-                        background: 'rgba(14,15,26,0.8)',
-                        border: '1px solid rgba(139,92,246,0.15)',
-                        borderRadius: 20, overflow: 'hidden',
-                        backdropFilter: 'blur(16px)',
-                    }}
-                >
-                    {[
-                        { value: '12+', label: 'Tech Domains' },
-                        { value: '200+', label: 'Projects Shipped' },
-                        { value: '98%', label: 'Client Retention' },
-                        { value: '24/7', label: 'Systems Uptime' },
-                    ].map((s, i) => (
-                        <div key={s.label} style={{
-                            flex: 1, padding: '24px 20px', textAlign: 'center',
-                            borderRight: i < 3 ? '1px solid rgba(139,92,246,0.1)' : 'none',
-                        }}>
-                            <div className="font-cyber" style={{
-                                fontSize: 'clamp(22px, 3vw, 32px)', fontWeight: 900,
-                                background: 'linear-gradient(135deg, #8B5CF6, #22D3EE)',
-                                WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
-                                marginBottom: 4,
-                            }}>{s.value}</div>
-                            <div style={{ fontSize: 11, color: '#475569', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em' }}>{s.label}</div>
+                            <span className="font-cyber" style={{
+                                fontSize: 10, fontWeight: 700, letterSpacing: '0.25em',
+                                color: '#A78BFA', textTransform: 'uppercase',
+                            }}>
+                                System Architects · Est. 2024 · Dubai, UAE
+                            </span>
                         </div>
-                    ))}
+                    </motion.div>
+
+                    {/* Massive headline */}
+                    <motion.h1 variants={revealer} className="font-title" style={{
+                        fontSize: 'clamp(58px, 9.5vw, 144px)',
+                        fontWeight: 900, lineHeight: 0.94,
+                        letterSpacing: '-0.047em', marginBottom: 40,
+                    }}>
+                        <span style={{ display: 'block', color: 'white' }}>We Build</span>
+                        <span style={{ display: 'block', color: 'white' }}>What Others</span>
+                        <span style={{
+                            display: 'block',
+                            background: 'linear-gradient(135deg, #8B5CF6 10%, #A78BFA 50%, #22D3EE 90%)',
+                            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+                        }}>
+                            Only Pitch.
+                        </span>
+                    </motion.h1>
+
+                    {/* Subline */}
+                    <motion.p variants={revealer} style={{
+                        fontSize: 'clamp(16px, 1.7vw, 21px)',
+                        color: '#64748B', lineHeight: 1.8,
+                        maxWidth: 540, marginBottom: 52, fontWeight: 400,
+                    }}>
+                        Full-stack technology execution — from product strategy to infrastructure.
+                        We design it, engineer it, ship it, and own the outcome.
+                    </motion.p>
+
+                    {/* CTAs */}
+                    <motion.div variants={revealer} style={{ display: 'flex', gap: 14, flexWrap: 'wrap', marginBottom: 96 }}>
+                        <Link href="https://wa.me/971503953988" className="btn-primary" style={{
+                            padding: '16px 44px', fontSize: 15, borderRadius: 12,
+                            boxShadow: '0 0 48px rgba(139,92,246,0.28)',
+                        }}>
+                            Start a Project <ArrowRight size={16} />
+                        </Link>
+                        <Link href="#capabilities" className="btn-outline" style={{
+                            padding: '16px 36px', fontSize: 15, borderRadius: 12,
+                        }}>
+                            Our Capabilities <ArrowUpRight size={15} />
+                        </Link>
+                    </motion.div>
+
+                    {/* Stats strip */}
+                    <motion.div variants={revealer} style={{
+                        display: 'flex', maxWidth: 660,
+                        background: 'rgba(255,255,255,0.018)',
+                        border: '1px solid rgba(255,255,255,0.07)',
+                        borderRadius: 16, overflow: 'hidden',
+                        backdropFilter: 'blur(20px)',
+                    }}>
+                        {[
+                            { value: '12+', label: 'Tech Domains' },
+                            { value: '200+', label: 'Systems Shipped' },
+                            { value: '98%', label: 'Client Retention' },
+                            { value: '24/7', label: 'Always Running' },
+                        ].map((s, i) => (
+                            <div key={s.label} style={{
+                                flex: 1, padding: '22px 16px', textAlign: 'center',
+                                borderRight: i < 3 ? '1px solid rgba(255,255,255,0.05)' : 'none',
+                            }}>
+                                <div className="font-cyber" style={{
+                                    fontSize: 'clamp(18px, 2.2vw, 28px)', fontWeight: 900,
+                                    background: 'linear-gradient(135deg, #8B5CF6, #22D3EE)',
+                                    WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+                                    marginBottom: 5, lineHeight: 1,
+                                }}>{s.value}</div>
+                                <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#334155' }}>{s.label}</div>
+                            </div>
+                        ))}
+                    </motion.div>
                 </motion.div>
             </div>
         </section>
