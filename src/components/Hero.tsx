@@ -76,7 +76,7 @@ export default function Hero() {
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 15 }}>
                                 {bootSequence.slice(0, bootState).map((line, i) => (
                                     <motion.div key={i} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="mono-sys" style={{ color: i === bootSequence.length - 1 ? 'var(--sys-neon-blue)' : 'var(--sys-slate)', fontSize: 14 }}>
-                                        > {line}
+                                        {`> ${line}`}
                                     </motion.div>
                                 ))}
                                 {bootState < bootSequence.length && (
