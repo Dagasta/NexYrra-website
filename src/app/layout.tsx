@@ -3,8 +3,8 @@ import './globals.css';
 import WhatsAppButton from '../components/WhatsAppButton';
 
 export const metadata: Metadata = {
-  title: 'Nexyrra: AI Agency Dubai | Autonomous AI Agents & Automation',
-  description: 'Nexyrra is a UAE-licensed AI agency specializing in autonomous AI agents, workflow automation, bulk WhatsApp marketing, web development, and enterprise data intelligence.',
+  title: 'Nexyrra | Full-Spectrum Technology Company — Build. Automate. Scale.',
+  description: 'Nexyrra is a premier technology company that designs, builds, automates, and scales everything in the digital world. Custom software, AI systems, SaaS platforms, cloud infrastructure, cybersecurity, and more.',
   generator: 'Nexyrra AI Agency',
   applicationName: 'Nexyrra',
   robots: 'index, follow',
@@ -13,8 +13,8 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: 'https://nexyrra.com/',
     siteName: 'Nexyrra',
-    title: 'Nexyrra: AI Agency Dubai',
-    description: 'Empowering Future with AI — UAE Licensed AI Agency',
+    title: 'Nexyrra | Full-Spectrum Technology Company',
+    description: 'Build. Automate. Scale. — Premium technology company, Dubai UAE',
     images: [{ url: '/assets/og-image.png', width: 1200, height: 630 }],
   },
   twitter: {

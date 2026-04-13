@@ -20,7 +20,7 @@ const Footer = () => {
                         <div>
                             <div style={{ marginBottom: 24 }}><NexyrraWordmark size={36} /></div>
                             <p style={{ color: '#475569', lineHeight: 1.8, marginBottom: 24, maxWidth: 300, fontSize: 14, fontWeight: 400 }}>
-                                Nexyrra AI Agency — Empowering businesses across the UAE and beyond with intelligent automation and AI-first digital solutions.
+                                Nexyrra is a full-spectrum technology company. We build, automate, and scale everything in the digital world — for businesses serious about growth.
                             </p>
                             {/* Contact */}
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 32 }}>
@@ -61,14 +61,15 @@ const Footer = () => {
 
                         {/* Links */}
                         {[
-                            {
+                             {
                                 title: 'Services',
                                 links: [
-                                    { name: 'AI Agents', href: '/services/ai-agents' },
+                                    { name: 'Custom Software', href: '/services/custom-software' },
+                                    { name: 'AI Systems & Agents', href: '/services/ai-agents' },
+                                    { name: 'SaaS Platforms', href: '/services/saas-platforms' },
                                     { name: 'Workflow Automation', href: '/services/workflow-automation' },
-                                    { name: 'WhatsApp Marketing', href: '/services/whatsapp-marketing' },
-                                    { name: 'Web & App Dev', href: '/services/web-app-development' },
-                                    { name: 'Data Intelligence', href: '/services/data-intelligence' },
+                                    { name: 'Cloud & DevOps', href: '/services/cloud-devops' },
+                                    { name: 'Data Analytics', href: '/services/data-intelligence' },
                                 ],
                             },
                             {
