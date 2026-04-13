@@ -1,20 +1,19 @@
-/* ===== THE NEXYRRA LUXURY SYSTEM (WHITE & PURPLE) ===== */
+/* ===== THE NEXYRRA NEURAL VOID (BLACK & PURPLE) ===== */
 
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;300;400;500;700;900&family=JetBrains+Mono:wght@100;300;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@100;300;500;700&display=swap');
 
 :root {
-  --font-main: 'Outfit', sans-serif;
+  --font-main: 'Space Grotesk', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
   
-  /* Core Luxury Palette */
+  /* Core Void Palette */
+  --nex-void: #020203;    /* Absolute Black */
+  --nex-purple: #A855F7;  /* Electric Purple */
+  --nex-cyan: #22D3EE;    /* Cyber Cyan */
   --nex-white: #FFFFFF;
-  --nex-purple: #8B5CF6;
-  --nex-purple-deep: #4C1D95;
-  --nex-bg: #F8FAFC; /* Extremely light grey/white for luxury feel */
-  --nex-void: #020617; /* Deepest indigo/black for contrast */
   
-  --glass: rgba(255, 255, 255, 0.7);
-  --glass-border: rgba(139, 92, 246, 0.1);
+  --glass: rgba(0, 0, 0, 0.7);
+  --glass-border: rgba(168, 85, 247, 0.2);
 }
 
 * {
@@ -24,119 +23,104 @@
 body {
   margin: 0;
   padding: 0;
-  background-color: var(--nex-white);
-  color: var(--nex-void);
+  background-color: var(--nex-void);
+  color: var(--nex-white);
   font-family: var(--font-main);
   overflow-x: hidden;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
 
-/* THE MESH GRID */
-.mesh-bg {
+/* THE NEURAL DATA GRID */
+.neural-bg {
   position: fixed;
   inset: 0;
+  z-index: -1;
   background: 
-    radial-gradient(circle at 0% 0%, rgba(139, 92, 246, 0.05) 0%, transparent 50%),
-    radial-gradient(circle at 100% 100%, rgba(139, 92, 246, 0.05) 0%, transparent 50%),
-    var(--nex-white);
-  z-index: -1;
+    radial-gradient(circle at 50% 50%, rgba(168, 85, 247, 0.05) 0%, transparent 70%),
+    linear-gradient(rgba(168, 85, 247, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(168, 85, 247, 0.02) 1px, transparent 1px);
+  background-size: 100% 100%, 50px 50px, 50px 50px;
 }
 
-.data-grid {
-  position: fixed;
-  inset: 0;
-  background-image: linear-gradient(rgba(139, 92, 246, 0.03) 1px, transparent 1px),
-                    linear-gradient(90deg, rgba(139, 92, 246, 0.03) 1px, transparent 1px);
-  background-size: 60px 60px;
-  z-index: -1;
-  mask-image: linear-gradient(to bottom, black, transparent);
-}
-
-/* TYPOGRAPHY LUXE */
+/* TYPOGRAPHY NEON */
 h1, h2, h3 {
   font-weight: 700;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.05em;
   text-transform: uppercase;
+  color: var(--nex-white);
 }
 
 .mono {
   font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.3em;
+  font-size: 10px;
+  letter-spacing: 0.4em;
   text-transform: uppercase;
-  color: var(--nex-purple);
+  color: var(--nex-cyan);
+  opacity: 0.8;
 }
 
-/* THE PRISMATIC GLASS (Luxury Tech) */
-.glass-luxe {
-  background: rgba(255, 255, 255, 0.4);
+/* THE DATA PANEL (Glass v5) */
+.glass-panel {
+  background: rgba(10, 10, 15, 0.6);
   backdrop-filter: blur(20px) saturate(180%);
   border: 1px solid var(--glass-border);
-  box-shadow: 0 8px 32px 0 rgba(139, 92, 246, 0.05);
-  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.glass-luxe:hover {
-  background: rgba(255, 255, 255, 0.6);
+.glass-panel:hover {
   border-color: var(--nex-purple);
-  transform: translateY(-5px);
-  box-shadow: 0 20px 40px 0 rgba(139, 92, 246, 0.1);
+  box-shadow: 0 0 30px rgba(168, 85, 247, 0.15);
 }
 
 /* BUTTONS */
-.btn-luxe {
+.btn-neon {
   background: var(--nex-purple);
   color: white;
-  padding: 16px 32px;
-  border-radius: 2px;
+  padding: 18px 36px;
+  border-radius: 0;
   font-family: var(--font-mono);
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.2em;
   border: 1px solid transparent;
   transition: all 0.4s;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: 15px;
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
 }
 
-.btn-luxe:hover {
-  background: white;
-  color: var(--nex-purple);
+.btn-neon:hover {
+  background: transparent;
   border-color: var(--nex-purple);
+  box-shadow: 0 0 40px rgba(168, 85, 247, 0.5);
   transform: scale(1.02);
-  box-shadow: 0 10px 30px rgba(139, 92, 246, 0.2);
 }
 
-/* KEYFRAMES FOR MOTION */
-@keyframes float {
-  0% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-20px) rotate(2deg); }
-  100% { transform: translateY(0px) rotate(0deg); }
+/* SCANLINE FX */
+.scanline {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 2px;
+  background: rgba(34, 211, 238, 0.05);
+  z-index: 1000;
+  pointer-events: none;
+  animation: scan 8s linear infinite;
 }
 
-@keyframes pulse-luxe {
-  0% { transform: scale(1); opacity: 0.5; }
-  50% { transform: scale(1.05); opacity: 0.8; }
-  100% { transform: scale(1); opacity: 0.5; }
+@keyframes scan {
+  from { top: 0; }
+  to { top: 100%; }
 }
 
-.animate-float {
-  animation: float 10s ease-in-out infinite;
+/* CORE GLOW */
+.glow-text {
+  text-shadow: 0 0 15px rgba(168, 85, 247, 0.5);
 }
 
-/* PAGE WRAPPER */
-.page-wrap {
-  position: relative;
-  z-index: 10;
-}
-
-/* SECTION LINE */
-.section-line {
-  width: 1px;
-  height: 100px;
-  background: linear-gradient(to bottom, var(--nex-purple), transparent);
-  margin: 0 auto;
+.glow-cyan {
+  text-shadow: 0 0 15px rgba(34, 211, 238, 0.5);
 }
