@@ -1,154 +1,124 @@
 'use client';
 
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'framer-motion';
-import { Sparkles, ArrowRight, Zap, Target } from 'lucide-react';
+import { ArrowRight, ChevronDown } from 'lucide-react';
 
 const Hero = () => {
     const containerRef = useRef<HTMLDivElement>(null);
-    const { scrollYProgress } = useScroll({ target: containerRef });
+    const { scrollYProgress } = useScroll({
+        target: containerRef,
+        offset: ["start start", "end start"]
+    });
 
-    // Interactive Floating Artifact logic
-    const mouseX = useMotionValue(0);
-    const mouseY = useMotionValue(0);
-    const springX = useSpring(mouseX, { stiffness: 40, damping: 20 });
-    const springY = useSpring(mouseY, { stiffness: 40, damping: 20 });
+    const mX = useMotionValue(0);
+    const mY = useMotionValue(0);
+    const sX = useSpring(mX, { stiffness: 40, damping: 20 });
+    const sY = useSpring(mY, { stiffness: 40, damping: 20 });
 
     useEffect(() => {
-        const handleMove = (e: MouseEvent) => {
-            const { clientX, clientY } = e;
-            const x = (clientX / window.innerWidth - 0.5) * 50;
-            const y = (clientY / window.innerHeight - 0.5) * 50;
-            mouseX.set(x);
-            mouseY.set(y);
+        const move = (e: MouseEvent) => {
+            mX.set((e.clientX / window.innerWidth - 0.5) * 40);
+            mY.set((e.clientY / window.innerHeight - 0.5) * 40);
         };
-        window.addEventListener('mousemove', handleMove);
-        return () => window.removeEventListener('mousemove', handleMove);
-    }, [mouseX, mouseY]);
+        window.addEventListener('mousemove', move);
+        return () => window.removeEventListener('mousemove', move);
+    }, [mX, mY]);
 
-    // Scroll Depth effects
-    const scale = useTransform(scrollYProgress, [0, 1], [1, 1.4]);
-    const z = useTransform(scrollYProgress, [0, 1], [0, -400]);
+    const scale = useTransform(scrollYProgress, [0, 1], [1, 1.5]);
     const opacity = useTransform(scrollYProgress, [0, 0.4, 0.6], [1, 1, 0]);
+    const blur = useTransform(scrollYProgress, [0, 0.8], ["blur(0px)", "blur(20px)"]);
 
     return (
-        <section ref={containerRef} style={{ height: '200vh', position: 'relative', perspective: '1200px' }}>
-            {/* The Neural Grid Background */}
-            <div className="neural-overlay" />
+        <section ref={containerRef} style={{ height: '180vh', position: 'relative', overflow: 'hidden' }}>
+            <div className="mesh-bg" />
+            <div className="data-grid" />
             
-            {/* Focal Luminous Gradient */}
-            <div style={{
-                position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-                width: '80vw', height: '80vh',
-                background: 'radial-gradient(circle, rgba(139, 92, 246, 0.08) 0%, transparent 70%)',
-                filter: 'blur(100px)', zIndex: 0, pointerEvents: 'none'
-            }} />
-
-            <div style={{ position: 'sticky', top: 0, height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+            <div style={{ position: 'sticky', top: 0, height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 
-                {/* THE HOLOGRAPHIC CORE (The WOW Artifact) */}
+                {/* THE CRYSTALLINE APERTURE (The $60k Artifact) */}
                 <motion.div style={{
-                    position: 'absolute', width: 'clamp(500px, 40vw, 800px)', height: 'clamp(500px, 40vw, 800px)',
-                    x: springX, y: springY, scale, opacity, z,
+                    position: 'absolute', width: '80vw', height: '80vw', maxWidth: '1000px', maxHeight: '1000px',
+                    border: '1px solid rgba(139, 92, 246, 0.1)', borderRadius: '50%',
+                    scale, opacity, x: sX, y: sY, filter: blur,
                     display: 'flex', alignItems: 'center', justifyContent: 'center'
                 }}>
-                    {/* Morphing Outer Shield */}
                     <motion.div 
-                        animate={{ 
-                            borderRadius: ["40% 60% 60% 40% / 60% 30% 70% 40%", "60% 40% 30% 70% / 40% 70% 30% 60%", "40% 60% 60% 40% / 60% 30% 70% 40%"],
-                            rotate: [0, 180, 360],
-                            boxShadow: [
-                                "0 0 50px rgba(139,92,246,0.3)",
-                                "0 0 100px rgba(34,211,238,0.3)",
-                                "0 0 50px rgba(139,92,246,0.3)"
-                            ]
-                        }}
-                        transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
+                        animate={{ rotate: 360 }}
+                        transition={{ repeat: Infinity, duration: 30, ease: "linear" }}
                         style={{
-                            position: 'absolute', inset: 0,
-                            border: '1px solid rgba(255,255,255,0.1)',
-                            background: 'rgba(255,255,255,0.01)',
-                            backdropFilter: 'blur(5px)'
+                            position: 'absolute', inset: '10%',
+                            border: '1px dashed rgba(139, 92, 246, 0.2)', borderRadius: '50%'
+                        }} 
+                    />
+                    <motion.div 
+                        animate={{ rotate: -360 }}
+                        transition={{ repeat: Infinity, duration: 50, ease: "linear" }}
+                        style={{
+                            position: 'absolute', inset: '20%',
+                            border: '1px solid rgba(139, 92, 246, 0.05)', borderRadius: '50%'
+                        }} 
+                    />
+                    
+                    {/* Glowing Core */}
+                    <motion.div 
+                        animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.4, 0.2] }}
+                        transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+                        style={{
+                            width: '30%', height: '30%', borderRadius: '50%',
+                            background: 'radial-gradient(circle, #8B5CF6 0%, transparent 70%)',
+                            filter: 'blur(50px)'
                         }}
                     />
-
-                    {/* Floating Data Points (Tech details) */}
-                    {[...Array(8)].map((_, i) => (
-                        <motion.div
-                            key={i}
-                            animate={{ 
-                                y: [0, -20, 0],
-                                rotateZ: [0, 360]
-                            }}
-                            transition={{ repeat: Infinity, duration: 4 + i, ease: "easeInOut" }}
-                            style={{ 
-                                position: 'absolute', top: `${10 + i * 10}%`, left: `${20 + i * 5}%`,
-                                width: 4, height: 4, background: i % 2 === 0 ? '#8B5CF6' : '#22D3EE',
-                                borderRadius: '50%', boxShadow: '0 0 10px currentColor'
-                            }}
-                        />
-                    ))}
-
-                    <div style={{ position: 'relative', zIndex: 10, textAlign: 'center' }}>
-                         <Sparkles size={48} style={{ color: '#8B5CF6', marginBottom: 20 }} />
-                         <div className="font-cyber" style={{ fontSize: 9, letterSpacing: '0.8em', color: '#22D3EE' }}>BIONIC_CORE_v4.0</div>
-                    </div>
                 </motion.div>
 
-                {/* Main Content Layout (High Creative Depth) */}
-                <div className="container-nex" style={{ position: 'relative', zIndex: 100 }}>
-                    <motion.div style={{ opacity, y: z }}>
+                {/* Content Overlay */}
+                <div className="container-nex" style={{ position: 'relative', zIndex: 10, textAlign: 'center' }}>
+                    <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+                        <div className="mono" style={{ marginBottom: 30, color: '#8B5CF6' }}>// SYSTEM_INITIALIZED_0xFA9</div>
                         
-                        <div style={{ display: 'flex', gap: 20, alignItems: 'center', marginBottom: 40 }}>
-                            <div style={{ width: 80, height: 1, background: 'linear-gradient(90deg, #8B5CF6, transparent)' }} />
-                            <span className="font-cyber" style={{ fontSize: 11, fontWeight: 800, color: 'white' }}>ARCHITECTING INTELLIGENCE</span>
-                        </div>
-
-                        <h1 className="text-bionic" style={{
-                            fontSize: 'clamp(50px, 10vw, 150px)',
-                            fontWeight: 800, lineHeight: 0.9, letterSpacing: '-0.06em',
-                            marginBottom: 40
+                        <h1 style={{ 
+                            fontSize: 'clamp(50px, 12vw, 150px)', 
+                            fontWeight: 900, 
+                            lineHeight: 0.85, 
+                            color: 'var(--nex-void)',
+                            marginBottom: 40 
                         }}>
                             BEYOND THE <br />
-                            <span className="shimmer-text">KNOWN.</span>
+                            <span style={{ color: '#8B5CF6' }}>FUTURE.</span>
                         </h1>
 
-                        <div style={{ gridTemplateColumns: 'minmax(200px, 1.5fr) 1fr', display: 'grid', gap: 100 }} className="grid-mobile-1">
-                            <p style={{ fontSize: '20px', color: '#CBD5E1', lineHeight: 1.7, fontWeight: 300, maxWidth: 500 }}>
-                                We deconstruct reality to architect the impossible. 
-                                High-performance systems engineering at the intersection of AI and human legacy.
+                        <div style={{ maxWidth: 600, margin: '0 auto 60px' }}>
+                            <p style={{ fontSize: 20, color: '#64748B', lineHeight: 1.6, fontWeight: 300 }}>
+                                We deconstruct the existing and engineer the improbable. 
+                                High-performance systems for the world's most ambitious technology leaders.
                             </p>
-                            
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-                                 {[
-                                    { l: 'NEURAL_THROUGHPUT', v: '1.2TB/S', c: '#8B5CF6' },
-                                    { l: 'ARCHITECTURE_SYNEC_v4', v: 'ACTIVE', c: '#22D3EE' }
-                                 ].map((s, i) => (
-                                     <div key={i} className="glass-prismatic" style={{ padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                         <div className="font-cyber" style={{ fontSize: 8 }}>{s.l}</div>
-                                         <div className="font-cyber" style={{ fontSize: 10, color: s.c }}>{s.v}</div>
-                                     </div>
-                                 ))}
-                            </div>
                         </div>
 
-                        <div style={{ marginTop: 80, display: 'flex', gap: 30, alignItems: 'center' }}>
-                            <button className="btn-beyond">
-                                INITIALIZE_EXPERIENCE <ArrowRight size={18} />
-                            </button>
-                            <div style={{ display: 'flex', gap: 5 }}>
-                                {[1, 2, 3, 4, 5].map(i => <div key={i} style={{ width: 3, height: 3, background: '#1E293B', borderRadius: '50%' }} />)}
+                        <div style={{ display: 'flex', gap: 20, justifyContent: 'center', alignItems: 'center' }}>
+                            <motion.button 
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className="btn-luxe"
+                            >
+                                START SESSION <ArrowRight size={16} />
+                            </motion.button>
+                            
+                            <div className="hide-mobile" style={{ display: 'flex', gap: 10 }}>
+                                {[1, 2, 3].map(i => <div key={i} style={{ width: 4, height: 4, background: '#8B5CF6', borderRadius: '50%', opacity: i * 0.3 }} />)}
                             </div>
                         </div>
                     </motion.div>
                 </div>
 
-                {/* Vertical Decorative Marquee (Tech feel) */}
-                <div style={{ position: 'absolute', right: 40, top: '20%', display: 'flex', gap: 20, opacity: 0.2 }} className="hide-mobile">
-                     <div style={{ writingMode: 'vertical-rl', textOrientation: 'mixed', fontSize: 9, letterSpacing: '0.4em', color: '#4B5563' }}>
-                        SYS_MOD_ALPHA_SYNC_STABLE_COORD_009384_LOG_44
-                     </div>
-                </div>
+                {/* Bottom Indicator */}
+                <motion.div 
+                    animate={{ y: [0, 10, 0] }}
+                    transition={{ repeat: Infinity, duration: 2 }}
+                    style={{ position: 'absolute', bottom: 40, left: '50%', transform: 'translateX(-50%)' }}
+                >
+                    <ChevronDown size={24} style={{ color: '#8B5CF6', opacity: 0.3 }} />
+                </motion.div>
             </div>
         </section>
     );

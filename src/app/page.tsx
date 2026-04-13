@@ -7,20 +7,20 @@ import Services from '../components/Services';
 import Footer from '../components/Footer';
 import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
-import { ArrowRight, Activity, Cpu, Layers, Radio, Sparkles, BrainCircuit } from 'lucide-react';
+import { ArrowRight, Activity, Cpu, Layers, Radio, Sparkles } from 'lucide-react';
 
 const SYSTEM_LOGS = [
-    'NEURAL_PATH_ESTABLISHED',
+    'LUXURY_ENGINE_ONLINE',
+    'PURPLE_SYNC_ESTABLISHED',
     'ARCHITECTING_DIGITAL_LEGACY',
-    'ENTROPY_BUFFER_v4_ACTIVE',
-    'BIONIC_INTEGRATION_SYNCING',
+    'ENTROPY_ZERO_PROTOCOL',
 ];
 
 const METHOD_PIPELINE = [
-    { id: '01', label: 'DECONSTRUCT', sub: 'ANALYZING_SYSTEM_VOIDS', icon: Activity },
-    { id: '02', label: 'ARCHITECT', sub: 'NEURAL_NODE_ENGINEERING', icon: Layers },
-    { id: '03', label: 'EXECUTE', sub: 'PULSING_DATA_INTO_NODES', icon: Cpu },
-    { id: '04', label: 'EVOLVE', sub: 'SYNEC_INTEGRATION_LOOP', icon: Radio },
+    { id: '01', label: 'ANALYZE', sub: 'SYSTEM_DECONSTRUCTION', icon: Activity },
+    { id: '02', label: 'ARCHITECT', sub: 'ENGINEERING_THE_SOLUTION', icon: Layers },
+    { id: '03', label: 'EXECUTE', sub: 'DATA_INJECTION_PULSE', icon: Cpu },
+    { id: '04', label: 'EVOLVE', sub: 'CONTINUOUS_SYNC_LOOP', icon: Radio },
 ];
 
 export default function Home() {
@@ -30,47 +30,41 @@ export default function Home() {
 
     const [logIdx, setLogIdx] = useState(0);
     useEffect(() => {
-        const i = setInterval(() => setLogIdx(p => (p + 1) % SYSTEM_LOGS.length), 2000);
+        const i = setInterval(() => setLogIdx(p => (p + 1) % SYSTEM_LOGS.length), 2500);
         return () => clearInterval(i);
     }, []);
 
-    const trackerScale = useTransform(sProgress, [0, 1], [0, 1]);
-
     return (
-        <main ref={containerRef} style={{ background: '#0a0b14', color: 'white' }}>
+        <main ref={containerRef} style={{ background: 'white', color: 'var(--nex-void)' }}>
             <Navbar />
-            <div className="scroll-tracker" style={{ scaleX: trackerScale }} />
             
-            {/* Luminous Neural HUD (Wow factor) */}
-            <div style={{ position: 'fixed', top: 120, left: 50, zIndex: 100 }} className="hide-mobile">
-                <div style={{ display: 'flex', alignItems: 'center', gap: 15, marginBottom: 20 }}>
-                    <div style={{ width: 40, height: 1, background: '#22D3EE', boxShadow: '0 0 10px #22D3EE' }} />
-                    <span className="font-cyber" style={{ fontSize: 9, letterSpacing: '0.4em', color: '#22D3EE' }}>BIONIC_LINK</span>
-                </div>
-                <div className="glass-prismatic" style={{ padding: '20px', borderRadius: 0 }}>
-                    <AnimatePresence mode="wait">
-                        <motion.div key={logIdx} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }} className="font-cyber" style={{ fontSize: 8, color: 'white' }}>
-                            &gt; {SYSTEM_LOGS[logIdx]}
-                        </motion.div>
-                    </AnimatePresence>
+            {/* LUXURY HUD INTERFACE (Fixed Detail) */}
+            <div style={{ position: 'fixed', bottom: 50, left: 50, zIndex: 100 }} className="hide-mobile">
+                <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+                     <Sparkles size={16} style={{ color: '#8B5CF6' }} />
+                     <div style={{ width: 1, height: 40, background: 'rgba(139,92,246,0.1)' }} />
+                     <AnimatePresence mode="wait">
+                         <motion.div key={logIdx} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }} className="mono" style={{ fontSize: 9 }}>
+                             {SYSTEM_LOGS[logIdx]}
+                         </motion.div>
+                     </AnimatePresence>
                 </div>
             </div>
 
             <Hero />
 
-            {/* THE NEURAL MARQUEE (Beyond Brain visual) */}
+            {/* THE DIRECTIVE (Cinetic Marquee) */}
             <section style={{ 
                 height: '40vh', display: 'flex', alignItems: 'center', 
-                background: '#0a0b14', borderTop: '1px solid rgba(255,255,255,0.05)',
-                borderBottom: '1px solid rgba(255,255,255,0.05)',
+                background: 'white', borderTop: '1px solid rgba(139,92,246,0.05)',
+                borderBottom: '1px solid rgba(139,92,246,0.05)',
                 position: 'relative', overflow: 'hidden' 
             }}>
-                <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 50% 50%, rgba(34,211,238,0.03) 0%, transparent 70%)' }} />
-                <div style={{ display: 'flex', whiteSpace: 'nowrap', gap: 100, animation: 'marquee-rtl 100s linear infinite' }}>
+                <div style={{ display: 'flex', whiteSpace: 'nowrap', gap: 100, animation: 'marquee-rtl 120s linear infinite' }}>
                     {[...Array(6)].map((_, i) => (
                         <div key={i} style={{ display: 'flex', gap: 100, alignItems: 'center' }}>
-                            <h2 className="text-bionic" style={{ fontSize: '120px', fontWeight: 800 }}>BEYOND_THE_BRAIN_</h2>
-                            <h2 style={{ fontSize: '120px', color: '#1E293B', opacity: 0.1, WebkitTextStroke: '2px white' }}>NEXYRRA_CORE_</h2>
+                            <h2 style={{ fontSize: 'clamp(50px, 8vw, 120px)', fontWeight: 900, color: 'var(--nex-void)', letterSpacing: '-0.04em' }}>ARCHITECTURE_FOR_THE_ELITE</h2>
+                            <h2 style={{ fontSize: 'clamp(50px, 8vw, 120px)', fontWeight: 300, color: '#8B5CF6' }}>NEXYRRA_CORE</h2>
                         </div>
                     ))}
                 </div>
@@ -78,39 +72,52 @@ export default function Home() {
 
             <Services />
 
-            {/* THE PIPELINE (Luminous Glass Overlap) */}
-            <section style={{ padding: '200px 0', position: 'relative' }}>
+            {/* THE PIPELINE (Luxury Overlap) */}
+            <section style={{ padding: '240px 0', background: 'white', position: 'relative' }}>
+                <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)' }} className="section-line" />
+                
                 <div className="container-nex">
-                    <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1.5fr', gap: 100 }} className="grid-mobile-1">
+                    <div style={{ display: 'grid', gridTemplateColumns: 'minmax(200px, 1fr) 2fr', gap: 120 }} className="grid-mobile-1">
                         <div>
-                             <div className="font-cyber" style={{ fontSize: 10, letterSpacing: '0.8em', color: '#8B5CF6', marginBottom: 30 }}>METHODOLOGY</div>
-                             <h2 className="text-bionic" style={{ fontSize: 'clamp(40px, 8vw, 100px)', fontWeight: 800, lineHeight: 0.9, letterSpacing: '-0.06em' }}>
+                             <div className="mono" style={{ marginBottom: 30 }}>// PROCESS_DYNAMICS</div>
+                             <h2 style={{ fontSize: 'clamp(40px, 6vw, 84px)', fontWeight: 900, lineHeight: 0.9, letterSpacing: '-0.04em' }}>
                                 THE <br />
-                                <span className="shimmer-text">PROCESS.</span>
+                                <span style={{ color: '#8B5CF6' }}>METHOD.</span>
                              </h2>
-                             <p style={{ marginTop: 40, fontSize: 18, color: '#64748B', lineHeight: 1.8, maxWidth: 400 }}>
-                                A continuous loop of deconstruction and architectural evolution designed for perpetual outcomes.
-                             </p>
                         </div>
 
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                             {METHOD_PIPELINE.map((step, i) => (
                                 <motion.div
                                     key={step.id}
-                                    initial={{ opacity: 0, scale: 0.9, y: 50 }}
-                                    whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                                    initial={{ opacity: 0, x: 40 }}
+                                    whileInView={{ opacity: 1, x: 0 }}
                                     viewport={{ once: true }}
                                     transition={{ delay: i * 0.1, duration: 0.8 }}
-                                    className="glass-prismatic wow-card"
-                                    style={{ padding: '60px 50px', display: 'flex', gap: 40, alignItems: 'center' }}
+                                    style={{ 
+                                        padding: '80px 60px', border: '1px solid rgba(139,92,246,0.05)',
+                                        display: 'grid', gridTemplateColumns: '100px 1fr 1fr', alignItems: 'center',
+                                        background: 'white', transition: 'all 0.4s'
+                                    }}
+                                    onMouseEnter={e => {
+                                        (e.currentTarget as HTMLElement).style.background = 'rgba(139,92,246,0.02)';
+                                        (e.currentTarget as HTMLElement).style.borderColor = 'rgba(139,92,246,0.2)';
+                                    }}
+                                    onMouseLeave={e => {
+                                        (e.currentTarget as HTMLElement).style.background = 'white';
+                                        (e.currentTarget as HTMLElement).style.borderColor = 'rgba(139,92,246,0.05)';
+                                    }}
                                 >
-                                    <div style={{ padding: 15, background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.1)' }}>
-                                        <step.icon size={24} style={{ color: '#22D3EE' }} />
-                                    </div>
+                                    <span className="mono" style={{ fontSize: 14 }}>{step.id}</span>
                                     <div>
-                                        <div className="font-cyber" style={{ fontSize: 9, color: '#8B5CF6', marginBottom: 8 }}>{step.id}_PHASE</div>
-                                        <h3 style={{ fontSize: 32, fontWeight: 800, letterSpacing: '-0.02em', color: 'white' }}>{step.label}</h3>
-                                        <p style={{ fontSize: 11, color: '#4B5563', letterSpacing: '0.1em' }}>{step.sub}</p>
+                                        <h3 style={{ fontSize: 32, fontWeight: 700, color: 'var(--nex-void)' }}>{step.label}</h3>
+                                        <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginTop: 10 }}>
+                                            <div style={{ width: 10, height: 1, background: '#8B5CF6' }} />
+                                            <span style={{ fontSize: 10, color: '#64748B', fontWeight: 600 }}>{step.sub}</span>
+                                        </div>
+                                    </div>
+                                    <div style={{ textAlign: 'right' }}>
+                                        <step.icon size={24} style={{ color: '#8B5CF6', opacity: 0.2 }} />
                                     </div>
                                 </motion.div>
                             ))}
@@ -119,43 +126,27 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* THE MANIFESTO (Prismatic Portal) */}
-            <section style={{ padding: '240px 0', background: '#000', position: 'relative', overflow: 'hidden' }}>
-                <div style={{ position: 'absolute', top: 0, left: 100, width: 600, height: 600, background: 'radial-gradient(circle, rgba(139,92,246,0.1) 0%, transparent 70%)', filter: 'blur(100px)' }} />
-                <div className="container-nex">
-                    <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} style={{ textAlign: 'center' }}>
-                        <BrainCircuit size={80} style={{ color: '#8B5CF6', marginBottom: 60, margin: '0 auto 60px' }} />
-                        <span className="font-cyber" style={{ fontSize: 10, letterSpacing: '0.6em', color: '#22D3EE', marginBottom: 40, display: 'block' }}>CORE_DIRECTIVE_v4.0</span>
-                        <h2 className="text-bionic" style={{ fontSize: 'clamp(40px, 6vw, 84px)', fontWeight: 800, lineHeight: 1.2, letterSpacing: '-0.04em' }}>
-                            WE ARE NOT BUILDING TOOLS.<br />
-                            <span style={{ opacity: 0.2 }}>WE ARE BUILDING INTELLIGENCE.</span><br />
-                            THE ARCHITECTURE OF THE<br />
-                            <span className="shimmer-text">NEXT CIVILIZATION.</span>
-                        </h2>
-                    </motion.div>
-                </div>
-            </section>
-
-            {/* THE FINAL UPLINK (Beyond Imagination) */}
-            <section style={{ height: '110vh', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', background: '#0a0b14' }}>
+            {/* THE FINAL UPLINK (Cinema Scale) */}
+            <section style={{ height: '110vh', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', background: 'white' }}>
                  <motion.div 
-                    initial={{ scale: 0.8, opacity: 0 }}
+                    initial={{ scale: 0.9, opacity: 0 }}
                     whileInView={{ scale: 1, opacity: 1 }}
                     style={{ textAlign: 'center', zIndex: 10 }}
                  >
-                    <span className="font-cyber" style={{ fontSize: 12, letterSpacing: '1em', color: '#8B5CF6', display: 'block', marginBottom: 50 }}>AUTHENTICATION_REQUIRED</span>
-                    <h2 className="text-bionic" style={{ fontSize: 'clamp(60px, 15vw, 240px)', fontWeight: 800, letterSpacing: '-0.08em', marginBottom: 80 }}>
-                        INITIATE.
+                    <div className="mono" style={{ letterSpacing: '1.2em', marginBottom: 60, color: '#8B5CF6' }}>READY_FOR_UPGRADE</div>
+                    <h2 style={{ fontSize: 'clamp(60px, 15vw, 240px)', fontWeight: 900, letterSpacing: '-0.08em', lineHeight: 0.8, color: 'var(--nex-void)' }}>
+                        INITIATE <br />
+                        <span style={{ color: '#8B5CF6' }}>SYNCHRONY_</span>
                     </h2>
-                    <div style={{ marginTop: 20 }}>
-                        <Link href="/contact" className="btn-beyond">
-                            ACCESS_THE_CORE <ArrowRight size={20} />
+                    <div style={{ marginTop: 100 }}>
+                        <Link href="/contact" className="btn-luxe" style={{ padding: '30px 100px', fontSize: 16 }}>
+                            CONNECT TO CORE <ArrowRight size={20} />
                         </Link>
                     </div>
                  </motion.div>
                  
-                 {/* Visual Artifact behind CTA */}
-                 <div style={{ position: 'absolute', width: 1200, height: 1200, background: 'radial-gradient(circle, rgba(139,92,246,0.1) 0%, transparent 70%)', filter: 'blur(150px)', zIndex: 1 }} />
+                 {/* Radial Gradient Glow */}
+                 <div style={{ position: 'absolute', width: 1200, height: 1200, background: 'radial-gradient(circle, rgba(139,92,246,0.05) 0%, transparent 70%)', filter: 'blur(100px)', zIndex: 1 }} />
             </section>
 
             <Footer />

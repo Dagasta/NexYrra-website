@@ -1,13 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Cpu, Box, Workflow, Network, BarChart3, Fingerprint, Activity, Zap } from 'lucide-react';
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Box, Cpu, Workflow, Network, BarChart3, Fingerprint, Zap } from 'lucide-react';
 import { services } from '../lib/services-data';
 
 const Services = () => {
-    const [hovered, setHovered] = useState<string | null>(null);
-
     const icons: any = {
         'custom-software': Box,
         'autonomous-systems': Cpu,
@@ -18,31 +16,24 @@ const Services = () => {
     };
 
     return (
-        <section id="capabilities" style={{ padding: '240px 0', position: 'relative', background: '#07080e' }}>
-            <div className="neural-overlay" style={{ opacity: 0.2 }} />
+        <section id="capabilities" style={{ padding: '240px 0', position: 'relative', background: 'white' }}>
+            <div className="section-line" style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)' }} />
             
-            <div className="container-nex" style={{ position: 'relative', zIndex: 10 }}>
-                {/* Section Header: The Neural Hub */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: 100, marginBottom: 120 }} className="grid-mobile-1">
-                    <div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 15, marginBottom: 20 }}>
-                            <Zap size={14} style={{ color: '#22D3EE' }} />
-                            <span className="font-cyber" style={{ fontSize: 10, letterSpacing: '0.6em', color: '#22D3EE' }}>SYSTEM_MATRIX.v4</span>
-                        </div>
-                        <h2 className="text-bionic" style={{ fontSize: 'clamp(44px, 10vw, 120px)', fontWeight: 800, lineHeight: 0.9, letterSpacing: '-0.07em' }}>
-                            CORE <br />
-                            <span className="shimmer-text">NODES.</span>
-                        </h2>
-                    </div>
-                    <div style={{ alignSelf: 'end' }}>
-                        <p style={{ fontSize: '18px', color: '#64748B', lineHeight: 1.8, fontWeight: 300 }}>
-                            Interconnected functional nodes engineered for absolute system control. 
-                            Our architecture eliminates operational friction through neural-path optimization.
-                        </p>
-                    </div>
+            <div className="container-nex">
+                {/* Header (Elite Clean) */}
+                <div style={{ marginBottom: 120, textAlign: 'center' }}>
+                    <div className="mono" style={{ marginBottom: 20 }}>// NODAL_CAPABILITIES_MATRIX</div>
+                    <h2 style={{ fontSize: 'clamp(44px, 8vw, 100px)', fontWeight: 900, lineHeight: 0.9, color: 'var(--nex-void)' }}>
+                        SYSTEM <br />
+                        <span style={{ color: '#8B5CF6' }}>ARCHITECTURE.</span>
+                    </h2>
+                    <p style={{ marginTop: 40, fontSize: 18, color: '#64748B', maxWidth: 600, margin: '40px auto 0', fontWeight: 300 }}>
+                        High-performance digital foundations designed for absolute operational dominance. 
+                        Interconnected, resilient, and virtually indestructible.
+                    </p>
                 </div>
 
-                {/* THE PRISMATIC GRID (Beyond Brain Layout) */}
+                {/* THE LUXURY BENTO (High interaction) */}
                 <div style={{ 
                     display: 'grid', 
                     gridTemplateColumns: 'repeat(12, 1fr)', 
@@ -58,47 +49,41 @@ const Services = () => {
                         return (
                             <motion.div
                                 key={s.slug}
-                                initial={{ opacity: 0, y: 30 }}
-                                whileInView={{ opacity: 1, y: 0 }}
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                whileInView={{ opacity: 1, scale: 1 }}
                                 viewport={{ once: true }}
                                 transition={{ delay: i * 0.1 }}
                                 style={{ gridColumn: span, position: 'relative' }}
-                                onMouseEnter={() => setHovered(s.slug)}
-                                onMouseLeave={() => setHovered(null)}
                             >
-                                <div className="glass-prismatic h-full wow-card" style={{ padding: '60px', display: 'flex', flexDirection: 'column' }}>
+                                <div className="glass-luxe h-full" style={{ padding: '60px', display: 'flex', flexDirection: 'column', borderRadius: 0 }}>
                                     
-                                    {/* Circuit Line Animation (Fancy detail) */}
-                                    <div className="circuit-line" style={{ top: 10, left: 10, width: hovered === s.slug ? '80%' : '10px', transition: 'width 0.6s' }} />
-                                    <div className="circuit-line" style={{ top: 10, right: 10, height: hovered === s.slug ? '30px' : '0px', width: '1px', transition: 'height 0.6s' }} />
-
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 50 }}>
-                                        <div style={{ width: 64, height: 64, background: 'rgba(255,255,255,0.03)', borderRadius: '20%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(255,255,255,0.1)' }}>
-                                            <Icon size={24} style={{ color: hovered === s.slug ? '#22D3EE' : '#8B5CF6', transition: 'color 0.4s' }} />
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 60, alignItems: 'center' }}>
+                                        <div style={{ padding: 15, background: 'rgba(139,92,246,0.05)', borderRadius: 2 }}>
+                                            <Icon size={24} style={{ color: '#8B5CF6' }} />
                                         </div>
-                                        <span className="font-cyber" style={{ fontSize: 9, color: '#1E293B', fontWeight: 800 }}>NODE_0{i+1}</span>
+                                        <div className="mono" style={{ fontSize: 9, opacity: 0.3 }}>NODE_0{i+1}</div>
                                     </div>
 
                                     <div style={{ flex: 1 }}>
-                                        <h3 className="font-title" style={{ fontSize: 32, fontWeight: 800, marginBottom: 15, letterSpacing: '-0.04em' }}>{s.title}</h3>
-                                        <p style={{ fontSize: 14, color: '#94A3B8', lineHeight: 1.8, maxWidth: 360 }}>
+                                        <h3 style={{ fontSize: 32, fontWeight: 800, color: 'var(--nex-void)', marginBottom: 20, letterSpacing: '-0.04em' }}>{s.title}</h3>
+                                        <p style={{ fontSize: 14, color: '#64748B', lineHeight: 2, maxWidth: 400 }}>
                                             {s.description}
                                         </p>
                                     </div>
 
-                                    {/* Internal Node Pulse (Wow factor) */}
-                                    <div style={{ marginTop: 40, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    {/* Data Stream (Visual Wow) */}
+                                    <div style={{ marginTop: 60, borderTop: '1px solid rgba(139,92,246,0.1)', paddingTop: 30, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                         <div className="mono" style={{ fontSize: 8 }}>LATENCY / OPTIMAL</div>
                                          <div style={{ display: 'flex', gap: 5 }}>
                                              {[...Array(4)].map((_, j) => (
                                                  <motion.div
                                                     key={j}
-                                                    animate={{ opacity: hovered === s.slug ? [0.2, 1, 0.2] : 0.2 }}
-                                                    transition={{ repeat: Infinity, duration: 1.5, delay: j * 0.2 }}
-                                                    style={{ width: 15, height: 1, background: '#22D3EE' }}
+                                                    animate={{ opacity: [0.1, 1, 0.1] }}
+                                                    transition={{ repeat: Infinity, duration: 2, delay: j * 0.2 }}
+                                                    style={{ width: 8, height: 1, background: '#8B5CF6' }}
                                                  />
                                              ))}
                                          </div>
-                                         <span className="font-cyber" style={{ fontSize: 8, color: '#8B5CF6' }}>LATENCY_0.00ms</span>
                                     </div>
                                 </div>
                             </motion.div>
