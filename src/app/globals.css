@@ -1,23 +1,17 @@
-/* ===== PROJECT OMNIS (V1.0) ===== */
-
-@import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Manrope:wght@200;300;400;500;700;800&family=JetBrains+Mono:wght@100;300;400;500&display=swap');
+/* ===== MATRIX NEON V4.0 ===== */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&family=JetBrains+Mono:wght@400;700&display=swap');
 
 :root {
-  /* Brutalist Typography */
-  --font-display: 'Syncopate', sans-serif;
-  --font-text: 'Manrope', sans-serif;
+  --matrix-bg: #06080F;
+  --matrix-cyan: #00F0FF;
+  --matrix-purple: #9D00FF;
+  --matrix-blue: #0066FF;
+  
+  --font-logo: 'Outfit', sans-serif;
+  --font-display: 'Outfit', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
   
-  /* Project Omnis Palette */
-  --omnis-obsidian: #000000;
-  --omnis-void: #050505;
-  --omnis-white: #FFFFFF;
-  --omnis-chrome: #E2E8F0;
-  --omnis-uv: #6D28D9;
-  --omnis-uv-glow: rgba(109, 40, 217, 0.4);
-  
-  /* Spatial Physics */
-  --ease-omnis: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-snappy: cubic-bezier(0.19, 1, 0.22, 1);
 }
 
 * {
@@ -26,95 +20,122 @@
   padding: 0;
 }
 
-html, body, #__next {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  background-color: var(--omnis-obsidian);
-  color: var(--omnis-white);
-  font-family: var(--font-text);
-  overflow: hidden; /* Scroll is handled visually by Three.js/ScrollControls */
-  -webkit-font-smoothing: antialiased;
-  overscroll-behavior: none;
-}
-
-/* 
-  Since the entire site is an infinite Z-Axis canvas,
-  HTML overlays will sit absolutely on top of the WebGL canvas
-*/
-.spatial-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none; /* Let clicks pass through to 3D canvas by default */
-  z-index: 10;
-}
-
-.interactive-node {
-  pointer-events: auto; /* Re-enable for buttons/forms */
-}
-
-/* Typography Overhauls */
-h1, h2, h3 {
+html, body {
+  background-color: var(--matrix-bg);
+  color: #FFFFFF;
   font-family: var(--font-display);
-  text-transform: uppercase;
-  letter-spacing: -0.02em;
-  line-height: 0.9;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
-.mono-stamp {
+/* THE TECH GRID BACKGROUND */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+  z-index: -2;
+  pointer-events: none;
+}
+
+/* CUSTOM SCROLLBAR */
+::-webkit-scrollbar {
+  width: 8px;
+  background: var(--matrix-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+/* TYPOGRAPHY */
+.giant-heading {
+  font-weight: 900;
+  font-size: clamp(60px, 12vw, 150px);
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+
+.sub-mono {
   font-family: var(--font-mono);
   font-size: 10px;
-  letter-spacing: 0.2em;
+  font-weight: 700;
+  letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: var(--omnis-chrome);
-  opacity: 0.5;
+  color: #A0A0A0;
 }
 
-/* Chrome Button */
-.btn-chrome {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: var(--omnis-white);
-  padding: 20px 40px;
-  font-family: var(--font-display);
+/* GRADIENTS & GLOWS */
+.text-gradient-cyan {
+  background: linear-gradient(180deg, #FFFFFF 0%, #00F0FF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+.text-gradient-purple {
+  background: linear-gradient(180deg, #FFFFFF 0%, #9D00FF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+.text-gradient-pure {
+  background: linear-gradient(135deg, var(--matrix-cyan), var(--matrix-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-glow-hard {
+  text-shadow: 0 0 20px rgba(0, 240, 255, 0.4), 0 0 40px rgba(0, 240, 255, 0.2);
+}
+
+.text-glow-purple {
+  text-shadow: 0 0 30px rgba(157, 0, 255, 0.5);
+}
+
+/* BUTTONS */
+.btn-matrix {
+  background: linear-gradient(90deg, #00F0FF, #9D00FF);
+  color: #FFFFFF;
+  padding: 12px 30px;
+  font-family: var(--font-mono);
   font-weight: 700;
-  font-size: 12px;
+  font-size: 11px;
   letter-spacing: 0.2em;
   cursor: pointer;
-  transition: all 0.5s var(--ease-omnis);
-  position: relative;
-  overflow: hidden;
+  border: none;
+  transition: all 0.3s var(--ease-snappy);
   text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.1);
 }
 
-.btn-chrome::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.2), transparent);
-  transform: translateX(-100%);
-  transition: transform 0.6s var(--ease-omnis);
+.btn-matrix:hover {
+  box-shadow: 0 0 30px rgba(0, 240, 255, 0.4);
+  transform: translateY(-2px);
 }
 
-.btn-chrome:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.3);
-  box-shadow: 0 0 40px var(--omnis-uv-glow);
+/* COMPONENT WRAPPERS */
+.container {
+  width: min(90%, 1400px);
+  margin: 0 auto;
 }
 
-.btn-chrome:hover::after {
-  transform: translateX(100%);
+.nav-hud {
+  background: rgba(6, 8, 15, 0.7);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Global utility */
-.glass-chrome {
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(30px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+/* MARQUEE STROKE TEXT */
+.text-stroke {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255,255,255,0.1);
 }
