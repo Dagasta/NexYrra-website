@@ -1,27 +1,32 @@
 import React from 'react';
-import NeonHero from '../components/NeonHero';
-import MatrixNodes from '../components/MatrixNodes';
-import MatrixServices from '../components/MatrixServices';
-import NeonPlayground from '../components/NeonPlayground';
-import MatrixFooter from '../components/MatrixFooter';
+import OSNavbar from '../components/OSNavbar';
+import OSHero from '../components/OSHero';
+import AICapabilities from '../components/AICapabilities';
+import WhatWeBuild from '../components/WhatWeBuild';
+import ServicesOS from '../components/ServicesOS';
+import LiveDashboard from '../components/LiveDashboard';
+import CaseStudies from '../components/CaseStudies';
+import WhyUs from '../components/WhyUs';
+import ClientJourney from '../components/ClientJourney';
+import FinalCTA from '../components/FinalCTA';
+import OSFooter from '../components/OSFooter';
+import AIChatWidget from '../components/AIChatWidget';
 
 export default function Home() {
     return (
         <main>
-            {/* The Top Hero strictly matching Image 1 */}
-            <NeonHero />
-            
-            {/* The Marquee and Node grid strictly matching Image 2 */}
-            <MatrixNodes />
-
-            {/* The expanded services returning the core content to the site */}
-            <MatrixServices />
-
-            {/* The functional terminal playground */}
-            <NeonPlayground />
-            
-            {/* The contact & navigation footer */}
-            <MatrixFooter />
+            <OSNavbar />
+            <OSHero />
+            <AICapabilities />
+            <WhatWeBuild />
+            <ServicesOS />
+            <LiveDashboard />
+            <CaseStudies />
+            <WhyUs />
+            <ClientJourney />
+            <FinalCTA />
+            <OSFooter />
+            <AIChatWidget />
         </main>
     );
 }
