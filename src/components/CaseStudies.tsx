@@ -146,7 +146,7 @@ export default function CaseStudies() {
 
                 {/* Link to Cases Page */}
                 <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.5 }} style={{ marginTop: 40, textAlign: 'center' }}>
-                    <Link href="/cases" style={{ textDecoration: 'none' }}>
+                    <Link href="/cases" style={{ textDecoration: 'none' }} title="Access the complete Nexyrra technology project ledger">
                         <button className="btn-os-outline" style={{ fontSize: 12, borderRadius: 4, display: 'inline-flex', alignItems: 'center', gap: 8 }}>
                             ACCESS_FULL_LEDGER <ChevronRight size={14} />
                         </button>

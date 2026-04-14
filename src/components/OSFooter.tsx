@@ -27,7 +27,7 @@ export default function OSFooter() {
                         <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', marginBottom: 24 }}>
                             <motion.img
                                 src="/assets/logo.png"
-                                alt="Nexyrra"
+                                alt="Nexyrra — Technology Architecture & AI Systems"
                                 style={{ width: 32, height: 32, objectFit: 'contain' }}
                                 animate={{ filter: ['drop-shadow(0 0 5px #8A2BE2)', 'drop-shadow(0 0 12px #8A2BE2)', 'drop-shadow(0 0 5px #8A2BE2)'] }}
                                 transition={{ repeat: Infinity, duration: 3 }}
@@ -39,7 +39,7 @@ export default function OSFooter() {
 
                         <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.28)', lineHeight: 1.9, maxWidth: 300, fontFamily: 'var(--font-mono)', marginBottom: 28 }}>
                             // NEXYRRA_SYSTEMS_v3.0<br />
-                            // AI AGENCY — DUBAI, UAE 🇦🇪<br />
+                            // TECHNOLOGY & AI AGENCY — DUBAI, UAE 🇦🇪<br />
                             // STATUS: OPERATIONAL
                         </p>
 
@@ -68,8 +68,8 @@ export default function OSFooter() {
                                     href={href}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    aria-label={label}
-                                    title={label}
+                                    aria-label={`Follow Nexyrra on ${label}`}
+                                    title={`Nexyrra on ${label}`}
                                     style={{
                                         width: 40, height: 40, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center',
                                         background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',

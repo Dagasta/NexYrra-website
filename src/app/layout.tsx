@@ -5,8 +5,24 @@ import SystemInit from '../components/SystemInit';
 import WhatsAppButton from '../components/WhatsAppButton';
 
 export const metadata: Metadata = {
+    metadataBase: new URL('https://nexyrra.com'),
     title: 'Nexyrra | Technology Operating System — Dubai, UAE',
     description: 'Nexyrra architects advanced software ecosystems, custom technology infrastructure, and autonomous AI solutions for enterprise leaders globally.',
+    keywords: [
+        'Technology Operating System',
+        'Bespoke Software Engineering Dubai',
+        'AI Agency UAE',
+        'Enterprise Automation Systems',
+        'Technology Architecture',
+        'Autonomous AI Agents',
+        'Digital Transformation Dubai',
+        'Custom Software Development Middle East',
+        'Next-Gen Workflow Automation',
+        'Intelligent Digital Infrastructure'
+    ],
+    alternates: {
+        canonical: '/',
+    },
     robots: 'index, follow',
     openGraph: {
         type: 'website',
@@ -36,9 +52,51 @@ export const viewport: Viewport = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+    const jsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'ProfessionalService',
+        'name': 'Nexyrra',
+        'image': 'https://nexyrra.com/assets/logo.png',
+        '@id': 'https://nexyrra.com',
+        'url': 'https://nexyrra.com',
+        'telephone': '+971503953988',
+        'address': {
+            '@type': 'PostalAddress',
+            'streetAddress': 'Dubai Silicon Oasis',
+            'addressLocality': 'Dubai',
+            'addressRegion': 'Dubai',
+            'addressCountry': 'AE'
+        },
+        'geo': {
+            '@type': 'GeoCoordinates',
+            'latitude': 25.1228,
+            'longitude': 55.3857
+        },
+        'openingHoursSpecification': {
+            '@type': 'OpeningHoursSpecification',
+            'dayOfWeek': [
+                'Monday',
+                'Tuesday',
+                'Wednesday',
+                'Thursday',
+                'Friday'
+            ],
+            'opens': '09:00',
+            'closes': '18:00'
+        },
+        'sameAs': [
+            'https://x.com/nexyrra',
+            'https://www.linkedin.com/company/nexyrra/'
+        ]
+    };
+
     return (
         <html lang="en" suppressHydrationWarning>
             <head>
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+                />
                 <link rel="preconnect" href="https://fonts.googleapis.com" />
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
                 <link

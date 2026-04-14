@@ -123,6 +123,7 @@ export default function ServicesOS() {
                                 href="/services" 
                                 key={item.title} 
                                 style={{ textDecoration: 'none' }}
+                                title={`Learn more about our ${item.title} services`}
                             >
                                 <motion.div
                                     initial={{ opacity: 0, x: -16 }}
