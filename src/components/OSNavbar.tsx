@@ -60,7 +60,7 @@ export default function OSNavbar() {
                         <span style={{
                             fontFamily: 'var(--font-mono)', fontSize: 9, color: 'rgba(138,43,226,0.6)',
                             letterSpacing: '0.2em', marginLeft: 4, marginTop: 2,
-                        }}>OS_v3</span>
+                        }}>TECH_ARCH_v3</span>
                     </Link>
 
                     {/* Desktop Links */}

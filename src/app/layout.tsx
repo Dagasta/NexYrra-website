@@ -5,22 +5,22 @@ import SystemInit from '../components/SystemInit';
 import WhatsAppButton from '../components/WhatsAppButton';
 
 export const metadata: Metadata = {
-    title: 'Nexyrra | AI Operating System — Dubai, UAE',
-    description: 'Nexyrra architects autonomous AI ecosystems, workflow automation, and intelligent digital infrastructure for enterprise leaders across the UAE and globally.',
+    title: 'Nexyrra | Technology Operating System — Dubai, UAE',
+    description: 'Nexyrra architects advanced software ecosystems, custom technology infrastructure, and autonomous AI solutions for enterprise leaders globally.',
     robots: 'index, follow',
     openGraph: {
         type: 'website',
         locale: 'en_US',
         url: 'https://nexyrra.com/',
         siteName: 'Nexyrra',
-        title: 'Nexyrra | AI Operating System',
-        description: 'Building Intelligence Into Everything — AI Agency Dubai, UAE',
+        title: 'Nexyrra | Technology Operating System',
+        description: 'Building the Future of Technology — Software & AI Agency Dubai, UAE',
         images: [{ url: '/assets/og-image.png', width: 1200, height: 630 }],
     },
     twitter: {
         card: 'summary_large_image',
-        title: 'Nexyrra | AI Operating System',
-        description: 'Building Intelligence Into Everything — AI Agency Dubai, UAE',
+        title: 'Nexyrra | Technology Operating System',
+        description: 'Building the Future of Technology — Software & AI Agency Dubai, UAE',
         images: ['/assets/og-image.png'],
     },
     icons: {

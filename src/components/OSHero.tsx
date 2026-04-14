@@ -253,13 +253,13 @@ export default function OSHero() {
                         transition={{ duration: 1, delay: 0.6, ease: [0.19, 1, 0.22, 1] }}
                         style={{ fontSize: 'clamp(48px, 7.5vw, 110px)', lineHeight: 1, marginBottom: 32, fontFamily: 'var(--font-display)' }}
                     >
-                        Building
+                        Architecting
                         <br />
                         <span className="gradient-purple-cyan glow-purple" style={{ display: 'inline-block', paddingRight: 8 }}>
-                            Intelligence
+                            The Future
                         </span>
                         <br />
-                        Into Everything
+                        Of Technology
                     </motion.h1>
                 </motion.div>
 
@@ -270,8 +270,8 @@ export default function OSHero() {
                     transition={{ duration: 0.9, delay: 0.85, ease: [0.19, 1, 0.22, 1] }}
                     style={{ fontSize: 'clamp(16px, 1.6vw, 20px)', color: 'var(--text-dim)', lineHeight: 1.75, maxWidth: 560, marginBottom: 52, fontWeight: 300 }}
                 >
-                    We design AI systems, software infrastructure, and digital ecosystems that{' '}
-                    <span style={{ color: 'white', fontWeight: 500 }}>scale beyond human limits.</span>
+                    We design advanced software infrastructure, high-fidelity technology ecosystems, and AI-powered digital assets that{' '}
+                    <span style={{ color: 'white', fontWeight: 500 }}>define the edge of innovation.</span>
                 </motion.p>
 
                 {/* CTAs */}
