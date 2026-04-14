@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Layers, Database, Cog, Users, BarChart2, Globe, Network } from 'lucide-react';
 
+import { useRouter } from 'next/navigation';
+
 const MODULES = [
     { icon: Layers,    id: 'saas',    title: 'AI SaaS Platforms',             desc: 'Full-stack SaaS products powered by AI — from MVP to enterprise-grade with multi-tenancy, billing, and scaling architecture built in.',                               color: '#8A2BE2' },
     { icon: Cog,       id: 'custom',  title: 'Custom Software Systems',        desc: 'Bespoke software tailored to your operational reality. No templates. No shortcuts. Engineered to outlast every competitor.',                                              color: '#00FFFF' },
@@ -28,10 +30,14 @@ function HoloFlash() {
 export default function WhatWeBuild() {
     const [flashing, setFlashing] = useState<string | null>(null);
     const [hov, setHov] = useState<string | null>(null);
+    const router = useRouter();
 
     const trigger = (id: string) => {
         setFlashing(id);
-        setTimeout(() => setFlashing(null), 600);
+        setTimeout(() => {
+            setFlashing(null);
+            router.push('/services');
+        }, 300);
     };
 
     return (

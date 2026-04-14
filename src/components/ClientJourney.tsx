@@ -3,6 +3,7 @@
 import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Search, Cpu, Rocket, TrendingUp } from 'lucide-react';
+import Link from 'next/link';
 
 const STAGES = [
     { id: '01', icon: Search,     title: 'DISCOVERY',   color: '#8A2BE2', desc: 'Deep-dive into your operations. We map your processes, identify AI opportunities, and define measurable outcomes.',           sub: '1–2 Weeks' },
@@ -44,48 +45,54 @@ export default function ClientJourney() {
                         {STAGES.map((stage, i) => {
                             const Icon = stage.icon;
                             return (
-                                <motion.div
-                                    key={stage.id}
-                                    initial={{ opacity: 0, y: 30 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ duration: 0.7, delay: i * 0.12, ease: [0.19, 1, 0.22, 1] }}
-                                    style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
+                                <Link 
+                                    href="/contact" 
+                                    key={stage.id} 
+                                    style={{ textDecoration: 'none' }}
                                 >
-                                    {/* Icon node */}
-                                    <div style={{
-                                        width: 56, height: 56,
-                                        borderRadius: '50%',
-                                        background: `${stage.color}14`,
-                                        border: `2px solid ${stage.color}60`,
-                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                        marginBottom: 24, position: 'relative',
-                                        boxShadow: `0 0 20px ${stage.color}25`,
-                                        flexShrink: 0,
-                                    }}>
-                                        <Icon size={22} color={stage.color} />
-                                        {/* Outer pulse ring */}
-                                        <motion.div
-                                            animate={{ scale: [1, 1.5, 1], opacity: [0.4, 0, 0.4] }}
-                                            transition={{ repeat: Infinity, duration: 3, delay: i * 0.6 }}
-                                            style={{ position: 'absolute', inset: -6, borderRadius: '50%', border: `1px solid ${stage.color}40` }}
-                                        />
-                                    </div>
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 30 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        viewport={{ once: true }}
+                                        transition={{ duration: 0.7, delay: i * 0.12, ease: [0.19, 1, 0.22, 1] }}
+                                        style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', cursor: 'pointer' }}
+                                        whileHover={{ y: -8 }}
+                                    >
+                                        {/* Icon node */}
+                                        <div style={{
+                                            width: 56, height: 56,
+                                            borderRadius: '50%',
+                                            background: `${stage.color}14`,
+                                            border: `2px solid ${stage.color}60`,
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                            marginBottom: 24, position: 'relative',
+                                            boxShadow: `0 0 20px ${stage.color}25`,
+                                            flexShrink: 0,
+                                        }}>
+                                            <Icon size={22} color={stage.color} />
+                                            {/* Outer pulse ring */}
+                                            <motion.div
+                                                animate={{ scale: [1, 1.5, 1], opacity: [0.4, 0, 0.4] }}
+                                                transition={{ repeat: Infinity, duration: 3, delay: i * 0.6 }}
+                                                style={{ position: 'absolute', inset: -6, borderRadius: '50%', border: `1px solid ${stage.color}40` }}
+                                            />
+                                        </div>
 
-                                    {/* Stage label */}
-                                    <div style={{ marginBottom: 6 }}>
-                                        <span className="mono" style={{ fontSize: 8, color: stage.color, letterSpacing: '0.2em' }}>PHASE_{stage.id}</span>
-                                    </div>
-                                    <h3 style={{ fontSize: 15, fontWeight: 700, fontFamily: 'var(--font-display)', color: 'white', marginBottom: 12, letterSpacing: '0.04em' }}>
-                                        {stage.title}
-                                    </h3>
-                                    <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', lineHeight: 1.65, fontWeight: 300, marginBottom: 14 }}>
-                                        {stage.desc}
-                                    </p>
-                                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: stage.color, border: `1px solid ${stage.color}30`, padding: '3px 10px', borderRadius: 20 }}>
-                                        {stage.sub}
-                                    </span>
-                                </motion.div>
+                                        {/* Stage label */}
+                                        <div style={{ marginBottom: 6 }}>
+                                            <span className="mono" style={{ fontSize: 8, color: stage.color, letterSpacing: '0.2em' }}>PHASE_{stage.id}</span>
+                                        </div>
+                                        <h3 style={{ fontSize: 15, fontWeight: 700, fontFamily: 'var(--font-display)', color: 'white', marginBottom: 12, letterSpacing: '0.04em' }}>
+                                            {stage.title}
+                                        </h3>
+                                        <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', lineHeight: 1.65, fontWeight: 300, marginBottom: 14 }}>
+                                            {stage.desc}
+                                        </p>
+                                        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: stage.color, border: `1px solid ${stage.color}30`, padding: '3px 10px', borderRadius: 20 }}>
+                                            {stage.sub}
+                                        </span>
+                                    </motion.div>
+                                </Link>
                             );
                         })}
                     </div>

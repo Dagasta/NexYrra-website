@@ -144,10 +144,28 @@ export default function FinalCTA() {
                 </motion.div>
 
                 {/* Trust line */}
-                <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.7 }} style={{ marginTop: 48, display: 'flex', justifyContent: 'center', gap: 32, flexWrap: 'wrap' }}>
-                    {['Dubai, UAE 🇦🇪', '+971 50 395 3988', 'nexyrra.com'].map(t => (
-                        <span key={t} className="mono" style={{ fontSize: 9, color: 'rgba(255,255,255,0.2)', letterSpacing: '0.15em' }}>{t}</span>
-                    ))}
+                <motion.div 
+                    initial={{ opacity: 0 }} 
+                    whileInView={{ opacity: 1 }} 
+                    viewport={{ once: true }} 
+                    transition={{ delay: 0.7 }} 
+                    style={{ marginTop: 48, display: 'flex', justifyContent: 'center', gap: 32, flexWrap: 'wrap' }}
+                >
+                    <Link href="/contact" style={{ textDecoration: 'none' }}>
+                        <span className="mono" style={{ fontSize: 9, color: 'rgba(255,255,255,0.2)', letterSpacing: '0.15em', cursor: 'pointer', transition: 'color 0.2s' }} onMouseEnter={e => e.currentTarget.style.color = 'white'} onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.2)'}>
+                            Dubai, UAE 🇦🇪
+                        </span>
+                    </Link>
+                    <a href="tel:+971503953988" style={{ textDecoration: 'none' }}>
+                        <span className="mono" style={{ fontSize: 9, color: 'rgba(255,255,255,0.2)', letterSpacing: '0.15em', cursor: 'pointer', transition: 'color 0.2s' }} onMouseEnter={e => e.currentTarget.style.color = 'white'} onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.2)'}>
+                            +971 50 395 3988
+                        </span>
+                    </a>
+                    <Link href="/" style={{ textDecoration: 'none' }}>
+                        <span className="mono" style={{ fontSize: 9, color: 'rgba(255,255,255,0.2)', letterSpacing: '0.15em', cursor: 'pointer', transition: 'color 0.2s' }} onMouseEnter={e => e.currentTarget.style.color = 'white'} onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.2)'}>
+                            nexyrra.com
+                        </span>
+                    </Link>
                 </motion.div>
             </div>
 

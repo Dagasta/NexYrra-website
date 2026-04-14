@@ -108,51 +108,55 @@ function ParticleCanvas() {
 }
 
 /* ── FLOATING HUD PANEL ──────────────────────────── */
-function HUDPanel({ title, value, sub, icon: Icon, delay, style }: any) {
+function HUDPanel({ title, value, sub, icon: Icon, delay, style, href = "/services" }: any) {
     return (
-        <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.92 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 1, delay, ease: [0.19, 1, 0.22, 1] }}
-            style={{
-                position: 'absolute',
-                ...style,
-                background: 'rgba(8,5,16,0.75)',
-                backdropFilter: 'blur(20px)',
-                border: '1px solid rgba(138,43,226,0.2)',
-                borderRadius: 8,
-                padding: '14px 18px',
-                minWidth: 160,
-                zIndex: 5,
-                animation: `float-${delay > 1 ? 'down' : 'up'} ${3 + delay}s ease-in-out infinite`,
-            }}
-        >
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                <Icon size={13} color="var(--neon-cyan)" />
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.15em', color: 'rgba(0,255,255,0.6)', textTransform: 'uppercase' }}>
-                    {title}
-                </span>
-            </div>
-            <div style={{ fontSize: 22, fontWeight: 800, fontFamily: 'var(--font-display)', color: 'white', letterSpacing: '-0.02em', marginBottom: 4 }}>
-                {value}
-            </div>
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: 'rgba(255,255,255,0.25)', letterSpacing: '0.1em' }}>
-                {sub}
-            </div>
-            {/* Mini bar */}
-            <div style={{ marginTop: 10, display: 'flex', gap: 2, alignItems: 'flex-end', height: 20 }}>
-                {[0.4, 0.7, 0.5, 1, 0.6, 0.8, 0.9, 0.5].map((h, i) => (
-                    <motion.div
-                        key={i}
-                        animate={{ height: [`${h * 100}%`, `${Math.min(1, h + 0.3) * 100}%`, `${h * 100}%`] }}
-                        transition={{ repeat: Infinity, duration: 1.2 + i * 0.15, ease: 'easeInOut' }}
-                        style={{ flex: 1, background: 'var(--neon-purple)', opacity: 0.5, borderRadius: 1 }}
-                    />
-                ))}
-            </div>
-            {/* glow border top */}
-            <div style={{ position: 'absolute', top: 0, left: '20%', right: '20%', height: 1, background: 'linear-gradient(90deg,transparent,var(--neon-cyan),transparent)', opacity: 0.5 }} />
-        </motion.div>
+        <Link href={href} style={{ textDecoration: 'none' }}>
+            <motion.div
+                initial={{ opacity: 0, y: 20, scale: 0.92 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 1, delay, ease: [0.19, 1, 0.22, 1] }}
+                style={{
+                    position: 'absolute',
+                    ...style,
+                    background: 'rgba(8,5,16,0.75)',
+                    backdropFilter: 'blur(20px)',
+                    border: '1px solid rgba(138,43,226,0.2)',
+                    borderRadius: 8,
+                    padding: '14px 18px',
+                    minWidth: 160,
+                    zIndex: 5,
+                    cursor: 'pointer',
+                    animation: `float-${delay > 1 ? 'down' : 'up'} ${3 + delay}s ease-in-out infinite`,
+                }}
+                whileHover={{ scale: 1.05, borderColor: 'var(--neon-cyan)', boxShadow: '0 0 20px rgba(0,255,255,0.2)' }}
+            >
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                    <Icon size={13} color="var(--neon-cyan)" />
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.15em', color: 'rgba(0,255,255,0.6)', textTransform: 'uppercase' }}>
+                        {title}
+                    </span>
+                </div>
+                <div style={{ fontSize: 22, fontWeight: 800, fontFamily: 'var(--font-display)', color: 'white', letterSpacing: '-0.02em', marginBottom: 4 }}>
+                    {value}
+                </div>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: 'rgba(255,255,255,0.25)', letterSpacing: '0.1em' }}>
+                    {sub}
+                </div>
+                {/* Mini bar */}
+                <div style={{ marginTop: 10, display: 'flex', gap: 2, alignItems: 'flex-end', height: 20 }}>
+                    {[0.4, 0.7, 0.5, 1, 0.6, 0.8, 0.9, 0.5].map((h, i) => (
+                        <motion.div
+                            key={i}
+                            animate={{ height: [`${h * 100}%`, `${Math.min(1, h + 0.3) * 100}%`, `${h * 100}%`] }}
+                            transition={{ repeat: Infinity, duration: 1.2 + i * 0.15, ease: 'easeInOut' }}
+                            style={{ flex: 1, background: 'var(--neon-purple)', opacity: 0.5, borderRadius: 1 }}
+                        />
+                    ))}
+                </div>
+                {/* glow border top */}
+                <div style={{ position: 'absolute', top: 0, left: '20%', right: '20%', height: 1, background: 'linear-gradient(90deg,transparent,var(--neon-cyan),transparent)', opacity: 0.5 }} />
+            </motion.div>
+        </Link>
     );
 }
 
@@ -202,6 +206,7 @@ export default function OSHero() {
                 icon={BarChart2}
                 delay={1.2}
                 style={{ top: '18%', right: 'clamp(20px, 6vw, 80px)' }}
+                href="/signals"
             />
             <HUDPanel
                 title="Market Intelligence"
@@ -210,6 +215,7 @@ export default function OSHero() {
                 icon={Activity}
                 delay={1.6}
                 style={{ top: '42%', right: 'clamp(20px, 5vw, 40px)' }}
+                href="/signals"
             />
             <HUDPanel
                 title="AI Automation"
@@ -218,6 +224,7 @@ export default function OSHero() {
                 icon={Cpu}
                 delay={2.0}
                 style={{ bottom: '18%', right: 'clamp(20px, 8vw, 120px)' }}
+                href="/cases"
             />
 
             {/* ── MAIN CONTENT ─────────────────────── */}
@@ -238,7 +245,7 @@ export default function OSHero() {
 
                 {/* Headline */}
                 <motion.div
-                    style={{ rotateX, rotateY, transformStyle: 'preserve-3d', perspective: 1200 }}
+                    style={{ rotateX: rotX, rotateY: rotY, transformStyle: 'preserve-3d', perspective: 1200 }}
                 >
                     <motion.h1
                         initial={{ opacity: 0, y: 40 }}
@@ -294,18 +301,23 @@ export default function OSHero() {
                     style={{ display: 'flex', gap: 48, marginTop: 72, flexWrap: 'wrap' }}
                 >
                     {[
-                        { val: '500+', lab: 'SYSTEMS DEPLOYED' },
-                        { val: '340%', lab: 'AVG CLIENT ROI' },
-                        { val: '99.9%', lab: 'UPTIME GUARANTEE' },
+                        { val: '500+', lab: 'SYSTEMS DEPLOYED', href: '/cases' },
+                        { val: '340%', lab: 'AVG CLIENT ROI', href: '/cases' },
+                        { val: '99.9%', lab: 'UPTIME GUARANTEE', href: '/about' },
                     ].map(s => (
-                        <div key={s.val}>
-                            <div style={{ fontSize: 'clamp(28px, 3.5vw, 42px)', fontWeight: 800, fontFamily: 'var(--font-display)', background: 'linear-gradient(135deg,#fff,rgba(255,255,255,0.6))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', lineHeight: 1 }}>
-                                {s.val}
-                            </div>
-                            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.2em', color: 'rgba(255,255,255,0.25)', marginTop: 6 }}>
-                                {s.lab}
-                            </div>
-                        </div>
+                        <Link href={s.href} key={s.val} style={{ textDecoration: 'none' }}>
+                            <motion.div 
+                                style={{ cursor: 'pointer' }}
+                                whileHover={{ y: -5 }}
+                            >
+                                <div style={{ fontSize: 'clamp(28px, 3.5vw, 42px)', fontWeight: 800, fontFamily: 'var(--font-display)', background: 'linear-gradient(135deg,#fff,rgba(255,255,255,0.6))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', lineHeight: 1 }}>
+                                    {s.val}
+                                </div>
+                                <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.2em', color: 'rgba(255,255,255,0.25)', marginTop: 6 }}>
+                                    {s.lab}
+                                </div>
+                            </motion.div>
+                        </Link>
                     ))}
                 </motion.div>
             </div>

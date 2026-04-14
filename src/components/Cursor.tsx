@@ -52,32 +52,35 @@ export default function Cursor() {
                         translateX: '-50%', translateY: '-50%'
                     }}
                 >
-                    {/* The $60k Reticle */}
                     <div style={{ position: 'relative', width: 40, height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         
-                        {/* Crosshair */}
-                        <div style={{ position: 'absolute', width: '100%', height: 1, background: isPointer ? 'var(--nex-accent)' : 'rgba(255,255,255,0.2)' }} />
-                        <div style={{ position: 'absolute', height: '100%', width: 1, background: isPointer ? 'var(--nex-accent)' : 'rgba(255,255,255,0.2)' }} />
-                        
-                        {/* Orbiting Points */}
+                        {/* Center Dot */}
                         <motion.div 
-                            animate={{ rotate: 360 }}
-                            transition={{ repeat: Infinity, duration: 4, ease: "linear" }}
-                            style={{ position: 'absolute', width: 50, height: 50, border: '1px dashed rgba(255,255,255,0.1)', borderRadius: '50%' }} 
+                            animate={{ scale: isPointer ? 1.5 : 1, backgroundColor: isPointer ? 'var(--neon-cyan)' : 'white' }}
+                            style={{ position: 'absolute', width: 4, height: 4, borderRadius: '50%', zIndex: 10 }}
+                        />
+                        
+                        {/* Hover Ring */}
+                        <motion.div 
+                            animate={{ scale: isPointer ? 1.5 : 1, opacity: isPointer ? 1 : 0 }}
+                            style={{ position: 'absolute', width: 60, height: 60, border: '1px solid var(--neon-cyan)', borderRadius: '50%', boxShadow: '0 0 10px rgba(0,255,255,0.5)' }}
                         />
 
-                        {/* Coordinate Box (The Wow Detail) */}
-                        <div style={{
-                            position: 'absolute', top: 40, left: 40,
-                            padding: '10px', background: 'rgba(0,0,0,0.8)',
-                            border: '1px solid rgba(255,255,255,0.05)',
-                            display: 'flex', flexDirection: 'column', gap: 4
-                        }}>
-                            <div className="mono" style={{ fontSize: 6, color: 'var(--nex-accent)', letterSpacing: '0.1em' }}>NX_COORD_LOCK</div>
-                            <div className="mono" style={{ fontSize: 7, color: 'white' }}>X: {Math.round(coords.x)}</div>
-                            <div className="mono" style={{ fontSize: 7, color: 'white' }}>Y: {Math.round(coords.y)}</div>
-                            {isPointer && <div className="mono" style={{ fontSize: 6, color: 'var(--nex-cyan)', marginTop: 5 }}>[ PTR_READY ]</div>}
-                        </div>
+                        {/* Coordinate Box (The Wow Detail - refined to be sleeker) */}
+                        <motion.div 
+                            animate={{ opacity: isPointer ? 0 : 0.6 }}
+                            style={{
+                                position: 'absolute', top: 30, left: 30,
+                                padding: '6px 8px', background: 'rgba(10,5,20,0.8)',
+                                border: '1px solid rgba(255,255,255,0.1)',
+                                borderLeft: '2px solid var(--neon-purple)',
+                                display: 'flex', flexDirection: 'column', gap: 2,
+                                pointerEvents: 'none', backdropFilter: 'blur(4px)'
+                            }}
+                        >
+                            <div className="mono" style={{ fontSize: 7, color: 'var(--neon-purple)', letterSpacing: '0.1em' }}>[ PTR_TRACK ]</div>
+                            <div className="mono" style={{ fontSize: 8, color: 'white' }}>X: {Math.round(coords.x)} // Y: {Math.round(coords.y)}</div>
+                        </motion.div>
                     </div>
                 </motion.div>
             )}

@@ -14,9 +14,11 @@ const CAPS = [
     { icon: Workflow, id: 'biz', title: 'AI Business Automation', color: '#4D9FFF', tag: 'MOD_07', desc: 'End-to-end process automation: CRM updates, lead scoring, invoice processing, scheduling, and reporting — all autonomous.' },
 ];
 
+import { useRouter } from 'next/navigation';
+
 export default function AICapabilities() {
     const [hovered, setHovered] = useState<string | null>(null);
-    const [expanded, setExpanded] = useState<string | null>(null);
+    const router = useRouter();
 
     return (
         <section style={{ padding: 'clamp(80px,10vw,160px) 0', position: 'relative', overflow: 'hidden' }}>
@@ -46,7 +48,6 @@ export default function AICapabilities() {
                     {CAPS.map((cap, i) => {
                         const Icon = cap.icon;
                         const isHov = hovered === cap.id;
-                        const isExp = expanded === cap.id;
 
                         return (
                             <motion.div
@@ -57,23 +58,23 @@ export default function AICapabilities() {
                                 transition={{ duration: 0.6, delay: i * 0.07, ease: [0.19, 1, 0.22, 1] }}
                                 onMouseEnter={() => setHovered(cap.id)}
                                 onMouseLeave={() => setHovered(null)}
-                                onClick={() => setExpanded(isExp ? null : cap.id)}
+                                onClick={() => router.push('/services')}
                                 style={{
-                                    background: isHov || isExp ? 'rgba(20,10,40,0.8)' : 'rgba(12,8,24,0.6)',
+                                    background: isHov ? 'rgba(20,10,40,0.8)' : 'rgba(12,8,24,0.6)',
                                     backdropFilter: 'blur(20px)',
-                                    border: `1px solid ${isHov || isExp ? cap.color + '50' : 'rgba(255,255,255,0.06)'}`,
+                                    border: `1px solid ${isHov ? cap.color + '50' : 'rgba(255,255,255,0.06)'}`,
                                     borderRadius: 10,
                                     padding: 28,
                                     cursor: 'pointer',
                                     position: 'relative',
                                     overflow: 'hidden',
                                     transition: 'all 0.35s cubic-bezier(0.19,1,0.22,1)',
-                                    boxShadow: isHov || isExp ? `0 0 30px ${cap.color}18, 0 8px 40px rgba(0,0,0,0.3)` : 'none',
+                                    boxShadow: isHov ? `0 0 30px ${cap.color}18, 0 8px 40px rgba(0,0,0,0.3)` : 'none',
                                     transform: isHov ? 'translateY(-4px) scale(1.01)' : 'translateY(0) scale(1)',
                                 }}
                             >
                                 {/* Top glow line */}
-                                <div style={{ position: 'absolute', top: 0, left: '15%', right: '15%', height: 1, background: `linear-gradient(90deg, transparent, ${cap.color}, transparent)`, opacity: isHov || isExp ? 0.8 : 0, transition: 'opacity 0.3s' }} />
+                                <div style={{ position: 'absolute', top: 0, left: '15%', right: '15%', height: 1, background: `linear-gradient(90deg, transparent, ${cap.color}, transparent)`, opacity: isHov ? 0.8 : 0, transition: 'opacity 0.3s' }} />
 
                                 {/* Tag + icon row */}
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
@@ -84,12 +85,12 @@ export default function AICapabilities() {
                                 </div>
 
                                 {/* Title */}
-                                <h3 style={{ fontSize: 17, fontWeight: 700, fontFamily: 'var(--font-display)', marginBottom: 12, color: isHov || isExp ? 'white' : 'rgba(255,255,255,0.85)', transition: 'color 0.2s', lineHeight: 1.25 }}>
+                                <h3 style={{ fontSize: 17, fontWeight: 700, fontFamily: 'var(--font-display)', marginBottom: 12, color: isHov ? 'white' : 'rgba(255,255,255,0.85)', transition: 'color 0.2s', lineHeight: 1.25 }}>
                                     {cap.title}
                                 </h3>
 
                                 {/* Description - always visible, more prominent on hover */}
-                                <p style={{ fontSize: 13, color: isHov || isExp ? 'rgba(255,255,255,0.65)' : 'rgba(255,255,255,0.35)', lineHeight: 1.7, transition: 'color 0.3s', fontWeight: 300 }}>
+                                <p style={{ fontSize: 13, color: isHov ? 'rgba(255,255,255,0.65)' : 'rgba(255,255,255,0.35)', lineHeight: 1.7, transition: 'color 0.3s', fontWeight: 300 }}>
                                     {cap.desc}
                                 </p>
 

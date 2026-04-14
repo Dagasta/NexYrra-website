@@ -11,12 +11,19 @@ import ClientJourney from '../components/ClientJourney';
 import FinalCTA from '../components/FinalCTA';
 import OSFooter from '../components/OSFooter';
 import AIChatWidget from '../components/AIChatWidget';
+import TechMarquee from '../components/TechMarquee';
 
 export default function Home() {
     return (
         <main>
             <OSNavbar />
             <OSHero />
+            
+            <TechMarquee 
+                items={['AUTONOMOUS AGENTS', 'NEURAL NETWORKS', 'ZERO-LATENCY CLOUD', 'PREDICTIVE ML', 'BESPOKE SAAS', 'EDGE COMPUTE']} 
+                speed={30} 
+            />
+            
             <AICapabilities />
             <WhatWeBuild />
             <ServicesOS />

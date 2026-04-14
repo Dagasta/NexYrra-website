@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Activity, Cpu, Zap, AlertCircle, CheckCircle } from 'lucide-react';
+import Link from 'next/link';
 
 /* ── ANIMATED LINE CHART ─────────────────────────── */
 function LiveChart({ color }: { color: string }) {
@@ -85,7 +86,11 @@ const LOG_TEMPLATES = [
 
 function LogFeed() {
     const [logs, setLogs] = useState(() =>
-        Array.from({ length: 5 }, (_, i) => ({ id: i, text: LOG_TEMPLATES[i % LOG_TEMPLATES.length], ts: `00:0${i}:${String(Math.floor(Math.random()*59)).padStart(2,'0')}` }))
+        Array.from({ length: 5 }, (_, i) => ({ 
+            id: i, 
+            text: LOG_TEMPLATES[i % LOG_TEMPLATES.length], 
+            ts: `00:0${i}:00` 
+        }))
     );
     const counterRef = useRef(5);
 
@@ -165,7 +170,7 @@ export default function LiveDashboard() {
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }} className="grid-1-mobile">
 
                     {/* Left — Charts */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                    <Link href="/signals" style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', gap: 16 }}>
                         {[
                             { label: 'AI THROUGHPUT', color: '#8A2BE2' },
                             { label: 'LATENCY (ms)', color: '#00FFFF' },
@@ -176,7 +181,8 @@ export default function LiveDashboard() {
                                 whileInView={{ opacity: 1, x: 0 }}
                                 viewport={{ once: true }}
                                 className="glass-panel"
-                                style={{ borderRadius: 10, padding: '18px 20px' }}
+                                style={{ borderRadius: 10, padding: '18px 20px', cursor: 'pointer' }}
+                                whileHover={{ scale: 1.02, borderColor: 'rgba(255,255,255,0.2)' }}
                             >
                                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12 }}>
                                     <span className="mono" style={{ fontSize: 9, color: c.color }}>{c.label}</span>
@@ -188,84 +194,90 @@ export default function LiveDashboard() {
                                 <LiveChart color={c.color} />
                             </motion.div>
                         ))}
-                    </div>
+                    </Link>
 
                     {/* Center — AI Decision Engine */}
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        className="glass-panel"
-                        style={{ borderRadius: 10, padding: '28px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}
-                    >
-                        {/* Spinning ring */}
+                    <Link href="/signals" style={{ textDecoration: 'none' }}>
                         <motion.div
-                            animate={{ rotate: 360 }}
-                            transition={{ repeat: Infinity, duration: 12, ease: 'linear' }}
-                            style={{ width: 120, height: 120, border: '1px solid rgba(138,43,226,0.3)', borderTop: '1px solid #8A2BE2', borderRadius: '50%', marginBottom: 24, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            viewport={{ once: true }}
+                            className="glass-panel"
+                            style={{ borderRadius: 10, padding: '28px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden', cursor: 'pointer', height: '100%' }}
+                            whileHover={{ scale: 1.02, borderColor: 'rgba(255,255,255,0.2)' }}
                         >
+                            {/* Spinning ring */}
                             <motion.div
-                                animate={{ rotate: -360 }}
-                                transition={{ repeat: Infinity, duration: 8, ease: 'linear' }}
-                                style={{ width: 80, height: 80, border: '1px solid rgba(0,255,255,0.2)', borderBottom: '1px solid #00FFFF', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                                animate={{ rotate: 360 }}
+                                transition={{ repeat: Infinity, duration: 12, ease: 'linear' }}
+                                style={{ width: 120, height: 120, border: '1px solid rgba(138,43,226,0.3)', borderTop: '1px solid #8A2BE2', borderRadius: '50%', marginBottom: 24, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                             >
-                                <Cpu size={24} color="#8A2BE2" />
+                                <motion.div
+                                    animate={{ rotate: -360 }}
+                                    transition={{ repeat: Infinity, duration: 8, ease: 'linear' }}
+                                    style={{ width: 80, height: 80, border: '1px solid rgba(0,255,255,0.2)', borderBottom: '1px solid #00FFFF', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                                >
+                                    <Cpu size={24} color="#8A2BE2" />
+                                </motion.div>
                             </motion.div>
+
+                            <span className="mono" style={{ fontSize: 10, color: 'rgba(138,43,226,0.7)', marginBottom: 8, letterSpacing: '0.2em' }}>AI_DECISION_ENGINE</span>
+                            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', fontFamily: 'var(--font-mono)', textAlign: 'center', marginBottom: 24 }}>STATUS: ACTIVE</div>
+
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, width: '100%' }}>
+                                <LiveCounter label="INFERENCES / SEC" start={1200} max={1800} unit="" color="#8A2BE2" />
+                                <LiveCounter label="ACCURACY SCORE" start={97} max={100} unit="%" color="#00FFFF" />
+                                <LiveCounter label="AGENTS ACTIVE" start={24} max={48} unit="" color="#4D9FFF" />
+                                <LiveCounter label="MODELS LOADED" start={12} max={20} unit="" color="#a855f7" />
+                            </div>
+
+                            {/* Glow */}
+                            <div style={{ position: 'absolute', top: '40%', left: '50%', transform: 'translate(-50%,-50%)', width: 200, height: 200, background: 'radial-gradient(circle, rgba(138,43,226,0.12) 0%, transparent 70%)', pointerEvents: 'none' }} />
                         </motion.div>
-
-                        <span className="mono" style={{ fontSize: 10, color: 'rgba(138,43,226,0.7)', marginBottom: 8, letterSpacing: '0.2em' }}>AI_DECISION_ENGINE</span>
-                        <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', fontFamily: 'var(--font-mono)', textAlign: 'center', marginBottom: 24 }}>STATUS: ACTIVE</div>
-
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, width: '100%' }}>
-                            <LiveCounter label="INFERENCES / SEC" start={1200} max={1800} unit="" color="#8A2BE2" />
-                            <LiveCounter label="ACCURACY SCORE" start={97} max={100} unit="%" color="#00FFFF" />
-                            <LiveCounter label="AGENTS ACTIVE" start={24} max={48} unit="" color="#4D9FFF" />
-                            <LiveCounter label="MODELS LOADED" start={12} max={20} unit="" color="#a855f7" />
-                        </div>
-
-                        {/* Glow */}
-                        <div style={{ position: 'absolute', top: '40%', left: '50%', transform: 'translate(-50%,-50%)', width: 200, height: 200, background: 'radial-gradient(circle, rgba(138,43,226,0.12) 0%, transparent 70%)', pointerEvents: 'none' }} />
-                    </motion.div>
+                    </Link>
 
                     {/* Right — Log feed */}
-                    <motion.div
-                        initial={{ opacity: 0, x: 20 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        className="glass-panel"
-                        style={{ borderRadius: 10, padding: '20px 20px', overflow: 'hidden' }}
-                    >
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 18, paddingBottom: 14, borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                            <Activity size={13} color="var(--neon-cyan)" />
-                            <span className="mono" style={{ fontSize: 9, color: 'var(--neon-cyan)', letterSpacing: '0.15em' }}>SYSTEM_LOG // STREAMING</span>
-                        </div>
-                        <LogFeed />
+                    <Link href="/signals" style={{ textDecoration: 'none' }}>
+                        <motion.div
+                            initial={{ opacity: 0, x: 20 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            className="glass-panel"
+                            style={{ borderRadius: 10, padding: '20px 20px', overflow: 'hidden', cursor: 'pointer', height: '100%' }}
+                            whileHover={{ scale: 1.02, borderColor: 'rgba(255,255,255,0.2)' }}
+                        >
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 18, paddingBottom: 14, borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                                <Activity size={13} color="var(--neon-cyan)" />
+                                <span className="mono" style={{ fontSize: 9, color: 'var(--neon-cyan)', letterSpacing: '0.15em' }}>SYSTEM_LOG // STREAMING</span>
+                            </div>
+                            <LogFeed />
 
-                        {/* Health bars */}
-                        <div style={{ marginTop: 20, display: 'flex', flexDirection: 'column', gap: 10, paddingTop: 16, borderTop: '1px solid rgba(255,255,255,0.04)' }}>
-                            {[
-                                { label: 'CPU_LOAD', pct: 34, color: '#00ff88' },
-                                { label: 'MEMORY', pct: 58, color: '#8A2BE2' },
-                                { label: 'NETWORK', pct: 71, color: '#00FFFF' },
-                            ].map(b => (
-                                <div key={b.label}>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-                                        <span className="mono" style={{ fontSize: 8, color: 'rgba(255,255,255,0.25)' }}>{b.label}</span>
-                                        <span className="mono" style={{ fontSize: 8, color: b.color }}>{b.pct}%</span>
+                            {/* Health bars */}
+                            <div style={{ marginTop: 20, display: 'flex', flexDirection: 'column', gap: 10, paddingTop: 16, borderTop: '1px solid rgba(255,255,255,0.04)' }}>
+                                {[
+                                    { label: 'CPU_LOAD', pct: 34, color: '#00ff88' },
+                                    { label: 'MEMORY', pct: 58, color: '#8A2BE2' },
+                                    { label: 'NETWORK', pct: 71, color: '#00FFFF' },
+                                ].map(b => (
+                                    <div key={b.label}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+                                            <span className="mono" style={{ fontSize: 8, color: 'rgba(255,255,255,0.25)' }}>{b.label}</span>
+                                            <span className="mono" style={{ fontSize: 8, color: b.color }}>{b.pct}%</span>
+                                        </div>
+                                        <div style={{ height: 2, background: 'rgba(255,255,255,0.05)', borderRadius: 2, overflow: 'hidden' }}>
+                                            <motion.div
+                                                initial={{ width: 0 }}
+                                                whileInView={{ width: `${b.pct}%` }}
+                                                viewport={{ once: true }}
+                                                transition={{ duration: 1.2, ease: [0.19, 1, 0.22, 1] }}
+                                                style={{ height: '100%', background: b.color, boxShadow: `0 0 6px ${b.color}` }}
+                                            />
+                                        </div>
                                     </div>
-                                    <div style={{ height: 2, background: 'rgba(255,255,255,0.05)', borderRadius: 2, overflow: 'hidden' }}>
-                                        <motion.div
-                                            initial={{ width: 0 }}
-                                            whileInView={{ width: `${b.pct}%` }}
-                                            viewport={{ once: true }}
-                                            transition={{ duration: 1.2, ease: [0.19, 1, 0.22, 1] }}
-                                            style={{ height: '100%', background: b.color, boxShadow: `0 0 6px ${b.color}` }}
-                                        />
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </motion.div>
+                                ))}
+                            </div>
+                        </motion.div>
+                    </Link>
                 </div>
             </div>
         </section>

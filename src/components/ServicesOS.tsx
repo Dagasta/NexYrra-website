@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Brain, Code2, Lightbulb, ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 
 const TABS = [
     {
@@ -118,39 +119,48 @@ export default function ServicesOS() {
                         style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%,300px),1fr))', gap: 16 }}
                     >
                         {current.items.map((item, i) => (
-                            <motion.div
-                                key={item.title}
-                                initial={{ opacity: 0, x: -16 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: i * 0.06, duration: 0.4 }}
-                                style={{
-                                    background: 'rgba(10,5,20,0.5)', backdropFilter: 'blur(16px)',
-                                    border: '1px solid rgba(255,255,255,0.06)',
-                                    borderLeft: `2px solid ${current.color}50`,
-                                    borderRadius: '0 8px 8px 0',
-                                    padding: '22px 24px',
-                                    transition: 'all 0.25s',
-                                    cursor: 'default',
-                                }}
-                                onMouseEnter={e => {
-                                    (e.currentTarget as HTMLElement).style.borderLeftColor = current.color;
-                                    (e.currentTarget as HTMLElement).style.background = 'rgba(18,8,36,0.7)';
-                                }}
-                                onMouseLeave={e => {
-                                    (e.currentTarget as HTMLElement).style.borderLeftColor = `${current.color}50`;
-                                    (e.currentTarget as HTMLElement).style.background = 'rgba(10,5,20,0.5)';
-                                }}
+                            <Link 
+                                href="/services" 
+                                key={item.title} 
+                                style={{ textDecoration: 'none' }}
                             >
-                                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 10 }}>
-                                    <h3 style={{ fontSize: 15, fontWeight: 700, fontFamily: 'var(--font-display)', color: 'white', lineHeight: 1.3 }}>
-                                        {item.title}
-                                    </h3>
-                                    <ArrowRight size={14} color={current.color} style={{ flexShrink: 0, marginLeft: 12, marginTop: 2, opacity: 0.6 }} />
-                                </div>
-                                <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.38)', lineHeight: 1.65, fontWeight: 300 }}>
-                                    {item.desc}
-                                </p>
-                            </motion.div>
+                                <motion.div
+                                    initial={{ opacity: 0, x: -16 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: i * 0.06, duration: 0.4 }}
+                                    style={{
+                                        background: 'rgba(10,5,20,0.5)', 
+                                        backdropFilter: 'blur(16px)',
+                                        border: '1px solid rgba(255,255,255,0.06)',
+                                        borderLeft: `2px solid ${current.color}50`,
+                                        borderRadius: '0 8px 8px 0',
+                                        padding: '22px 24px',
+                                        transition: 'all 0.25s',
+                                        cursor: 'pointer',
+                                        height: '100%'
+                                    }}
+                                    onMouseEnter={e => {
+                                        (e.currentTarget as HTMLElement).style.borderLeftColor = current.color;
+                                        (e.currentTarget as HTMLElement).style.background = 'rgba(18,8,36,0.7)';
+                                        (e.currentTarget as HTMLElement).style.transform = 'translateX(4px)';
+                                    }}
+                                    onMouseLeave={e => {
+                                        (e.currentTarget as HTMLElement).style.borderLeftColor = `${current.color}50`;
+                                        (e.currentTarget as HTMLElement).style.background = 'rgba(10,5,20,0.5)';
+                                        (e.currentTarget as HTMLElement).style.transform = 'none';
+                                    }}
+                                >
+                                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 10 }}>
+                                        <h3 style={{ fontSize: 15, fontWeight: 700, fontFamily: 'var(--font-display)', color: 'white', lineHeight: 1.3 }}>
+                                            {item.title}
+                                        </h3>
+                                        <ArrowRight size={14} color={current.color} style={{ flexShrink: 0, marginLeft: 12, marginTop: 2, opacity: 0.6 }} />
+                                    </div>
+                                    <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.38)', lineHeight: 1.65, fontWeight: 300 }}>
+                                        {item.desc}
+                                    </p>
+                                </motion.div>
+                            </Link>
                         ))}
                     </motion.div>
                 </AnimatePresence>

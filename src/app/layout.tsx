@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import Cursor from '../components/Cursor';
 import SystemInit from '../components/SystemInit';
+import WhatsAppButton from '../components/WhatsAppButton';
 
 export const metadata: Metadata = {
     title: 'Nexyrra | AI Operating System — Dubai, UAE',
@@ -49,6 +50,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <body suppressHydrationWarning>
                 <SystemInit />
                 <Cursor />
+                <WhatsAppButton />
                 {children}
             </body>
         </html>

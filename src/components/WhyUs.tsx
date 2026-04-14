@@ -1,6 +1,8 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import Link from 'next/link';
+import { ChevronRight } from 'lucide-react';
 
 const STATEMENTS = [
     { text: "We don't build websites.", highlight: "We build systems.", color: 'white' },
@@ -91,24 +93,29 @@ export default function WhyUs() {
                 </div>
 
                 {/* Bottom tagline */}
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.5 }}
-                    style={{ marginTop: 'clamp(48px,7vw,80px)', padding: '28px 32px', background: 'rgba(138,43,226,0.06)', border: '1px solid rgba(138,43,226,0.15)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 20 }}
-                >
-                    <div>
-                        <div className="mono" style={{ fontSize: 9, color: 'rgba(138,43,226,0.6)', marginBottom: 8, letterSpacing: '0.2em' }}>NEXYRRA // CORE PRINCIPLE</div>
-                        <p style={{ fontSize: 'clamp(15px,1.8vw,20px)', color: 'rgba(255,255,255,0.7)', fontWeight: 300, fontFamily: 'var(--font-display)' }}>
-                            Every solution we deploy is engineered to outlast every competitor you have.
-                        </p>
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                        <div className="status-dot" />
-                        <span className="mono" style={{ fontSize: 9, color: 'rgba(0,255,136,0.5)' }}>OPERATIONAL</span>
-                    </div>
-                </motion.div>
+                <Link href="/about" style={{ textDecoration: 'none' }}>
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.5 }}
+                        style={{ marginTop: 'clamp(48px,7vw,80px)', padding: '28px 32px', background: 'rgba(138,43,226,0.06)', border: '1px solid rgba(138,43,226,0.15)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 20, cursor: 'pointer' }}
+                        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(138,43,226,0.15)'; }}
+                        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(138,43,226,0.06)'; }}
+                    >
+                        <div>
+                            <div className="mono" style={{ fontSize: 9, color: 'rgba(138,43,226,0.6)', marginBottom: 8, letterSpacing: '0.2em' }}>NEXYRRA // CORE PRINCIPLE</div>
+                            <p style={{ fontSize: 'clamp(15px,1.8vw,20px)', color: 'rgba(255,255,255,0.7)', fontWeight: 300, fontFamily: 'var(--font-display)', display: 'flex', alignItems: 'center', gap: 10 }}>
+                                Every solution we deploy is engineered to outlast every competitor you have.
+                                <ChevronRight size={20} color="var(--neon-purple)" />
+                            </p>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                            <div className="status-dot" />
+                            <span className="mono" style={{ fontSize: 9, color: 'rgba(0,255,136,0.5)' }}>OPERATIONAL</span>
+                        </div>
+                    </motion.div>
+                </Link>
             </div>
         </section>
     );

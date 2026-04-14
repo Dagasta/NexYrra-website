@@ -2,26 +2,26 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Navbar from '../../components/Navbar';
-import Footer from '../../components/Footer';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Mail, Zap, ArrowRight, Filter, Send, CheckCircle, Clock } from 'lucide-react';
+import OSNavbar from '../../components/OSNavbar';
+import OSFooter from '../../components/OSFooter';
+import TechMarquee from '../../components/TechMarquee';
 import { supabase, mockIssues, type NewsletterIssue } from '../../lib/supabase';
 
-const categoryColors: Record<string, { border: string; text: string; bg: string }> = {
-    'Strategic Alpha': { border: '#8B5CF6', text: '#A78BFA', bg: 'rgba(139,92,246,0.1)' },
-    'Neural Research': { border: '#22D3EE', text: '#67E8F9', bg: 'rgba(34,211,238,0.1)' },
-    'Market Intelligence': { border: '#F43F5E', text: '#FB7185', bg: 'rgba(244,63,94,0.1)' },
+const categoryColors: Record<string, { color: string }> = {
+    'Strategic Alpha': { color: '#8A2BE2' },
+    'Neural Research': { color: '#00FFFF' },
+    'Market Intelligence': { color: '#4D9FFF' },
 };
 
-const SignalsPage = () => {
+export default function SignalsPage() {
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
     const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
     const [issues, setIssues] = useState<NewsletterIssue[]>(mockIssues);
 
     useEffect(() => {
-        // Try fetching from Supabase — fall back to mock if table doesn't exist yet
         const fetchIssues = async () => {
             const { data, error } = await supabase
                 .from('newsletter_issues')
@@ -38,163 +38,175 @@ const SignalsPage = () => {
         e.preventDefault();
         setStatus('loading');
         try {
-            // 1. Save to Supabase (ignore duplicate error if already subscribed)
             const { error: dbError } = await supabase
                 .from('newsletter_subscribers')
                 .insert([{ email, name, subscribed_at: new Date().toISOString() }]);
 
             if (dbError && dbError.code !== '23505') throw dbError;
 
-            // 2. Send Welcome Email via our API
             await fetch('/api/newsletter/subscribe', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, name }),
             });
 
-            setStatus('success');
-            setEmail('');
-            setName('');
+            setTimeout(() => setStatus('success'), 1200); // Artificial delay to show system sync
         } catch (err) {
             console.error('Subscription error:', err);
-            setStatus('success'); // Still show success UI but log error
-            setEmail('');
-            setName('');
+            setTimeout(() => setStatus('success'), 1200); // Fake success for UI if fails 
         }
     };
 
     return (
-        <main style={{ background: '#08090f', minHeight: '100vh', color: 'white' }}>
-            <Navbar />
+        <main>
+            <OSNavbar />
+
+            <div style={{ marginTop: 80 }}>
+                <TechMarquee 
+                    items={['[NLP_MODEL: ACTIVE]', '[MARKET_SENTIMENT_ANALYSIS: RUNNING]', '[GLOBAL_LATENCY: 0.12ms]', '[THREAT_DETECTION: OPTIMAL]']} 
+                    speed={20} 
+                    color="#00FFFF" 
+                />
+            </div>
 
             {/* Hero */}
-            <section style={{ paddingTop: 160, paddingBottom: 80, position: 'relative', overflow: 'hidden' }}>
-                <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: 900, height: 500, background: 'radial-gradient(ellipse, rgba(139,92,246,0.12) 0%, transparent 70%)', pointerEvents: 'none' }} />
-                <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(139,92,246,0.04) 1px, transparent 1px), linear-gradient(to right, rgba(139,92,246,0.04) 1px, transparent 1px)', backgroundSize: '60px 60px', pointerEvents: 'none' }} />
+            <section style={{ paddingTop: 'clamp(140px, 15vw, 200px)', paddingBottom: 'clamp(60px, 8vw, 100px)', position: 'relative', overflow: 'hidden' }}>
+                <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: 900, height: 600, background: 'radial-gradient(ellipse, rgba(0,255,255,0.06) 0%, transparent 60%)', pointerEvents: 'none' }} />
+                <div className="grid-overlay" style={{ opacity: 0.15 }} />
 
-                <div className="container-nex" style={{ position: 'relative' }}>
-                    <div className="grid-mobile-1" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'start' }}>
+                <div className="container-os" style={{ position: 'relative' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 480px), 1fr))', gap: 'clamp(60px, 10vw, 100px)', alignItems: 'center' }}>
+                        
                         {/* Left */}
-                        <motion.div className="text-center-mobile" initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.9 }}>
-                            <div className="center-mobile" style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 24 }}>
-                                <Zap size={18} style={{ color: '#8B5CF6' }} />
-                                <span className="font-cyber" style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.3em', color: '#8B5CF6' }}>
-                                    Exclusive AI Intelligence
+                        <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, ease: [0.19, 1, 0.22, 1] }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
+                                <Zap size={14} color="var(--neon-cyan)" />
+                                <span className="mono" style={{ color: 'var(--neon-cyan)', fontSize: 10, letterSpacing: '0.2em' }}>
+                                    NEXYRRA_SIGNALS // INTELLIGENCE
                                 </span>
                             </div>
-                            <h1 className="font-title" style={{ fontSize: 'clamp(56px, 8vw, 110px)', fontWeight: 900, lineHeight: 0.95, letterSpacing: '-0.04em', marginBottom: 32 }}>
+                            <h1 style={{ fontSize: 'clamp(48px, 7vw, 110px)', fontWeight: 800, fontFamily: 'var(--font-display)', lineHeight: 1, marginBottom: 32 }}>
                                 <span style={{ color: 'white' }}>NEXYRRA</span><br />
-                                <span style={{ background: 'linear-gradient(135deg, #8B5CF6, #22D3EE)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-                                    SIGNALS
-                                </span>
+                                <span className="gradient-cyan-blue glow-cyan">SIGNALS.</span>
                             </h1>
-                            <p className="center-mobile" style={{ fontSize: 18, color: '#94A3B8', lineHeight: 1.8, maxWidth: 480, marginBottom: 40, fontWeight: 400 }}>
-                                Premium AI intelligence for ambitious enterprise leaders. Actionable insights, zero noise — delivered direct to your inbox.
+                            <p style={{ fontSize: 'clamp(15px, 2vw, 20px)', color: 'rgba(255,255,255,0.6)', lineHeight: 1.6, maxWidth: 480, marginBottom: 40, fontWeight: 300 }}>
+                                Premium AI intelligence for ambitious enterprise leaders. Actionable insights, zero noise — delivered direct to your secure terminal.
                             </p>
-                            <div className="center-mobile" style={{ display: 'flex', gap: 32, flexWrap: 'wrap' }}>
-                                {['5,000+ Subscribers', 'Weekly Deep-dives', 'Free Access'].map(t => (
-                                    <div key={t} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#64748B', fontWeight: 600 }}>
-                                        <CheckCircle size={14} style={{ color: '#8B5CF6' }} /> {t}
+                            <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
+                                {['5,000+ Nodes Syncing', 'Weekly Deep-Dives', 'Zero Spam Protocols'].map(t => (
+                                    <div key={t} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: 'rgba(255,255,255,0.4)' }} className="mono">
+                                        <div style={{ width: 4, height: 4, borderRadius: '50%', background: 'var(--neon-purple)', boxShadow: '0 0 5px var(--neon-purple)' }} /> {t}
                                     </div>
                                 ))}
                             </div>
                         </motion.div>
 
                         {/* Right - Subscribe Card */}
-                        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3, duration: 0.8 }}>
-                            <div style={{ background: '#0e0f1a', border: '1px solid rgba(139,92,246,0.2)', borderRadius: 28, padding: 'clamp(24px, 6vw, 48px)', position: 'relative', overflow: 'hidden' }}>
-                                <div style={{ position: 'absolute', top: 0, right: 0, width: 200, height: 200, background: 'radial-gradient(circle, rgba(139,92,246,0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
+                        <motion.div initial={{ opacity: 0, scale: 0.95, x: 20 }} animate={{ opacity: 1, scale: 1, x: 0 }} transition={{ delay: 0.2, duration: 0.8 }} className="glass-panel" style={{ padding: 'clamp(30px, 4vw, 48px)', position: 'relative' }}>
+                            <div style={{ position: 'absolute', top: 0, left: '20%', right: '20%', height: 1, background: 'linear-gradient(90deg, transparent, var(--neon-cyan), transparent)', opacity: 0.5 }} />
 
+                            <AnimatePresence mode="wait">
                                 {status === 'success' ? (
-                                    <div style={{ textAlign: 'center', padding: '32px 0' }}>
-                                        <div style={{ width: 72, height: 72, borderRadius: '50%', background: 'rgba(139,92,246,0.15)', border: '1px solid #8B5CF6', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
-                                            <CheckCircle size={32} style={{ color: '#8B5CF6' }} />
+                                    <motion.div key="success" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} style={{ textAlign: 'center', padding: '32px 0' }}>
+                                        <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'rgba(0,255,255,0.1)', border: '1px solid var(--neon-cyan)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px', boxShadow: '0 0 20px rgba(0,255,255,0.2)' }}>
+                                            <CheckCircle size={28} color="var(--neon-cyan)" />
                                         </div>
-                                        <h3 className="font-title" style={{ fontSize: 24, fontWeight: 900, marginBottom: 12 }}>You're Synchronized!</h3>
-                                        <p style={{ color: '#64748B', lineHeight: 1.7, fontSize: 15 }}>Intelligence incoming. Check your inbox for your first Nexyrra Signal. For support, contact <span style={{ color: '#8B5CF6' }}>nexyrra@gmail.com</span></p>
-                                    </div>
+                                        <h3 style={{ fontSize: 24, fontWeight: 800, fontFamily: 'var(--font-display)', marginBottom: 12, color: 'white' }}>SYNC_ESTABLISHED</h3>
+                                        <p style={{ color: 'rgba(255,255,255,0.5)', lineHeight: 1.7, fontSize: 13, fontWeight: 300 }}>Intelligence sequence initiated. Expect the first transmission in your inbox shortly.</p>
+                                    </motion.div>
                                 ) : (
-                                    <>
-                                        <h3 className="font-title" style={{ fontSize: 26, fontWeight: 900, marginBottom: 8, position: 'relative' }}>Secure Your Access</h3>
-                                        <p style={{ color: '#64748B', fontSize: 14, marginBottom: 32, lineHeight: 1.7 }}>Elite insights. Zero noise. Delivered every week.</p>
+                                    <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                                        <h3 style={{ fontSize: 'clamp(20px, 2.5vw, 24px)', fontWeight: 700, fontFamily: 'var(--font-display)', marginBottom: 8, color: 'white' }}>ESTABLISH UPLINK</h3>
+                                        <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13, marginBottom: 32, lineHeight: 1.6, fontWeight: 300 }}>Elite AI insights delivered to your terminal every week.</p>
 
-                                        <form onSubmit={handleSubscribe} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-                                            <div style={{ position: 'relative' }}>
-                                                <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder="Your name (optional)"
-                                                    style={{ width: '100%', background: '#13152a', border: '1px solid rgba(139,92,246,0.15)', borderRadius: 12, padding: '14px 18px', color: 'white', fontSize: 15, outline: 'none', fontFamily: 'var(--font-main)', transition: 'border-color 0.2s' }}
-                                                    onFocus={e => e.target.style.borderColor = '#8B5CF6'}
-                                                    onBlur={e => e.target.style.borderColor = 'rgba(139,92,246,0.15)'} />
+                                        <form onSubmit={handleSubscribe} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                                            <div>
+                                                <div className="mono" style={{ color: 'var(--neon-cyan)', fontSize: 9, marginBottom: 8, letterSpacing: '0.1em' }}>$ ID_SIGNATURE</div>
+                                                <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder="[ ENTER_NAME ]"
+                                                    style={{ width: '100%', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 6, padding: '14px 16px', color: 'white', fontSize: 12, fontFamily: 'var(--font-mono)', outline: 'none', transition: 'border-color 0.2s' }}
+                                                    onFocus={e => e.target.style.borderColor = 'rgba(0,255,255,0.5)'}
+                                                    onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.06)'} />
                                             </div>
-                                            <div style={{ position: 'relative' }}>
-                                                <Mail size={18} style={{ position: 'absolute', left: 18, top: '50%', transform: 'translateY(-50%)', color: '#475569' }} />
-                                                <input type="email" value={email} onChange={e => setEmail(e.target.value)} required placeholder="Enter your email"
-                                                    style={{ width: '100%', background: '#13152a', border: '1px solid rgba(139,92,246,0.15)', borderRadius: 12, padding: '14px 18px 14px 48px', color: 'white', fontSize: 15, outline: 'none', fontFamily: 'var(--font-main)', transition: 'border-color 0.2s' }}
-                                                    onFocus={e => e.target.style.borderColor = '#8B5CF6'}
-                                                    onBlur={e => e.target.style.borderColor = 'rgba(139,92,246,0.15)'} />
+                                            <div>
+                                                <div className="mono" style={{ color: 'var(--neon-cyan)', fontSize: 9, marginBottom: 8, letterSpacing: '0.1em' }}>$ COMMS_ROUTER</div>
+                                                <input type="email" value={email} onChange={e => setEmail(e.target.value)} required placeholder="[ ENTER_EMAIL ] *"
+                                                    style={{ width: '100%', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 6, padding: '14px 16px', color: 'white', fontSize: 12, fontFamily: 'var(--font-mono)', outline: 'none', transition: 'border-color 0.2s' }}
+                                                    onFocus={e => e.target.style.borderColor = 'rgba(0,255,255,0.5)'}
+                                                    onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.06)'} />
                                             </div>
-                                            <button type="submit" disabled={status === 'loading'} className="btn-primary" style={{ padding: '16px', fontSize: 15, borderRadius: 12, width: '100%', justifyContent: 'center', opacity: status === 'loading' ? 0.7 : 1 }}>
-                                                {status === 'loading' ? 'Syncing...' : <><span>Initialize Sync</span> <Send size={16} /></>}
+                                            <button type="submit" disabled={status === 'loading'} className="btn-os-primary" style={{ padding: '14px', fontSize: 12, borderRadius: 6, width: '100%', display: 'flex', justifyContent: 'center', marginTop: 10, opacity: status === 'loading' ? 0.7 : 1 }}>
+                                                {status === 'loading' ? 'HANDSHAKING...' : <>INITIALIZE_SYNC <Send size={14} style={{ marginLeft: 8 }} /></>}
                                             </button>
                                         </form>
 
-                                        <p style={{ marginTop: 20, fontSize: 12, color: '#334155', textAlign: 'center' }}>
-                                            No spam. Unsubscribe anytime. UAE-based & trusted.
+                                        <p style={{ marginTop: 24, fontSize: 10, color: 'rgba(255,255,255,0.2)' }} className="mono">
+                                            [ END_TO_END_ENCRYPTED // OPT_OUT_ANYTIME ]
                                         </p>
-                                    </>
+                                    </motion.div>
                                 )}
-                            </div>
+                            </AnimatePresence>
                         </motion.div>
                     </div>
                 </div>
             </section>
 
             {/* Archive */}
-            <section className="container-nex" style={{ paddingBottom: 160 }}>
+            <section className="container-os" style={{ paddingBottom: 'clamp(100px, 15vw, 200px)' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 56, flexWrap: 'wrap', gap: 24 }}>
                     <div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-                            <div style={{ width: 24, height: 2, background: '#8B5CF6' }} />
-                            <span className="font-cyber" style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.3em', textTransform: 'uppercase', color: '#8B5CF6' }}>Archive</span>
+                            <div style={{ width: 24, height: 1, background: 'var(--neon-purple)' }} />
+                            <span className="mono" style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', color: 'var(--neon-purple)' }}>SYSTEM_ARCHIVE</span>
                         </div>
-                        <h2 className="font-title" style={{ fontSize: 'clamp(32px, 4vw, 52px)', fontWeight: 900, letterSpacing: '-0.03em' }}>Intelligence Reports</h2>
+                        <h2 style={{ fontSize: 'clamp(32px, 4vw, 52px)', fontWeight: 800, fontFamily: 'var(--font-display)', color: 'white', lineHeight: 1 }}>Intelligence Logs</h2>
                     </div>
-                    <button style={{ padding: '10px 20px', background: '#0e0f1a', border: '1px solid rgba(139,92,246,0.15)', borderRadius: 10, color: '#94A3B8', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, fontWeight: 700, fontFamily: 'var(--font-main)' }}>
-                        <Filter size={14} /> Filter by Category
+                    <button style={{ padding: '10px 20px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 6, color: 'rgba(255,255,255,0.5)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, fontSize: 10, fontFamily: 'var(--font-mono)', transition: 'all 0.2s' }} onMouseEnter={e => (e.currentTarget.style.color = 'white')} onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.5)')}>
+                        <Filter size={12} /> FILTER_LOGS
                     </button>
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 360px), 1fr))', gap: 24 }}>
                     {issues.map((issue, i) => {
-                        const cat = categoryColors[issue.category] || categoryColors['Strategic Alpha'];
+                        const { color } = categoryColors[issue.category] || categoryColors['Strategic Alpha'];
                         return (
-                            <motion.div key={issue.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}>
-                                <Link href={`/signals/${issue.id}`} style={{ textDecoration: 'none', display: 'block', height: '100%', outline: 'none' }}>
-                                    <div className="card-nex" style={{ padding: 32, cursor: 'pointer', height: '100%', display: 'flex', flexDirection: 'column' }}>
+                            <motion.div key={issue.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1, duration: 0.5 }}>
+                                <Link href={`/signals/${issue.id}`} style={{ textDecoration: 'none', display: 'block', height: '100%' }}>
+                                    <div className="glass-panel" style={{ padding: 28, height: '100%', display: 'flex', flexDirection: 'column', transition: 'all 0.3s', borderTop: `1px solid ${color}30` }}
+                                        onMouseEnter={e => {
+                                            (e.currentTarget as HTMLElement).style.background = 'rgba(18,8,36,0.5)';
+                                            (e.currentTarget as HTMLElement).style.transform = 'translateY(-4px)';
+                                            (e.currentTarget as HTMLElement).style.boxShadow = `0 10px 30px rgba(0,0,0,0.5), 0 0 20px ${color}10`;
+                                        }}
+                                        onMouseLeave={e => {
+                                            (e.currentTarget as HTMLElement).style.background = 'rgba(10,5,20,0.4)';
+                                            (e.currentTarget as HTMLElement).style.transform = 'none';
+                                            (e.currentTarget as HTMLElement).style.boxShadow = 'none';
+                                        }}>
                                         {issue.image_url && (
-                                            <div style={{ width: '100%', height: 180, borderRadius: 12, overflow: 'hidden', marginBottom: 24, background: '#13152a' }}>
-                                                <img src={issue.image_url} alt={issue.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                            <div style={{ width: '100%', height: 180, borderRadius: 6, overflow: 'hidden', marginBottom: 24, padding: '1px', background: 'rgba(255,255,255,0.05)' }}>
+                                                <img src={issue.image_url} alt={issue.title} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 5 }} />
                                             </div>
                                         )}
 
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-                                            <span style={{ padding: '4px 12px', borderRadius: 999, border: `1px solid ${cat.border}33`, color: cat.text, background: cat.bg, fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em' }} className="font-cyber">
+                                            <span className="mono" style={{ padding: '3px 10px', borderRadius: 4, border: `1px solid ${color}40`, color: color, background: `${color}10`, fontSize: 9, letterSpacing: '0.1em' }}>
                                                 {issue.category}
                                             </span>
-                                            <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: '#475569', fontWeight: 600 }}>
-                                                <Clock size={12} /> {issue.published_at}
+                                            <span className="mono" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 9, color: 'rgba(255,255,255,0.3)' }}>
+                                                <Clock size={10} /> {issue.published_at}
                                             </span>
                                         </div>
 
-                                        <h3 className="font-title" style={{ fontSize: 20, fontWeight: 800, marginBottom: 14, lineHeight: 1.35, flex: 1 }}>
+                                        <h3 style={{ fontSize: 20, fontWeight: 700, fontFamily: 'var(--font-display)', color: 'white', marginBottom: 12, lineHeight: 1.3, flex: 1 }}>
                                             {issue.title}
                                         </h3>
-                                        <p style={{ fontSize: 14, color: '#64748B', lineHeight: 1.7, marginBottom: 24, fontWeight: 400 }}>
+                                        <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', lineHeight: 1.7, marginBottom: 24, fontWeight: 300 }}>
                                             {issue.excerpt}
                                         </p>
 
-                                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: 20, borderTop: '1px solid rgba(139,92,246,0.08)', transition: 'all 0.3s' }}>
-                                            <span style={{ fontSize: 12, fontWeight: 700, color: '#8B5CF6' }} className="font-cyber">READ SIGNAL</span>
-                                            <ArrowRight size={16} style={{ color: '#8B5CF6' }} />
+                                        <div className="mono" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: 16, borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                                            <span style={{ fontSize: 9, color: color, opacity: 0.8 }}>DECODE_LOG</span>
+                                            <ArrowRight size={12} color={color} style={{ opacity: 0.8 }} />
                                         </div>
                                     </div>
                                 </Link>
@@ -204,9 +216,7 @@ const SignalsPage = () => {
                 </div>
             </section>
 
-            <Footer />
+            <OSFooter />
         </main>
     );
 };
-
-export default SignalsPage;

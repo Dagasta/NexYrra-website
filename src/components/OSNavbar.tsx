@@ -93,10 +93,12 @@ export default function OSNavbar() {
                     <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
 
                         {/* System status */}
-                        <div className="hide-mobile" style={{ display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'var(--font-mono)', fontSize: 9, color: 'rgba(255,255,255,0.25)', letterSpacing: '0.15em' }}>
-                            <div className="status-dot" />
-                            SYS_ONLINE
-                        </div>
+                        <Link href="/signals" style={{ textDecoration: 'none' }}>
+                            <div className="hide-mobile" style={{ display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'var(--font-mono)', fontSize: 9, color: 'rgba(255,255,255,0.25)', letterSpacing: '0.15em', cursor: 'pointer' }}>
+                                <div className="status-dot" />
+                                SYS_ONLINE
+                            </div>
+                        </Link>
 
                         <Link href="/contact" className="hide-mobile" style={{ textDecoration: 'none' }}>
                             <button className="btn-os-primary" style={{ padding: '10px 20px', fontSize: 11, borderRadius: 3, gap: 8 }}>

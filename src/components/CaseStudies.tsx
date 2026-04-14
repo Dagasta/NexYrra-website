@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Lock, FileText, TrendingUp, X, ChevronRight } from 'lucide-react';
+import Link from 'next/link';
 
 const CASES = [
     {
@@ -142,6 +143,15 @@ export default function CaseStudies() {
                         </motion.div>
                     ))}
                 </div>
+
+                {/* Link to Cases Page */}
+                <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.5 }} style={{ marginTop: 40, textAlign: 'center' }}>
+                    <Link href="/cases" style={{ textDecoration: 'none' }}>
+                        <button className="btn-os-outline" style={{ fontSize: 12, borderRadius: 4, display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                            ACCESS_FULL_LEDGER <ChevronRight size={14} />
+                        </button>
+                    </Link>
+                </motion.div>
             </div>
 
             {/* Expanded file modal */}
